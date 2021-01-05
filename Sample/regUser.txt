@@ -1,0 +1,41 @@
+module.exports.register = (req, res, next) => {
+    var user = new User();
+    user.fullName = req.body.fullName;
+    user.email = req.body.email;
+    user.password = req.body.password;
+    user.role=req.body.role; //for get role
+    user.save((err, doc) => {
+        if (!err){
+           res.send(doc);
+           //To send Token VIA Mailgun
+           const token=jwt.sign({user},process.env.JWT_ACC_ACTIVATE,{expiresIn:'20m'});
+           //Mailgun Property
+           const data = {
+            from: 'noReply@hello.com',
+            to:user.email,
+            subject: 'ACCOUNT ACTIVATION LINK',
+            html:
+            `
+            <h2>Please Activate Your Account</h2>
+            <h6>${process.env.CLIENT_URL}/authentication/activate/${token}</h6>
+             
+            `
+        };
+        mg.messages().send(data, function (error, body) {
+            if(error){
+                return res.json({
+                    eror:err.message
+                })
+            }
+            return res.json({message:'Email has been sent,Kindly activate your account'})
+        });
+    }//end of the if 
+        else {
+            if (err.code == 11000)
+                res.status(422).send(['Duplicate email adrress found.']);
+            else
+                return next(err);
+        }
+
+    });
+}

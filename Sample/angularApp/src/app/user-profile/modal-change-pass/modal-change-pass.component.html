@@ -1,0 +1,46 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+          <label for="dateOfBirth">Enter New Password</label>
+        </div>
+        <form #changePasswordForm="ngForm" (ngSubmit)="changePasswordForm.valid && onSubmit(changePasswordForm)">
+      
+              <input type="password" name="newPassword" #password="ngModel" [(ngModel)]="tempModel.newPassword" placeholder="New Password" required minlength="4"
+                [ngClass]="{'invalid-textbox' :changePasswordForm.submitted && !password.valid }">
+              <div *ngIf="changePasswordForm.submitted && password.errors?.minlength">
+                <label class="validation-message">Minimum 4 characters.</label>
+              </div>
+              <input type="password" name="confirmPassword" #password="ngModel" [(ngModel)]="tempModel.confirmPassword" placeholder="Confirm Password" required minlength="4"
+              [ngClass]="{'invalid-textbox' :changePasswordForm.submitted && !password.valid }">
+              <div *ngIf="changePasswordForm.submitted && password.errors?.minlength">
+                 <label class="validation-message">Minimum 4 characters.</label>
+              </div>
+              <input type="submit" value="Change">
+      
+            </form>
+     <!-- Success message -->
+     <div class="success" *ngIf="showSucessMessage">
+       Password Changed !
+    </div>
+    
+    <!-- Error message -->
+    <div class="alert" *ngIf="serverErrorMessages">
+      {{serverErrorMessages}}
+    </div>
+    </div>
+   <!--<div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>-->
+  </ng-template>
+  
+  <button class="btn btn-outline-info" (click)="open(content)">Edit</button>
+  
+  <!--<hr>-->
+  
+  <!--<pre>{{ closeResult }}</pre>-->

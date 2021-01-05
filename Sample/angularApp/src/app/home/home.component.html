@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<body>
+<!--This is for Admin role-->
+<div id="mySidenav" class="sidenav" *ngIf="this.userService.userDetails.role=='admin'">
+  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+  <!--<a routerLink="/userprofile">About</a>-->
+  <a (click)="profile()">Profile</a>
+  <a (click)="registerUser()">Add User</a>
+  <a (click)="userList()">View Users</a>
+  <a (click)="viewArcUsers()">View Archived Users</a>
+  <a (click)="addDoc()">Add Document</a>
+  <a (click)="viewDoc()">View Documents</a>
+  <a href="#">Contact</a>
+</div>
+<!--This is for reader role-->
+<div id="mySidenav" class="sidenav" *ngIf="this.userService.userDetails.role=='reader'">
+  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+  <a (click)="profile()">Profile</a>
+  <!--<a (click)="registerUser()">Add User</a>-->
+  <a href="#"></a>
+  <a href="#">Contact</a>
+</div>
+<!--This is for author role-->
+<div id="mySidenav" class="sidenav" *ngIf="this.userService.userDetails.role=='author'">
+  <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
+  <a (click)="profile()">Profile</a>
+  <!--<a (click)="registerUser()">Add User</a>-->
+  <a href="#"></a>
+  <a href="#">Contact</a>
+</div>
+<!--Body-->
+<div id="main">
+  <div id="sub" class="sub">
+  <span style="font-size:30px;cursor:pointer;" (click)="openNav()">&#9776;
+   &nbsp;Welcome!
+  </span>
+  <div class="subButton">
+  <button type="button" class="btn btn-outline-info" (click)="onLogout()" ><i class="fa fa-power-off" aria-hidden="true"></i></button>
+  </div>
+  </div>
+    <app-user-profile  *ngIf="this.tOfP==true"></app-user-profile>
+    <app-register *ngIf="this.tOfR==true"></app-register>
+    <app-other-users *ngIf="this.toflist==true"></app-other-users>
+    <app-manage-docs *ngIf="this.tofdocs==true"></app-manage-docs>
+    <app-view-docs  *ngIf="this.tofviewDocs==true"></app-view-docs>
+    <app-archived-users  *ngIf="this.tofviewArcUsers==true"></app-archived-users>
+ </div>
+   
+</body>
+</html> 

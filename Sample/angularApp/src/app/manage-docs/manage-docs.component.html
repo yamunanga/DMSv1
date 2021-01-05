@@ -1,0 +1,41 @@
+
+<h1 style="text-align: center">Fun Of Heuristic File Uploader</h1>
+<div class="container pt-3">
+<div style="text-align: center" class="col">
+  <form> 
+    <div>
+        <input type="text" [(ngModel)]="docName"  name="name" placeholder="Name" >
+    </div>
+    <div>
+      <input type="text" [(ngModel)]="departmentName"  name="department" placeholder="Department" >
+    </div> 
+    <div>
+      <input type="text" [(ngModel)]="categoryName"  name="category" placeholder="Category" >
+    </div>  
+    <div>
+      <input type="text" [(ngModel)]="tags"  name="tags" placeholder="Custom tags" >
+    </div>       
+    <div>
+  <input type="file"   #takeInput name="file" (change)="selectFile($event)" /> 
+    </div>
+    <br>
+    <div>
+      <button type="submit" class="btn btn-outline-primary" (click)="onSubmit()">Upload</button>
+    </div>
+  </form>
+  <br/>
+   <div *ngIf="doc" class="progress" style="height: 20px;" >
+    <div
+      class="progress-bar progress-bar bg-success progress-bar-striped"
+      role="progressbar"
+      attr.aria-valuenow="{{percentDone}}"
+      aria-valuemin="0"
+      aria-valuemax="100"
+      [ngStyle]="{ width:percentDone+ '%' }"
+    >
+      {{percentDone}}%
+    </div>
+ 
+  </div>
+ </div>
+</div>

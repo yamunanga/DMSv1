@@ -1,0 +1,44 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+    <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+      <div class="form-group">
+        <label for="dateOfBirth">Enter Your Full Name</label>
+      </div>
+      <form #fullNameForm="ngForm" (ngSubmit)="fullNameForm.valid && onSubmit(fullNameForm)">
+        <input type="text" #fullName="ngModel" [(ngModel)]="model.fullName" name="fullName" placeholder="Full Name"
+        required  [ngClass]="{'invalid-textbox' :fullNameForm.submitted && !fullName.valid }">
+        <div *ngIf="fullNameForm.submitted && !fullName.valid">
+          <label class="validation-message">This field is required.</label>
+        </div>
+        <div>
+       <!-- <div class="modal-footer">-->
+           <input type="submit"  value="update"  >
+            <!--(click)="modal.close('Save click')"-->
+      <!--  </div>-->
+       </div>
+      </form>
+       <!-- Success message -->
+       <div class="success" *ngIf="showSucessMessage">
+          Full Name Changed !
+      </div>
+      
+      <!-- Error message -->
+      <div class="alert" *ngIf="serverErrorMessages">
+        {{serverErrorMessages}}
+      </div>
+  </div>
+  <!--<div class="modal-footer">
+    <button type="submit" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+  </div>-->
+
+</ng-template>
+
+<button class="btn btn-outline-info" (click)="open(content)">Edit</button>
+
+<!--<hr>-->
+<!--<pre>{{ closeResult }}</pre>-->

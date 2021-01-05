@@ -1,0 +1,2 @@
+npm clear cache -force
+npm install

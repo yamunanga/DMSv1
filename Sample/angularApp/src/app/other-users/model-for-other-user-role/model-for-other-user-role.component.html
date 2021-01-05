@@ -1,0 +1,68 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="form-group">
+          <label for="dateOfBirth"> Select Role </label>
+        </div>
+        <!--for Admin-->
+        <form #userRoleForm="ngForm" (ngSubmit)="userRoleForm.valid && onSubmit(userRoleForm)" *ngIf="userService.otherUserRole=='admin'">
+          <p id="radioText">
+         <!--<input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Admin &nbsp;-->
+         <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Reader &nbsp;
+         <input type="radio" value="author" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Author
+          </p>
+          <div *ngIf="userRoleForm.submitted && !role.valid"> 
+            <label class="validation-message">Role is required.</label>
+           </div>
+          <input type="submit" value="Change">
+       </form>
+       <!--for Reader-->
+       <form #userRoleForm="ngForm" (ngSubmit)="userRoleForm.valid && onSubmit(userRoleForm)" *ngIf="userService.otherUserRole=='reader'">
+        <p id="radioText">
+       <!--<input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Admin &nbsp;-->
+       <input type="radio" value="admin" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Admin &nbsp;
+       <input type="radio" value="author" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Author
+        </p>
+        <div *ngIf="userRoleForm.submitted && !role.valid"> 
+          <label class="validation-message">Role is required.</label>
+         </div>
+        <input type="submit" value="Change">
+     </form>
+     <!--for Author-->
+     <form #userRoleForm="ngForm" (ngSubmit)="userRoleForm.valid && onSubmit(userRoleForm)" *ngIf="userService.otherUserRole=='author'">
+      <p id="radioText">
+     <!--<input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Admin &nbsp;-->
+     <input type="radio" value="admin" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Admin &nbsp;
+     <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Reader
+      </p>
+      <div *ngIf="userRoleForm.submitted && !role.valid"> 
+        <label class="validation-message">Role is required.</label>
+       </div>
+      <input type="submit" value="Change">
+   </form>
+ 
+     <!-- Success message -->
+     <div class="success" *ngIf="showSucessMessage">
+         Role Has been Changed !
+    </div>
+    
+    <!-- Error message -->
+    <div class="alert" *ngIf="serverErrorMessages">
+      {{serverErrorMessages}}
+    </div>
+    </div>
+   <!--<div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>-->
+  </ng-template>
+  
+  <button class="btn btn-outline-info" (click)="open(content)">Edit</button>
+  
+  <!--<hr>-->
+  
+  <!--<pre>{{ closeResult }}</pre>-->

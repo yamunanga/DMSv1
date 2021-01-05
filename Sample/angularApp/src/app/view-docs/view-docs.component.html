@@ -1,0 +1,31 @@
+<br>
+    <div class="table-responsive">
+        <table class="responsive-table highlight ">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Size(Mb)</th>
+                <th>Category</th>
+                <th>Department</th>
+                <th>CreatedBy</th>
+                <th>Tags</th>
+                <th>File</th>
+                <th>CreatedAt</th>
+              </tr>
+            </thead>
+            <tr *ngFor="let doc of documentService.allDocs">
+              <td>{{doc.name}}</td>
+              <td>{{doc.type}}</td>
+              <td>{{byteToMb(doc.size)}}</td>
+              <td>{{doc.category}}</td>
+              <td>{{doc.department}}</td>
+              <td>{{doc.createdBy}}</td>
+              <td>{{doc.tags}}</td>
+              <td>
+                <button type="button" class="btn btn-outline-info"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
+              </td>
+              <td>{{doc.createdAt}}</td>
+            </tr>
+          </table>
+    </div>

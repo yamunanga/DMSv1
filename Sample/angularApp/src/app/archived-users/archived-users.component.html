@@ -1,0 +1,35 @@
+<br>
+<div class="container pt-3">
+  <div style="text-align: center">
+    <input type="text" [(ngModel)]="arcName" (input)="search()" placeholder="Search here" /> <!-- (input)="search()"-->
+   </div>
+<br>
+<div class="col s7">
+    <table class="responsive-table highlight">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created Date</th>
+            <th>Last Active</th>
+            <th>Archived Date</th>
+            <th>Options</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let aUser of userService.allArchivedUsers">
+          <td>{{aUser.fullName}}</td>
+          <td>{{aUser.email}}</td>
+          <td>{{aUser.role}}</td>
+          <td>{{getDate(aUser.uCreatedAt)}}</td>
+          <td>{{getDate(aUser.uUpdatedAt)}}</td>
+          <td>{{getDate(aUser.createdAt)}}</td>
+          <td>
+           
+            <button type="button" class="btn btn-outline-warning" (click)="restoreArcUser(aUser.email)">Restore</button>
+            <button type="button" class="btn btn-outline-danger" (click)="deleteArchivedUser(aUser.email)">Delete</button>
+          </td>
+        </tr>
+      </table>
+</div>
+</div>

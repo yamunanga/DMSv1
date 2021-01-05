@@ -1,0 +1,33 @@
+<div class="wrapper fadeInDown">
+    <div id="formContent">
+      <h2 class="inactive underlineHover">Activate Account</h2>
+      <div>
+        <img src="/assets/img/activate.png" id="icon" alt="activate Icon" />
+      </div>
+    <form #activationForm="ngForm" (ngSubmit)="activationForm.valid && onSubmit(activationForm)">
+      
+       <!--<input type="text" #token="ngModel" [(ngModel)]="userService.activationToken.token" name="token" placeholder="Token"
+        required  [ngClass]="{'invalid-textbox' :activationForm.submitted && !token.valid }">
+        <div *ngIf="activationForm.submitted && !token.valid">
+          <label class="validation-message">This field is required.</label>
+        </div>-->
+        <input type="submit" value="Activate"> 
+
+      </form>
+    <!--  <input type="button" (click)="sendActivateToken()" value="Activate" />-->
+
+      <!-- Success message -->
+      <div class="success" *ngIf="showSucessMessage">
+         Account Activated Please Log in !
+         <input type="button" (click)="toLogin()" value="LogIn" />
+      </div>
+      
+      <!-- Error message -->
+      <div class="alert" *ngIf="serverErrorMessages">
+        <!--{{emailToken.token}}-->
+         {{serverErrorMessages}}
+      </div>
+     
+    </div>
+  </div>
+

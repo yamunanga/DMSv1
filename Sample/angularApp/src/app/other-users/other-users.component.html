@@ -1,0 +1,41 @@
+<br>
+<div class="container pt-3">
+<div style="text-align: center">
+<input type="text" [(ngModel)]="sName" (input)="search()" placeholder="Search here" /> <!-- (input)="search()"-->
+</div>
+<br>
+<div class="col s7">
+    <table class="responsive-table highlight">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Created Date</th>
+            <th>Last Active</th>
+            <th>Status</th>
+            <th>Options</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let user of userService.allUsers">
+          <td>{{user.fullName}}</td>
+          <td>{{user.email}}</td>
+          <td>{{user.role}}</td>
+          <td>{{getDate(user.createdAt)}}</td>
+          <td>{{getDate(user.lastActive)}}</td>
+          <td>{{user.status}}</td>
+          
+         <td>
+              <!--*ngIf="user.role=='admin'"-->
+              <a   (click)="getUserId(user._id)" (click)="getOtherUserRole(user.role)" >
+                <app-model-for-other-user-role></app-model-for-other-user-role>
+              </a>
+              <a class="btn btn-outline-danger" (click)="onDelete(user._id)">
+                <i class="bi bi-trash">Delete</i>
+              </a>
+              <button type="button" (click)="toArchive(user.email)" class="btn btn-outline-warning">Archive</button>
+         </td>
+        </tr>
+      </table>
+</div>
+</div>
