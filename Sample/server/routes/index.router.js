@@ -69,7 +69,8 @@ router.put('/updateUserStatus',jwtHelper.verifyJwtToken,ctrlUser.updateUserStatu
 router.put('/deleteUser',jwtHelper.verifyJwtToken,ctrlUser.deleteUser);
 //for update userRole via user list
 router.put('/updateOtherUserRole',jwtHelper.verifyJwtToken,ctrlUser.updateUserRolefromList);
-
+//findUserProfile
+router.put('/findUserProfile',jwtHelper.verifyJwtToken,ctrlUser.findUserProfile);
 /*
 //routs for documentSchema
 router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (req, res, next) {
@@ -216,7 +217,8 @@ router.put('/deleteSentMessage',jwtHelper.verifyJwtToken,ctrlMsg.deleteSentMessa
 //deleteReciveMessage
 //To delete recive message 
 router.put('/deleteReciveMessage',jwtHelper.verifyJwtToken,ctrlMsg.deleteReciveMessage);
-
+//readReciveMessage
+router.put('/readReciveMessage',jwtHelper.verifyJwtToken,ctrlMsg.readReciveMessage);
 module.exports = router;
 
 

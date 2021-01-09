@@ -36,6 +36,13 @@ import { AuthInterceptor } from './auth/auth.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { ArchivedUsersComponent } from './archived-users/archived-users.component';
+import { MessageBoxComponent } from './message-box/message-box.component';
+import { WriteMessageComponent } from './message-box/write-message/write-message.component';
+import { ViewSentsComponent } from './message-box/view-sents/view-sents.component';
+import { ViewRecivedComponent } from './message-box/view-recived/view-recived.component';
+import { ModelViewComponent } from './message-box/view-recived/model-view/model-view.component';
+import { ModelViewSentsComponent } from './message-box/view-sents/model-view-sents/model-view-sents.component';
+import { PopupUserprofileComponent } from './popup-userprofile/popup-userprofile.component';
 
 
 
@@ -67,6 +74,13 @@ import { ArchivedUsersComponent } from './archived-users/archived-users.componen
     ManageDocsComponent,
     ViewDocsComponent,
     ArchivedUsersComponent,
+    MessageBoxComponent,
+    WriteMessageComponent,
+    ViewSentsComponent,
+    ViewRecivedComponent,
+    ModelViewComponent,
+    ModelViewSentsComponent,
+    PopupUserprofileComponent,
    
   ],
   imports: [

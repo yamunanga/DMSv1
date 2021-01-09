@@ -21,14 +21,16 @@ module.exports.register = (req, res, next) => {
     user.email = req.body.email;
     user.password = req.body.password;
     user.role=req.body.role; //for get role
-    const{fullName,email,password,role}=req.body;
+    user.department=req.body.department;
+    user.position=req.body.position;
+    const{fullName,email,password,role,department,position}=req.body;
     User.findOne({email:req.body.email}).exec((err,user)=>{
         if(user){
              return res.status(422).send(['Duplicate email adrress found.']);
         }else{
     
          //To send Token VIA Mailgun
-           const Emailtoken=jwt.sign({fullName,email,password,role},process.env.JWT_ACC_ACTIVATE,{expiresIn:'10m'});
+           const Emailtoken=jwt.sign({fullName,email,password,role,department,position},process.env.JWT_ACC_ACTIVATE,{expiresIn:'10m'});
            //Mailgun Property
            const data = {
             from: 'noReply@hello.com',
@@ -77,13 +79,15 @@ module.exports.activateAccount = (req, res, next) =>{
                 return res.status(400).send(['Incorrect or Expired link Contact Admin!']);
                 //return res.status(400).json({eror:'Incorrect or Expired link.'})
             }
-            const{fullName,email,password,role}=decodedToken;
+            const{fullName,email,password,role,department,position}=decodedToken;
             //start here
             var user = new User();
             user.fullName =fullName ;
             user.email =email ;
             user.password =password ;
             user.role=role; //for get role
+            user.department=department;
+            user.position=position;
             user.save((err, doc) => {
             if (!err)
                 res.send(doc);
@@ -483,6 +487,23 @@ module.exports.findUser = (req, res, next) =>{
         }
     );
 }
+//To view user profile for other users
+module.exports.findUserProfile = (req, res, next) =>{
+    const{email}=req.body;
+    User.findOne({ email:email},
+        (err, user) => {
+            if (!user)
+                return res.status(404).json({ status: false, message: 'User record not found.' });
+            else
+                return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role','createdAt','lastActive','status', 'department','position']) });
+        }
+    );
+}
+
+
+
+
+
 
 //ARCHIVED USER 
 

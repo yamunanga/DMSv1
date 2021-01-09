@@ -48,6 +48,8 @@ export class RegisterComponent implements OnInit {
       email: '',
       password: '',
       role:'',
+      department:'',
+      position:''
     };
     form.resetForm();
     this.serverErrorMessages = '';

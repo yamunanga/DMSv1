@@ -27,6 +27,18 @@
           <label *ngIf="password.errors.required" class="validation-message">This field is required.</label>
           <label *ngIf="password.errors.minlength" class="validation-message">Enter atleast 4 characters.</label>
         </div>
+        <!--For department-->
+        <input type="text" #department="ngModel" [(ngModel)]="userService.selectedUser.department" name="department" placeholder="Department"
+        required  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !department.valid }">
+        <div *ngIf="signUpForm.submitted && !department.valid">
+          <label class="validation-message">This field is required.</label>
+        </div>
+        <!--For position-->
+        <input type="text" #position="ngModel" [(ngModel)]="userService.selectedUser.position" name="position" placeholder="Position"
+        required  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !position.valid }">
+        <div *ngIf="signUpForm.submitted && !position.valid">
+          <label class="validation-message">This field is required.</label>
+        </div>
         <!--For role -->
         <p id="radioText">
         <input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="userService.selectedUser.role" >Admin &nbsp;

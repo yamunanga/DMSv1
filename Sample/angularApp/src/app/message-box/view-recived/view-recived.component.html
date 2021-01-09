@@ -1,0 +1,31 @@
+<br>
+<div class="centertb">
+  <div style="text-align: center">
+    <input type="text" [(ngModel)]="sName" (input)="search()" placeholder="Search here" (keydown)="onKeydown($event)" />&nbsp;
+    <button type="button" class="btn btn-outline-info"  (click)="refresh()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+  </div>
+</div>
+<div class="col s7">
+  <table class="responsive-table highlight centertb">
+      <!--<thead>
+        <tr>
+          <th>Status</th>
+          <th>From</th>
+          <th>Date</th>
+          <th>Options</th>
+        </tr>
+      </thead>-->
+      <tr *ngFor="let msg of messageService.allRecived">
+        <td>{{msg.isRead}}</td>
+        <td>{{msg.from}}</td>
+        <td>{{messageService.getDate(msg.createdAt)}}</td>
+        <td>
+          <app-model-view (click)="passBody(msg.body)" (click)="passIsRead(msg._id)" (click)="replyModel(msg.from)"></app-model-view>
+        </td>
+        <td>
+          <button type="button" class="btn btn-outline-danger" (click)="passDelete(msg._id)" ><i class="fa fa-trash" aria-hidden="true"> Delete </i></button>
+        </td>
+     </tr>
+    </table>
+    {{this.messageService.replyModel.msgBody}}
+</div>

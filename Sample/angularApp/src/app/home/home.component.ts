@@ -18,6 +18,7 @@ export class HomeComponent implements OnInit {
   tofdocs=false;//for the document upload component to load
   tofviewDocs=false;//for the document view component to load
   tofviewArcUsers=false;//for the archived user component to load
+  tofviewMessageBox=false;//for the message box load
   constructor(public userService: UserService, private router: Router) { }
   lastData={
     lastActive:'',
@@ -76,6 +77,7 @@ export class HomeComponent implements OnInit {
     this.tofdocs=false;
     this.tofviewDocs=false;
     this.tofviewArcUsers=false;
+    this.tofviewMessageBox=false;
   }
   //to load userList
   userList(){
@@ -97,6 +99,11 @@ export class HomeComponent implements OnInit {
     this.refresh();
     this.tofviewArcUsers=true;
 
+  }
+  //To load messeage box
+  viewMessageBox(){
+    this.refresh();
+    this.tofviewMessageBox=true;
   }
   toGetLastActiveData() {
     this.userService.updateUserLastActive(this.lastData).subscribe(

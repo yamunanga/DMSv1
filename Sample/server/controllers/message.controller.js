@@ -53,7 +53,7 @@ module.exports.viewSentMessage=(req,res,next)=>{
             }else{
                 return res.send(msg);
             }
-        })
+        }).sort({createdAt: 'desc'})
 
 }
 
@@ -66,7 +66,7 @@ module.exports.viewRecievedMessage=(req,res,next)=>{
             }else{
                 return res.send(msg);
             }
-        })
+        }).sort({createdAt: 'desc'})
 
 }
 
@@ -107,4 +107,23 @@ module.exports.deleteReciveMessage=(req,res,next)=>{
                })
           }
       })
+}
+
+//to update msg status 
+module.exports.readReciveMessage=(req,res,next)=>{
+    Message.findOne({_id:req.body._id}, //post message id from frontend
+        (err,msg)=>{
+            if (!msg){
+                return res.status(404).json({ status: false, message: 'Can not find !' });
+            }else{
+                msg.updateOne({isRead:'READ'},function(err,doc){
+                    if(err){
+                      return res.status(422).send(['Cannot update !']);
+                    }else{
+                      return res.status(200).send(['Message read !']);
+                    }
+        
+                 })
+            }
+        })
 }

@@ -1,0 +1,74 @@
+<br>
+<div class="row">
+  <div class="column a">
+    <h4>Users</h4>
+    <div class="container pt-3">
+      <div style="text-align: center">
+        <input type="text" [(ngModel)]="sName" (input)="search()" placeholder="Search here" (keydown)="onKeydown($event)" />
+      </div>
+    <br>
+    <div class='a'>
+       <button type="button"   (click)="status()"   class="btn btn-outline-info">Online</button>&nbsp;
+      <button type="button"   (click)="refresh()"   class="btn btn-outline-info">Refresh</button>&nbsp;
+      <button type="button"   (click)="sendAll()"   class="btn btn-outline-info">SelectAll</button> &nbsp;
+    </div>
+    <br>
+    <div class="col s7" style="height:400px;overflow:auto;">
+        <table class="responsive-table highlight centertb">
+         <!-- <thead>
+              <tr>
+              <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Last Active</th>
+                <th>Status</th>
+                <th>Department</th>
+                <th>Position</th>
+              </tr>
+            </thead>-->
+            <tr *ngFor="let user of userService.allUsers">
+              <td>{{user.status}}</td>
+              <td>{{user.fullName}}</td>
+              <td>{{user.email}}</td>
+             <!-- <td>{{userService.getDate(user.lastActive)}}</td>-->
+              <td><app-popup-userprofile (click)="getOtherUserdetailes(user.email)"></app-popup-userprofile></td>
+              <td><button type="button"   (click)="selectMailes(user.email)" class="btn btn-outline-info">Select</button></td>
+              <!--<td> <input type="checkbox"  value="{{user.email}}" (change)="selectMailes(user.email)"></td>-->
+            </tr>
+          </table>
+    </div>
+  </div>
+ </div>
+  <div class="column a">
+    <h4>Write New </h4>
+    <h5>Slected Users:{{mailesArr.length}}</h5>
+    <div class="col s7" style="height:200px;overflow:auto;">
+    <table class="responsive-table highlight centertb">
+    <tr *ngFor="let mail of  mailesArr">
+      <td>{{mail}}</td>
+      <td><app-popup-userprofile (click)="getOtherUserdetailes(mail)"></app-popup-userprofile></td>
+     <td><button type="button" (click)="del(mail)" class="btn btn-outline-info"> <i class="fa fa-trash" aria-hidden="true"></i></button></td> 
+    </tr>
+    </table>
+  </div>
+  <br>
+  <div>
+    <h4>Write:</h4> <textarea matInput rows="10" cols="50" [(ngModel)]="sendModel.msgBody" placeholder="Type here"></textarea>
+  </div>
+  <div>
+    <button type="button" (click)="sendMsg()" class="btn btn-outline-success">Send</button>
+  </div>
+   <!-- Success message -->
+   <div class="success" *ngIf="showSucessMessage">
+    Message Send !
+   </div>
+
+   <!-- Error message -->
+  <div class="alert" *ngIf="serverErrorMessages">
+    {{serverErrorMessages}}
+  </div>
+
+  <p id="demo"></p>
+ 
+  </div>
+</div>

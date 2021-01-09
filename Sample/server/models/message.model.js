@@ -15,11 +15,15 @@ var messageSchema = new mongoose.Schema({
     },
     to:{
         type:String,
-        required:true
+        required:true 
     },
     body: { type: String, 
         required:true
      },
+    isRead:{
+        type:String,
+        default:'NEW'
+    }
 
 },{timestamps:true});
 

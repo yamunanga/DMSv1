@@ -1,0 +1,31 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">User Profile</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body centertb">
+        <div class="card" style="width: 18rem;">
+            <img class="card-img-top" src="assets/img/single_user.png" alt="Card image cap">
+            <div class="card-body">
+            <!--  <p class="card-text"></p>-->
+              <div class="a">
+                      <h4>{{userService.otherUserProfile.fullName}}</h4>
+                      <h5>Role: {{userService.otherUserProfile.role}}</h5>
+                      <br>
+                      <h6><i class="fa fa-briefcase" aria-hidden="true"> {{userService.otherUserProfile.position}} At {{userService.otherUserProfile.department}} Department </i></h6>
+                      <h6><i class="fa fa-envelope" aria-hidden="true"> {{userService.otherUserProfile.email}} </i></h6>
+                      <h6><i class="fa fa-check" aria-hidden="true"> Last Active at {{userService.getDate(userService.otherUserProfile.lastActive)}} </i></h6>
+                      <br>
+                      <br>
+             </div>
+            </div>
+          </div>
+    </div>
+  </ng-template>
+  
+  <button class="btn btn-outline-info" (click)="open(content)">View</button>
+  
+  
+

@@ -1,0 +1,21 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<br>
+<div class="container-sm border">
+    <br>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" (click)="loadRecivedMsg()" >INBOX</button>
+        <button type="button" class="btn btn-primary" (click)="loadSentsMsg()">SENTS</button>
+        <button type="button" class="btn btn-primary" (click)="loadWriteMsg()">WRITE</button>
+      </div>
+    <br>
+    <div>
+        <app-write-message *ngIf="this.tOfWMsg==true"></app-write-message>
+        <app-view-sents *ngIf="this.tOfVSMsg==true"></app-view-sents>
+        <app-view-recived *ngIf="this.tOfVRMsg==true;" ></app-view-recived>
+
+
+    </div>
+ 
+</div>

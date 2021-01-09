@@ -1,0 +1,29 @@
+<br>
+<div class="centertb" >
+  <div style="text-align: center" >
+    <input type="text" [(ngModel)]="sName" (input)="search()" placeholder="Search here"  (keydown)="onKeydown($event)" />&nbsp;
+  </div>
+</div>
+<div class="col s7">
+  <table class="responsive-table highlight centertb">
+      <!--<thead>
+        <tr>
+          <th>Status</th>
+          <th>From</th>
+          <th>Date</th>
+          <th>Options</th>
+        </tr>
+      </thead>-->
+      <tr *ngFor="let msg of messageService.allSents">
+        <td>To:</td>
+        <td>{{msg.to}}</td>
+        <td>{{messageService.getDate(msg.createdAt)}}</td>
+        <td>
+          <app-model-view-sents (click)="passSentBdy(msg.body)"></app-model-view-sents>
+        </td>
+        <td>
+          <button type="button" class="btn btn-outline-danger" (click)="passDelete(msg._id)" ><i class="fa fa-trash" aria-hidden="true"> Delete </i></button>
+        </td>
+      </tr>
+    </table>
+</div>

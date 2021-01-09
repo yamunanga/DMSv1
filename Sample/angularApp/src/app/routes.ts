@@ -42,7 +42,7 @@ export const appRoutes: Routes = [
         path: 'userprofile', component: UserProfileComponent,canActivate:[AuthGuard],data:['admin','reader','author']
     },
     {
-        path: 'home', component: HomeComponent,canActivate:[AuthGuard],data:['admin','reader','author']
+        path: 'home', component: HomeComponent,//canActivate:[AuthGuard],data:['admin','reader','author']
     },
     {
         path: 'userList', component:OtherUsersComponent,canActivate:[AuthGuard],data:['admin']

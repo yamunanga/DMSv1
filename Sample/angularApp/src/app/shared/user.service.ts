@@ -25,6 +25,8 @@ export class UserService {
     email: '',
     password: '',
     role:'', //to fetch role info
+    department:'',
+    position:''
   };
    activationToken:Email={
      token:'',
@@ -46,6 +48,11 @@ export class UserService {
    allUsers:OTHERUSERS[]; //For get the users
    allArchivedUsers:ARCHIVEDUSERS[];//For get the archived users
    userDetails;
+   otherUserProfile;//for the popup profile
+   //for pass to other user email to backend
+   otherUserEmail={
+     email:''
+   };
    userInfo;
    otherUserRole;//this for get current user role from userList
    //otherUserId;//this is for get userId from userList
@@ -115,7 +122,10 @@ export class UserService {
   updateOtherUserRole( userData:OtherUserRole){
     return this.http.put(environment.apiBaseUrl+'/updateOtherUserRole',userData);
   } 
- 
+ //To view user profile for other Users
+ viewOtherUserProfile(data){
+  return this.http.put(environment.apiBaseUrl+'/findUserProfile',data);
+} 
   //------------------THIS IS FOR ARCHIVED USERs---------------------------
 
 //To get all archived users 
@@ -199,6 +209,11 @@ refreshUsersList() {
   });
 }
 
+getDate(date){
+   var stillUtc = moment.utc(date).toDate();
+   var currentTime= moment(stillUtc).local().format('MMMM Do YYYY, h:mm:ss a');
+   return currentTime;
+}
 
 
 //THIS IS FOR ARCHIVED USER LIST

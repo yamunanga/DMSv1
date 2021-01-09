@@ -7,6 +7,7 @@ import { NgForm } from '@angular/forms';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { NgbdModalBasic } from './modal-basic/modal-basic.component';
 import { ToastrService } from 'ngx-toastr';
+import { MessageServiceService } from '../shared/message-service.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -21,7 +22,7 @@ export class UserProfileComponent implements OnInit {
     _id:''
   }
   //userDetails;
-  constructor(public userService: UserService, private router: Router,private toastr: ToastrService) { }
+  constructor(public userService: UserService, private router: Router,private toastr: ToastrService,public messageService: MessageServiceService) { }
   showSucessMessage: boolean;
   serverErrorMessages: string;
   message=true;

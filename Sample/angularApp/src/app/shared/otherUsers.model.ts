@@ -7,5 +7,7 @@ export class OTHERUSERS {
     updatedAt:String;
     lastActive:String;
     status:String;
+    department:String;
+    position:String;
 
 }

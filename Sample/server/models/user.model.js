@@ -38,6 +38,14 @@ var userSchema = new mongoose.Schema({
        type:String,
        default:'no'
     },
+    department:{
+        type:String,
+        required: 'Department can\'t be empty'
+    },
+    position:{
+        type:String,
+        required: 'Position can\'t be empty'
+    },
     saltSecret: String
 },{timestamps:true});
 
