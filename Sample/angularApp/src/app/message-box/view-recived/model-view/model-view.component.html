@@ -10,12 +10,26 @@
             <h5>{{messageService.passRBody}}</h5>
         </div>
         <br>
+        <br>
+      <div class="col s7" style="height:100px;overflow:auto;">
+       <table class="responsive-table highlight">
+        <tr *ngFor="let attachment of messageService.recivedAttachments">
+          <td>{{splitName(attachment)}}</td>
+          <td><button type="button" class="btn btn-outline-info"><a href="{{getLink(attachment)}}"  target="_blank">View</a></button></td>
+        </tr>
+      </table>
+     </div>
         <div>
-          <h4>Reply:</h4> <textarea matInput rows="5" cols="40" [(ngModel)]="this.messageService.replyModel.msgBody"></textarea>
+          <h4>Reply:</h4> <textarea matInput rows="5" cols="50" [(ngModel)]="this.messageService.replyModel.msgBody"></textarea>
         </div>
         <div>
-          <button type="button" (click)="sentReply()" class="btn btn-outline-success">Send</button>
+          <input type="file"   #takeInput name="files" multiple (change)="selectMultipleFiles($event)" /> 
         </div>
+        <br>
+        <div>
+          <button type="button" (click)="onSend()" class="btn btn-outline-success">Send</button>
+        </div>
+        <br>
           <!-- Success message -->
           <div class="success" *ngIf="showSucessMessage">
             Message Send !

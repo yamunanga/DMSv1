@@ -8,6 +8,18 @@
     <div class="modal-body">
         <div>
             <h4>{{messageService.passSBody}}</h4>
+            <br>
+           <!-- <ul *ngFor="let attachment of messageService.attachments">
+              <li>{{splitName(attachment)}}&nbsp;<button type="button" class="btn btn-outline-info"><a href="{{getLink(attachment)}}"  target="_blank">View</a></button></li>
+           </ul>-->
+           <div class="col s7" style="height:150px;overflow:auto;">
+           <table class="responsive-table highlight">
+            <tr *ngFor="let attachment of messageService.attachments">
+              <td>{{splitName(attachment)}}</td>
+              <td><button type="button" class="btn btn-outline-info"><a href="{{getLink(attachment)}}"  target="_blank">View</a></button></td>
+            </tr>
+          </table>
+        </div>
         </div>
     </div>
   </ng-template>

@@ -34,7 +34,11 @@ sName;//Ng model for search name
     this.userService.userDetails.email
     
   }
-
+//pass recived attachments
+passAtach(arr){
+  this.messageService.recivedAttachments=arr;
+  console.log(this.messageService.recivedAttachments);
+}
   
 
 

@@ -19,7 +19,7 @@
         <td>{{msg.to}}</td>
         <td>{{messageService.getDate(msg.createdAt)}}</td>
         <td>
-          <app-model-view-sents (click)="passSentBdy(msg.body)"></app-model-view-sents>
+          <app-model-view-sents (click)="passSentBdy(msg.body)" (click)="passAtach(msg.file)" ></app-model-view-sents>
         </td>
         <td>
           <button type="button" class="btn btn-outline-danger" (click)="passDelete(msg._id)" ><i class="fa fa-trash" aria-hidden="true"> Delete </i></button>

@@ -95,9 +95,12 @@ onKeydown(event) {
   }
 }
 
+//for get the message attachments
 
-
-
+passAtach(arr){
+  this.messageService.attachments=arr;
+ // console.log(this.messageService.attachments);
+}
 
 
 

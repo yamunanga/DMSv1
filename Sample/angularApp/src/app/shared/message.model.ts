@@ -8,5 +8,6 @@ export class MESSAGE{
     createdAt:String;
     updatedAt:String; 
     isRead:String;
+    file:String;
 
 }

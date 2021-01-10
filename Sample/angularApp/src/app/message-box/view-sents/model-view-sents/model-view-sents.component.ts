@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { MessageServiceService } from 'src/app/shared/message-service.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-model-view-sents',
@@ -42,12 +43,17 @@ export class ModelViewSentsComponent implements OnInit {
 
 
 
-
-
-
-
-
-
-
+//to get the file
+getLink(url){
+  var ul=environment.apiDownloadUrl+'/'+url;
+  return ul
+}
+//Split for get file name
+splitName(name){
+  var str =name; 
+  var splitted = str.split("-")[1];
+  //console.log(splitted);
+  return splitted;
+}
 
 }

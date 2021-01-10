@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { ToastrService } from 'ngx-toastr';
 import { MessageServiceService } from 'src/app/shared/message-service.service';
+import { environment } from 'src/environments/environment';
 @Component({
   selector: 'app-model-view',
   templateUrl: './model-view.component.html',
@@ -14,10 +16,16 @@ export class ModelViewComponent implements OnInit {
   closeResult = '';
   showSucessMessage: boolean;
   serverErrorMessages: string;
+  multipleFiles = []; //This is for multiple attachments
+  // ViewChild is used to access the input element. 
+  @ViewChild('takeInput', {static: false}) 
+  // this InputVar is a reference to our input. 
+  InputVar: ElementRef; 
   
-  constructor(private modalService: NgbModal,public messageService: MessageServiceService,private toastr: ToastrService) { }
+  constructor(private modalService: NgbModal,private http: HttpClient,public messageService: MessageServiceService,private toastr: ToastrService) { }
 
   ngOnInit(): void {
+    this.serverErrorMessages="";
   }
 
   open(content) {
@@ -42,7 +50,7 @@ export class ModelViewComponent implements OnInit {
     }
   }
 
-//to sent the reply
+//to sent the reply--not Used---
 sentReply(){
   this.messageService.postMsg(this.messageService.replyModel).subscribe((res) => {
     //this.toastr.success('Message Send !');
@@ -74,6 +82,71 @@ resetReplyModle(){
     msgBody:''
   }
 }
+//to reset file array
+resetFarr(){
+  this.multipleFiles=[];
+}
 
+//to get the file
+getLink(url){
+  var ul=environment.apiDownloadUrl+'/'+url;
+  return ul
+}
+//Split for get file name
+splitName(name){
+  var str =name; 
+  var splitted = str.split("-")[1];
+  //console.log(splitted);
+  return splitted;
+}
+
+
+
+//for post msg with attachments--used---
+onSend(){
+  const formData = new FormData();
+  formData.append('fromEmail',this.messageService.replyModel.fromEmail);
+  //console.log(formData.get('fromEmail'));
+  formData.append('toEmail',this.messageService.replyModel.toEmail);
+  //console.log(formData.get('toEmail'));
+  formData.append('msgBody',this.messageService.replyModel.msgBody);
+  //console.log(formData.get('msgBody'));
+  for(let file of this.multipleFiles){
+    formData.append('files',file);
+  }
+  this.http.post<any>(environment.apiBaseUrl+'/postFiles', formData,{
+    reportProgress: true,
+  }).subscribe(
+    (res) => {
+      this.showSucessMessage = true;
+      setTimeout(() => this.showSucessMessage = false, 4000);
+      
+    },
+    (err) =>{
+      this.serverErrorMessages = err.error.join('<br/>');
+    }
+  );
+  
+}
+resetButton(){
+  this.ngOnInit();
+  this.inputReset();
+  this.resetReplyModle();
+  this.resetFarr();
+}
+
+//input reset
+inputReset(){
+  // We will clear the value of the input  
+    // field using the reference variable.
+    this.InputVar.nativeElement.value = "";
+ }
+
+//This is for select file event
+selectMultipleFiles(event){
+  if (event.target.files.length > 0) {
+    this.multipleFiles = event.target.files;
+  }
+}
 
 }

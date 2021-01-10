@@ -1,10 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { getMaxListeners } from 'process';
 import { throwIfEmpty } from 'rxjs/operators';
 import { MessageServiceService } from 'src/app/shared/message-service.service';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { UserService } from 'src/app/shared/user.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-write-message',
@@ -15,16 +17,22 @@ export class WriteMessageComponent implements OnInit {
   sName;//Ng model for search name
   mailesArr=[]; //this is for send messages
   allMailes=[];//this is for all mails
+  multipleFiles = []; //This is for multiple attachments
   count=0;//Count for select mailes
   showSucessMessage: boolean;
   serverErrorMessages: string;
+  isSelectAll=false;//for unselect all
   clicked = false;
   sendModel={
     fromEmail:'',
     toEmail:'',
     msgBody:''
   }
-  constructor(public userService: UserService,private toastr: ToastrService,public messageService: MessageServiceService) { }
+  // ViewChild is used to access the input element. 
+  @ViewChild('takeInput', {static: false}) 
+  // this InputVar is a reference to our input. 
+  InputVar: ElementRef; 
+  constructor(public userService: UserService,private http: HttpClient,private toastr: ToastrService,public messageService: MessageServiceService) { }
 
   ngOnInit(): void {
     this.refreshUsersList();
@@ -108,6 +116,8 @@ selectMailes(email){
 reset(){
   this.count=0;
   this.mailesArr.splice(0,this.mailesArr.length);
+  
+   this.serverErrorMessages ="";
 }
 
 //Delete arr element
@@ -128,20 +138,8 @@ del(key){
   }
 }
 
-//to select allusers ---not work--
-selectAll(){
-  this.reset();
-  var user;
-  this.userService.allUsers.forEach(this.getMailes);
-  }
 
-
-//To get user emails--not work---
-getMailes(item,index){
-  document.getElementById("demo").innerHTML +=":" +item.email+ "<br>"; 
-}
-
-//To send msg
+//To send msg--not used----
 sendMsg(){
   var len=this.mailesArr.length;
   for(var i=0;i<len;i++){
@@ -154,7 +152,7 @@ sendMsg(){
       this.showSucessMessage = true;
       setTimeout(() => this.showSucessMessage = false, 4000);
       this.ngOnInit();
-       this.resetSentModel();
+      this.resetSentModel();
     }, err => {
       if (err.status === 404) {
        // this.serverErrorMessages = err.error.join('<br/>');
@@ -172,15 +170,37 @@ sendMsg(){
   }
 }
 
-//To send msg to all
-sendAll(){
-  this.reset();//reset mail arr
-  var len= this.userService.allUsers.length;
-  console.log(len);
+//to send message with files
+onSend(){
+  var len=this.mailesArr.length;
+  console.log(len)
   for(var i=0;i<len;i++){
-   //console.log(this.userService.allUsers[i].email);
-   this.mailesArr.push(this.userService.allUsers[i].email);
+    var email=this.mailesArr[i];
+    const formData = new FormData();
+    formData.append('fromEmail',this.userService.userDetails.email);
+    //console.log(formData.get('fromEmail'));
+    formData.append('toEmail',email);
+    //console.log(formData.get('toEmail'));
+    formData.append('msgBody', this.sendModel.msgBody);
+    //console.log(formData.get('msgBody'));
+    for(let file of this.multipleFiles){
+      formData.append('files',file);
+    }
+    this.http.post<any>(environment.apiBaseUrl+'/postFiles', formData,{
+      reportProgress: true,
+    }).subscribe(
+      (res) => {
+        this.showSucessMessage = true;
+        setTimeout(() => this.showSucessMessage = false, 4000);
+      },
+      (err) =>{
+        this.serverErrorMessages = err.error.join('<br/>');
+      }
+   );
   }
+  this.ngOnInit();
+  this.resetSentModel();
+  this.inputReset();
 }
 
 
@@ -189,9 +209,35 @@ sendAll(){
 
 
 
+//input reset
+inputReset(){
+ // We will clear the value of the input  
+   // field using the reference variable.
+   this.InputVar.nativeElement.value = "";
+}
 
 
 
+
+
+
+
+//To send msg to all
+sendAll(){
+  this.reset();//reset mail arr
+  this.isSelectAll=true;
+  var len= this.userService.allUsers.length;
+  console.log(len);
+  for(var i=0;i<len;i++){
+   //console.log(this.userService.allUsers[i].email);
+   this.mailesArr.push(this.userService.allUsers[i].email);
+  }
+}
+//to unselect all usesr
+unselect(){
+  this.isSelectAll=false;//for unselect all
+  this.reset();
+}
 
 resetSentModel(){
   this.sendModel={
@@ -221,6 +267,30 @@ onKeydown(event) {
     console.log(event);
   }
 }
+
+//This is for select file event
+selectMultipleFiles(event){
+  if (event.target.files.length > 0) {
+    this.multipleFiles = event.target.files;
+  }
+}
+
+//To clear the form data
+clearFormData( fd )
+{
+  for( var prop in fd )
+  {
+    if ( typeof fd[ prop ] != "function" )
+    {
+      fd[ prop ] = "";
+    }
+  }
+}
+
+
+
+
+
 }
 
 

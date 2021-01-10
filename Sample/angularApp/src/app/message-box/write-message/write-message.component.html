@@ -42,7 +42,10 @@
   <div class="column a">
     <h4>Write New </h4>
     <h5>Slected Users:{{mailesArr.length}}</h5>
-    <div class="col s7" style="height:200px;overflow:auto;">
+    <div *ngIf="isSelectAll==true">
+    <button type="button" (click)="unselect()" class="btn btn-outline-danger">Unselect All</button>
+   </div>
+    <div class="col s7" style="height:215px;overflow:auto;">
     <table class="responsive-table highlight centertb">
     <tr *ngFor="let mail of  mailesArr">
       <td>{{mail}}</td>
@@ -56,7 +59,10 @@
     <h4>Write:</h4> <textarea matInput rows="10" cols="50" [(ngModel)]="sendModel.msgBody" placeholder="Type here"></textarea>
   </div>
   <div>
-    <button type="button" (click)="sendMsg()" class="btn btn-outline-success">Send</button>
+    <input type="file"   #takeInput name="files" multiple (change)="selectMultipleFiles($event)" /> 
+  </div>
+  <div>
+    <button type="button" (click)="onSend()" class="btn btn-outline-success">Send</button>
   </div>
    <!-- Success message -->
    <div class="success" *ngIf="showSucessMessage">

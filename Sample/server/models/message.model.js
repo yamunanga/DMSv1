@@ -23,6 +23,10 @@ var messageSchema = new mongoose.Schema({
     isRead:{
         type:String,
         default:'NEW'
+    },
+    file:{
+        type:Array,
+        default:[]
     }
 
 },{timestamps:true});

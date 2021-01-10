@@ -3,20 +3,11 @@ const mongoose = require('mongoose');
 const router = express.Router();
 //Multer configuration
 const multer = require('multer');
-var storage = multer.diskStorage({
+var storage1 = multer.diskStorage({
     destination: function (req, file, cb) {
       cb(null, 'uploads/')
     },
-    /*filename: function (req, file, cb) {
-      let extArray = file.mimetype.split("/");
-      let extension = extArray[extArray.length - 1];
-      //to get original file name
-      let nameArray= file.originalname.split(".");
-      let name=nameArray[nameArray.length-2];
-      //cb(null, req.body.name + '-' + file.originalname )
-       cb(null, name +'.'+extension) //this can store file as original
-    }*/
-    
+   
     filename: function (req, file, cb) {
        let extArray = file.originalname.split(".")
        let extension = extArray[extArray.length - 1];
@@ -28,11 +19,8 @@ var storage = multer.diskStorage({
       }
 
 })
-   
-var upload = multer({ storage: storage })
-//var upload = multer({ dest: 'uploads/' })
-//Multer Configuration over
-
+var upload = multer({ storage: storage1});
+//Doc upload config over
 const User = mongoose.model('User');
 const Document = mongoose.model('Document');
 const ctrlUser = require('../controllers/user.controller');
@@ -204,8 +192,21 @@ router.put('/deleteArchivedUser',jwtHelper.verifyJwtToken,ctrlUser.deleteArchive
 
 
 //Message Routes-----------------------------------------------------------------------------
-//send message
+//send message--not used--
 router.post('/postmessage',jwtHelper.verifyJwtToken,ctrlMsg.postMessage);
+
+//postMessageWithFile ---not used---
+router.post('/postFile',jwtHelper.verifyJwtToken,ctrlMsg.postMessageWithFile);
+
+//postMessageWith multiple files
+
+router.post('/postFiles',jwtHelper.verifyJwtToken,ctrlMsg.postMessageWithFiles);
+
+
+
+
+
+
 //view sent messages
 router.get('/viewSents',jwtHelper.verifyJwtToken,ctrlMsg.viewSentMessage);
 //view recived messages

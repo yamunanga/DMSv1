@@ -9,3 +9,4 @@ require('./user.model');
 require('./document.model.js');
 require('./archivedUsers.model');
 require('./message.model');
+require('./department.model');

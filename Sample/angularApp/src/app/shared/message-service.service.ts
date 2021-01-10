@@ -10,6 +10,8 @@ import { MESSAGE } from './message.model';
 export class MessageServiceService {
   allRecived:MESSAGE[]; //For get all recived
   allSents:MESSAGE[];//For get all sents
+  attachments=[]//for pass attachments to model
+  recivedAttachments=[]//for view recived attachments
   passRBody;//pass recived message body
   passSBody;//pass sent message body
   replyModel={
