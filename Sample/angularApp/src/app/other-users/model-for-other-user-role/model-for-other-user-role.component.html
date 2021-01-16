@@ -6,44 +6,50 @@
       </button>
     </div>
     <div class="modal-body">
-        <div class="form-group">
-          <label for="dateOfBirth"> Select Role </label>
-        </div>
+      <div>
+        <h5 style="text-align: center;">Select Role :</h5>
+      </div>
         <!--for Admin-->
         <form #userRoleForm="ngForm" (ngSubmit)="userRoleForm.valid && onSubmit(userRoleForm)" *ngIf="userService.otherUserRole=='admin'">
-          <p id="radioText">
+          <p id="radioText" class="centertb">
          <!--<input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Admin &nbsp;-->
-         <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Reader &nbsp;
-         <input type="radio" value="author" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Author
+         <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" > Reader &nbsp;&nbsp; OR &nbsp;
+         <input type="radio" value="author" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" > Author
           </p>
           <div *ngIf="userRoleForm.submitted && !role.valid"> 
             <label class="validation-message">Role is required.</label>
            </div>
-          <input type="submit" value="Change">
+           <div class="centertb">
+            <input type="submit" value="Change">
+            </div>
        </form>
        <!--for Reader-->
        <form #userRoleForm="ngForm" (ngSubmit)="userRoleForm.valid && onSubmit(userRoleForm)" *ngIf="userService.otherUserRole=='reader'">
-        <p id="radioText">
+        <p id="radioText" class="centertb">
        <!--<input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Admin &nbsp;-->
-       <input type="radio" value="admin" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Admin &nbsp;
-       <input type="radio" value="author" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Author
+       <input type="radio" value="admin" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" > Admin &nbsp;&nbsp; OR &nbsp;
+       <input type="radio" value="author" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" > Author
         </p>
         <div *ngIf="userRoleForm.submitted && !role.valid"> 
           <label class="validation-message">Role is required.</label>
          </div>
-        <input type="submit" value="Change">
+         <div class="centertb">
+          <input type="submit" value="Change">
+          </div>
      </form>
      <!--for Author-->
      <form #userRoleForm="ngForm" (ngSubmit)="userRoleForm.valid && onSubmit(userRoleForm)" *ngIf="userService.otherUserRole=='author'">
-      <p id="radioText">
+      <p id="radioText" class="centertb">
      <!--<input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Admin &nbsp;-->
-     <input type="radio" value="admin" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Admin &nbsp;
-     <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" >Reader
+     <input type="radio" value="admin" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" > Admin &nbsp;&nbsp; OR &nbsp;
+     <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="userService.userData.role" > Reader
       </p>
       <div *ngIf="userRoleForm.submitted && !role.valid"> 
         <label class="validation-message">Role is required.</label>
        </div>
+       <div class="centertb">
       <input type="submit" value="Change">
+      </div>
    </form>
  
      <!-- Success message -->
@@ -56,6 +62,77 @@
       {{serverErrorMessages}}
     </div>
     </div>
+    <div class="centertb">
+   <h5 id="radioText" style="text-align: center;" >Select Department:</h5>
+    <div style="height:200px;overflow:auto;">
+    <table class="responsive-table highlight centertb" id="radioText" >
+      <tr *ngFor="let dep of departmentService.allDepsForOther">
+       <td><input type="radio" id={{dep.name}}  required #department="ngModel"  name="department"  [(ngModel)]="userService.otherUserDep.name"  value={{dep.name}}>
+       
+      </td>
+       <td>{{dep.name.toUpperCase()}}</td>
+       <td  *ngIf="isSubmitDep==true && !department.valid && userService.otherUserDep.name =='' ">
+          <label class="validation-message">Department is required.</label>
+       </td>
+      </tr>
+    </table>
+   </div>
+   <br>
+   <div *ngIf="userService.otherUserDep.name !='' ">
+   &nbsp; <input type="submit" (click)="changeDep()">
+  
+  </div>
+  <!-- Success message -->
+  <div class="success" *ngIf="showSucessMessageCd">
+    Department Has been Changed !
+  </div>
+
+  <!-- Error message -->
+  <div class="alert" *ngIf="serverErrorMessagesCd">
+   {{serverErrorMessagesCd}}
+  </div>
+  </div>
+  
+  <div class="centertb">
+    <h5 id="radioText" style="text-align: center;" >Select  Desiganation:</h5>
+     <div style="height:200px;overflow:auto;">
+     <table class="responsive-table highlight centertb" id="radioText" >
+       <tr *ngFor="let post of positionService.allPositionsOther">
+        <td><input type="radio" id={{post.name}}  required #position="ngModel"  name="position"  [(ngModel)]="userService.otherUserPost.name"  value={{post.name}}>
+        
+       </td>
+        <td>{{post.name.toUpperCase()}}</td>
+       <td  *ngIf="isSubmitPost==true && !position.valid && userService.otherUserPost.name =='' ">
+           <label class="validation-message">Position is required.</label>
+        </td>
+       </tr>
+     </table>
+    </div>
+    <br>
+    <div *ngIf="userService.otherUserPost.name !='' "><!--*ngIf="userService.otherUserDep.name !='' "-->
+    &nbsp; <input type="submit" (click)="changePost()">
+   
+   </div>
+   <!-- Success message -->
+   <div class="success" *ngIf="showSucessMessageCp">
+     Designation Has been Changed !
+   </div>
+ 
+   <!-- Error message -->
+   <div class="alert" *ngIf="serverErrorMessagesCp">
+    {{serverErrorMessagesCp}}
+ 
+   </div>
+   </div>
+
+
+
+
+
+
+
+
+
    <!--<div class="modal-footer">
       <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
     </div>-->

@@ -28,26 +28,61 @@
           <label *ngIf="password.errors.minlength" class="validation-message">Enter atleast 4 characters.</label>
         </div>
         <!--For department-->
-        <input type="text" #department="ngModel" [(ngModel)]="userService.selectedUser.department" name="department" placeholder="Department"
+       <!-- <input type="text" #department="ngModel" [(ngModel)]="userService.selectedUser.department" name="department" placeholder="Department"
         required  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !department.valid }">
         <div *ngIf="signUpForm.submitted && !department.valid">
           <label class="validation-message">This field is required.</label>
-        </div>
+        </div>-->
+        <br>
+        <br>
+        <h5 id="radioText">Select Department:</h5>
+        <div style="height:200px;overflow:auto;">
+        <table class="responsive-table highlight centertb" id="radioText" >
+          <tr *ngFor="let dep of departmentService.allDeps">
+           <td><input type="radio" id={{dep.name}}  required #department="ngModel"    name="department"  [(ngModel)]="userService.selectedUser.department"  value={{dep.name}}>
+           
+          </td>
+           <td>{{dep.name.toUpperCase()}}</td>
+           <td  *ngIf="signUpForm.submitted && !department.valid">
+              <label class="validation-message">Department is required.</label>
+           </td>
+          </tr>
+        </table>
+       
+      </div>
+       
+      
         <!--For position-->
-        <input type="text" #position="ngModel" [(ngModel)]="userService.selectedUser.position" name="position" placeholder="Position"
+     <!--<input type="text" #position="ngModel" [(ngModel)]="userService.selectedUser.position" name="position" placeholder="Position"
         required  [ngClass]="{'invalid-textbox' :signUpForm.submitted && !position.valid }">
         <div *ngIf="signUpForm.submitted && !position.valid">
           <label class="validation-message">This field is required.</label>
-        </div>
+        </div>-->
+        <br>
+        <h5 id="radioText">Select Designation:</h5>
+        <div style="height:200px;overflow:auto;">
+          <table class="responsive-table highlight centertb" id="radioText" >
+            <tr *ngFor="let post of positionService.allPositions">
+             <td><input type="radio" id={{post.name}}  required #position="ngModel"    name="position"  [(ngModel)]="userService.selectedUser.position"  value={{post.name}}>
+            </td>
+             <td>{{post.name.toUpperCase()}}</td>
+             <td  *ngIf="signUpForm.submitted && !designation.valid">
+                <label class="validation-message">Designation is required.</label>
+             </td>
+            </tr>
+          </table>
+          </div>
+          <br>
         <!--For role -->
         <p id="radioText">
         <input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="userService.selectedUser.role" >Admin &nbsp;
         <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="userService.selectedUser.role" >Reader &nbsp;
         <input type="radio" value="author" name="role" required #role="ngModel" [(ngModel)]="userService.selectedUser.role" >Author
         </p>
-        <div *ngIf="signUpForm.submitted && !role.valid"> 
+        <span *ngIf="signUpForm.submitted && !role.valid"> 
           <label class="validation-message">Role is required.</label>
-         </div>
+        </span>
+        <br>
         <input type="submit" value="Register">
       </form>
       

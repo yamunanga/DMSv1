@@ -26,6 +26,8 @@ const Document = mongoose.model('Document');
 const ctrlUser = require('../controllers/user.controller');
 const ctrlDoc = require('../controllers/document.controller');
 const ctrlMsg =require('../controllers/message.controller');
+const ctrlDep=require('../controllers/department.controller');
+const ctrlPost=require('../controllers/position.controller');
 
 const jwtHelper = require('../config/jwtHelper');
 
@@ -41,6 +43,7 @@ router.get('/userInfo',jwtHelper.verifyJwtToken,ctrlUser.UserInfo);
 //test
 router.get('/findUser',jwtHelper.verifyJwtToken,ctrlUser.findUser);
 router.get('/getUsers',jwtHelper.verifyJwtToken,ctrlUser.getUsers);
+
 
 //register only works for authenticated users 
 router.post('/reguser',jwtHelper.verifyJwtToken,ctrlUser.register);/*, (req, res) => {
@@ -59,6 +62,11 @@ router.put('/deleteUser',jwtHelper.verifyJwtToken,ctrlUser.deleteUser);
 router.put('/updateOtherUserRole',jwtHelper.verifyJwtToken,ctrlUser.updateUserRolefromList);
 //findUserProfile
 router.put('/findUserProfile',jwtHelper.verifyJwtToken,ctrlUser.findUserProfile);
+
+//changeUserDepartment this is for change user department
+router.put('/changeDep',jwtHelper.verifyJwtToken,ctrlUser.changeUserDepartment);
+//this is for change user position
+router.put('/changePosition',ctrlUser.changeUserPosition);
 /*
 //routs for documentSchema
 router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (req, res, next) {
@@ -202,11 +210,6 @@ router.post('/postFile',jwtHelper.verifyJwtToken,ctrlMsg.postMessageWithFile);
 
 router.post('/postFiles',jwtHelper.verifyJwtToken,ctrlMsg.postMessageWithFiles);
 
-
-
-
-
-
 //view sent messages
 router.get('/viewSents',jwtHelper.verifyJwtToken,ctrlMsg.viewSentMessage);
 //view recived messages
@@ -220,6 +223,42 @@ router.put('/deleteSentMessage',jwtHelper.verifyJwtToken,ctrlMsg.deleteSentMessa
 router.put('/deleteReciveMessage',jwtHelper.verifyJwtToken,ctrlMsg.deleteReciveMessage);
 //readReciveMessage
 router.put('/readReciveMessage',jwtHelper.verifyJwtToken,ctrlMsg.readReciveMessage);
+
+
+//Department routes Started----------------------------------------------------------------------------------
+
+//to add department
+router.post('/postDep',jwtHelper.verifyJwtToken,ctrlDep.postDepartment);
+//to get department list
+router.get('/getDep',jwtHelper.verifyJwtToken,ctrlDep.getDepartment);
+//to delete department
+router.delete('/depDel/:id',jwtHelper.verifyJwtToken,ctrlDep.delDepartment);
+//to put user to department
+router.put('/depUser',ctrlDep.addDepartmentUser);
+//To count department users  
+router.get('/getCount/:id',jwtHelper.verifyJwtToken,ctrlDep.countDepUsers);
+//to get departments without current departments
+router.get('/getDepsWithout',jwtHelper.verifyJwtToken,ctrlDep.getDepartmentWithout);
+//to get departments without current department to update other user department
+router.get('/getDepOther/:id',ctrlDep.getDepartmentWithoutOther);
+
+
+//this is for position/designation routes---------------------------
+
+//to add position/designation
+router.post('/postDesignation',ctrlPost.postPosition);
+//to get designation list
+router.get('/getDesignations',ctrlPost.getPosts);
+//to delete designation
+router.delete('/designationDel/:id',ctrlPost.delDesignation);
+
+//To count department users  
+router.get('/getCountDesig/:id',ctrlPost.countDesignations);
+
+//to get position without current position to update other user position
+router.get('/getPositionOther/:id',ctrlPost.getPositionWithoutOther);
+
+
 module.exports = router;
 
 

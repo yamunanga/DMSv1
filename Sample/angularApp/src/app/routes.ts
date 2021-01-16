@@ -1,6 +1,6 @@
 import { RouterModule, Routes } from '@angular/router';
 import { UserComponent } from './user/user.component';
-import { RegisterComponent } from './register/register.component';
+import { RegisterComponent } from './manage-users-main/register/register.component';
 import { SignInComponent } from './user/sign-in/sign-in.component';
 import { UserProfileComponent } from './user-profile/user-profile.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';

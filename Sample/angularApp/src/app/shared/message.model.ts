@@ -1,5 +1,6 @@
 //this is for message
 export class MESSAGE{
+    _id:string;
     from:String;
     fromId:String;
     toId:String;

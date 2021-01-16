@@ -10,12 +10,15 @@
   <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
   <!--<a routerLink="/userprofile">About</a>-->
   <a (click)="profile()">Profile</a>
-  <a (click)="registerUser()">Add User</a>
-  <a (click)="userList()">View Users</a>
-  <a (click)="viewArcUsers()">View Archived Users</a>
-  <a (click)="addDoc()">Add Document</a>
-  <a (click)="viewDoc()">View Documents</a>
+ <!-- <a (click)="registerUser()">Add User</a>-->
+ <!-- <a (click)="userList()">View Users</a>-->
+ <!-- <a (click)="viewArcUsers()">View Archived Users</a>-->
+  <!--<a (click)="addDoc()">Add Document</a>-->
+  <!--<a (click)="viewDoc()">View Documents</a>-->
   <a (click)="viewMessageBox()">Message Box</a>
+  <a (click)="viewOrganization()">Manage Organization</a>
+  <a (click)="viewManageMain()">Manage Users</a>
+  <a (click)="viewDocMain()">Manage Documents</a>
   <a href="#">Contact</a>
 </div>
 <!--This is for reader role-->
@@ -52,6 +55,9 @@
     <app-view-docs  *ngIf="this.tofviewDocs==true"></app-view-docs>
     <app-archived-users  *ngIf="this.tofviewArcUsers==true"></app-archived-users>
     <app-message-box *ngIf="tofviewMessageBox==true"></app-message-box>
+    <app-organization *ngIf="tofviewOrganisation==true"></app-organization>
+    <app-manage-users-main *ngIf="tofviewManageUsersMain==true"></app-manage-users-main>
+    <app-manage-documents-main *ngIf="tofviewMangaDocMain==true"></app-manage-documents-main>
  </div>
    
 </body>

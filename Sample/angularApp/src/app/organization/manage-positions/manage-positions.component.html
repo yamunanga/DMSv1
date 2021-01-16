@@ -1,0 +1,48 @@
+<br>
+<div class="row">
+  <div class="column a">
+    <h4>Add Designation</h4>
+    <div class="container pt-3">
+      <div style="text-align: center">
+        <input type="text" [(ngModel)]="addDesigModel.name"  placeholder="Designation Name"  />&nbsp;<button type="button"  (click)="onAdd()" class="btn btn-outline-info"><i class="fa fa-plus" aria-hidden="true"></i></button>
+      </div>
+    <br>
+    
+   <!-- Success message -->
+   <div class="success" *ngIf="showSucessMessage">
+     Designation Added !
+  </div>
+  
+  <!-- Error message -->
+  <div class="alert" *ngIf="serverErrorMessages">
+    {{serverErrorMessages}}
+  </div>
+  </div>
+ </div>
+  <div class="column a">
+    <h4>View Designations</h4>
+    <p id="demo"></p>
+    <div class="col s7" style="height:400px;overflow:auto;">
+      <table class="responsive-table highlight">
+        <tr *ngFor="let post of positionService.allPositions">
+            <td>{{post.name.toUpperCase()}}</td>
+            <td>{{positionService.getDate(post.createdAt)}}</td>
+            <td><button type="button" (click)="onCount(post._id,post.name)"  class="btn btn-outline-info">Info</button></td><!--{{onCount(dep._id)}}-->
+            <td><button type="button"  (click)="onDel(post._id)" class="btn btn-outline-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+            
+          </tr>
+        </table>
+  </div>
+  <br>
+   <!-- Success message -->
+   <div class="success" *ngIf="showSucessMessageList">
+    Department Removed !
+   </div>
+ 
+  <!-- Error message -->
+  <div class="alert" *ngIf="serverErrorMessagesList">
+    {{serverErrorMessages}}
+  </div>
+   
+  </div>
+</div>

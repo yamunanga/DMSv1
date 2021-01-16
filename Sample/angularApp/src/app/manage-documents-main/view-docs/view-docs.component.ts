@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
-import{DOCUMENTS} from '../shared/document.model';
-import { DocumentService } from '../shared/document.service';
+import{DOCUMENTS} from '../../shared/document.model';
+import { DocumentService } from '../../shared/document.service';
 
 @Component({
   selector: 'app-view-docs',

@@ -1,0 +1,17 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<br>
+<div class="container-sm border">
+    <br>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" (click)="loadDepartment()" >DEPARTMENT</button>
+        <button type="button" class="btn btn-primary" (click)="loadDesignation()">DESIGNATION</button>
+      </div>
+    <br>
+    <div>
+        <app-manage-departments *ngIf="this.tOfVd==true"></app-manage-departments>
+        <app-manage-positions *ngIf="this.tOfVp==true" ></app-manage-positions>
+    </div>
+ 
+</div>

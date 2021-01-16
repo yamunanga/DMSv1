@@ -3,8 +3,8 @@ import { Component,ViewChild, ElementRef, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { ToastrService } from 'ngx-toastr';
 import { environment } from 'src/environments/environment';
-import { DocumentService } from '../shared/document.service';
-import { UserService } from '../shared/user.service';
+import { DocumentService } from '../../shared/document.service';
+import { UserService } from '../../shared/user.service';
 
 @Component({
   selector: 'app-manage-docs',

@@ -1,7 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { DEPARTMENTS } from '../../shared/department.model';
+import { DepartmentService } from '../../shared/department.service';
+import { POSITIONS } from '../../shared/position.model';
+import { PositionService } from '../../shared/position.service';
 
-import {UserService } from '../shared/user.service'
+import {UserService } from '../../shared/user.service'
 
 
 @Component({
@@ -14,11 +18,13 @@ export class RegisterComponent implements OnInit {
   emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   showSucessMessage: boolean;
   serverErrorMessages: string;
-
   
-  constructor(public userService: UserService) { }
+  
+  constructor(public userService: UserService,public departmentService:DepartmentService,public positionService:PositionService) { }
 
   ngOnInit(): void {
+    this.refreshDepList();
+    this.refreshPositionList();
   }
   onSubmit(form: NgForm) {
     this.userService.postUser(form.value).subscribe(
@@ -54,6 +60,27 @@ export class RegisterComponent implements OnInit {
     form.resetForm();
     this.serverErrorMessages = '';
   }
+
+
+//To get departments
+refreshDepList() {
+  this.departmentService.getDepList().subscribe((res) => {
+    this.departmentService.allDeps= res as DEPARTMENTS[];
+  });
+}
+
+
+//to get position
+refreshPositionList(){
+  this.positionService.getDesigList().subscribe((res) => {
+    this.positionService.allPositions= res as POSITIONS[];
+  });
+}
+
+
+
+
+
 
 
 }

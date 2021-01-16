@@ -62,5 +62,9 @@
 
     </tbody>
   </table>
+  <form *ngFor="let dep of departmentService.allDeps">
+    <input type="radio" id={{dep.name}} name="department"  [(ngModel)]="department"  value={{dep.name}}> {{dep.name.toUpperCase()}}<br>
+  </form> 
+  {{department}}
 </body>
 </html>

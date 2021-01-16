@@ -2,7 +2,11 @@
 <div class="centertb">
   <div style="text-align: center">
     <input type="text" [(ngModel)]="sName" (input)="search()" placeholder="Search here" (keydown)="onKeydown($event)" />&nbsp;
-    <button type="button" class="btn btn-outline-info"  (click)="refresh()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+  </div>
+  <br>
+  <div  class="a">
+    <button type="button" class="btn btn-outline-info"  (click)="refresh()"><i class="fa fa-refresh" aria-hidden="true"></i> Refresh</button>&nbsp;
+    <button type="button" class="btn btn-outline-danger" (click)="delAll()"><i class="fa fa-trash" aria-hidden="true"></i> Delete All</button>
   </div>
 </div>
 <div class="col s7">

@@ -1,0 +1,19 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<br>
+<div class="container-fluid border">
+    <br>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" (click)="addUserOpen()" >ADD</button>
+        <button type="button" class="btn btn-primary" (click)="viewUsersOpen()">VIEW</button>
+        <button type="button" class="btn btn-primary" (click)="viewArcUsersOpen()">ARCHIVED</button>
+      </div>
+    <br>
+    <div><!--*ngIf="this.tOfWMsg==true"-->
+        <app-register *ngIf="this.tOfadd==true"></app-register>
+        <app-other-users *ngIf="this.tOfVusers==true"></app-other-users>
+        <app-archived-users *ngIf="this.tOfVarcUsers==true"></app-archived-users>
+    </div>
+ 
+</div>

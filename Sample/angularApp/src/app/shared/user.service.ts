@@ -6,7 +6,6 @@ import { environment } from '../../environments/environment';
 import * as moment from 'moment';
 
 import { User } from './user.model';
-import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { Email} from './email.model';
 import { RESETPASS } from './resetPassword.model';
 import { OTHERUSERS } from './otherUsers.model';
@@ -44,7 +43,7 @@ export class UserService {
      _id:'',
      role:''
    }
-
+   
    allUsers:OTHERUSERS[]; //For get the users
    allArchivedUsers:ARCHIVEDUSERS[];//For get the archived users
    userDetails;
@@ -53,6 +52,16 @@ export class UserService {
    otherUserEmail={
      email:''
    };
+   //to update other user department
+   otherUserDep={
+     _id:'',
+     name:''
+   }
+   //to update other user position
+   otherUserPost={
+     _id:'',
+     name:''
+   }
    userInfo;
    otherUserRole;//this for get current user role from userList
    //otherUserId;//this is for get userId from userList
@@ -126,7 +135,18 @@ export class UserService {
  viewOtherUserProfile(data){
   return this.http.put(environment.apiBaseUrl+'/findUserProfile',data);
 } 
-  //------------------THIS IS FOR ARCHIVED USERs---------------------------
+
+//To change other user department
+changeOtherUserDepartment(data){
+  return this.http.put(environment.apiBaseUrl+'/changeDep',data);
+} 
+//To change other user position/designation
+
+changeOtherUserPosition(data){
+  return this.http.put(environment.apiBaseUrl+'/changePosition',data);
+} 
+
+//------------------THIS IS FOR ARCHIVED USERs---------------------------
 
 //To get all archived users 
 getAllArchivedUsers() {

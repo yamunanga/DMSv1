@@ -10,7 +10,7 @@ const mg = mailgun({apiKey:process.env.MAILGUN_APIKEY, domain: DOMAIN});
 //user created properties
 const User = mongoose.model('User');
 const ArchivedUser = mongoose.model('archivedUser');
-
+const Dep=mongoose.model('Department');
 
 
 
@@ -89,13 +89,14 @@ module.exports.activateAccount = (req, res, next) =>{
             user.department=department;
             user.position=position;
             user.save((err, doc) => {
-            if (!err)
+            if (!err){
                 res.send(doc);
-            else{
-                if (err.code == 11000)
-                    res.status(422).send(['Email adrress Already Registerd !']);
-                else
-                    return next(err);
+            } 
+       else{
+           if (err.code == 11000)
+                res.status(422).send(['Email adrress Already Registerd !']);
+            else
+                 return next(err);
             }
 
             });
@@ -639,3 +640,76 @@ var user = new User();
     
              })
 */
+
+//to change user department --notwork--
+
+module.exports.changeUserDepartmentn=(req,res,next)=>{
+    var user_id =req.body._id; 
+    User.findByIdAndUpdate(user_id, {department:req.body.name}, 
+    function (err, docs) { 
+        if (err){ 
+            return res.status(404).send(['Cannot find user !']);
+        } 
+        else{ 
+           return res.status(200).send("Department changed !");
+        }
+    }); 
+}
+
+//to change user designation/position--notwork--
+
+module.exports.changeUserPositionn=(req,res,next)=>{
+    var user_id =req.body._id; 
+    User.findByIdAndUpdate(user_id, {position:req.body.name }, 
+    function (err, docs) { 
+        if (err){ 
+            return res.send(err);
+        } 
+        else{ 
+           return res.send("Position changed !");
+        }
+    }); 
+}
+
+//to change other user department new --working--
+
+exports.changeUserDepartment=(req,res)=>{
+    const{name}=req.body;
+    User.findOne({ _id: req.body._id },(err,user)=>{
+        if(err || !user){
+            return res.status(404).send(['User With this req Id Does Not Exist !']);
+       }else{
+        user.updateOne({department:name},function(err,doc){
+            if(err){
+              return res.status(422).send(['Eror from backend !']);
+            }else{
+              return res.status(200).send(['User department has been changed !']);
+            }
+
+         })
+
+       }
+    })
+
+}
+
+//to change other user position new 
+exports.changeUserPosition=(req,res)=>{
+    const{name}=req.body;
+    User.findOne({ _id: req.body._id },(err,user)=>{
+        if(err || !user){
+            return res.status(404).send(['User With this req Id Does Not Exist !']);
+       }else{
+        user.updateOne({position:name},function(err,doc){
+            if(err){
+              return res.status(422).send(['Eror from backend !']);
+            }else{
+              return res.status(200).send(['User position has been changed !']);
+            }
+
+         })
+
+       }
+    })
+
+}

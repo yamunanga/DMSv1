@@ -14,7 +14,7 @@ import { environment } from 'src/environments/environment';
   styleUrls: ['./write-message.component.css']
 })
 export class WriteMessageComponent implements OnInit {
-  sName;//Ng model for search name
+  sNameM;//Ng model for search name
   mailesArr=[]; //this is for send messages
   allMailes=[];//this is for all mails
   multipleFiles = []; //This is for multiple attachments
@@ -35,7 +35,7 @@ export class WriteMessageComponent implements OnInit {
   constructor(public userService: UserService,private http: HttpClient,private toastr: ToastrService,public messageService: MessageServiceService) { }
 
   ngOnInit(): void {
-    this.refreshUsersList();
+   this.refreshUsersList();
     this.reset();
   }
 
@@ -46,41 +46,68 @@ export class WriteMessageComponent implements OnInit {
     });
   }
 
-
-  search(){
-    if(this.sName !=""){
+//not used
+  searchn(){
+    if(this.sNameM !=""){
       this.userService.allUsers=this.userService.allUsers.filter(res=>{
          //var nowCreate= this.getDate(res.createdAt);
          var nowActive=this.userService.getDate(res.lastActive);
-      if(res.fullName.toLocaleLowerCase().match(this.sName.toLocaleLowerCase())){
-        return res.fullName.toLocaleLowerCase().match(this.sName.toLocaleLowerCase());
-      }else if(res.role.toLocaleLowerCase().match(this.sName.toLocaleLowerCase())){
-        return res.role.toLocaleLowerCase().match(this.sName.toLocaleLowerCase());
-      }else if(res.status.toLocaleLowerCase().match(this.sName.toLocaleLowerCase())){
-        return res.status.toLocaleLowerCase().match(this.sName.toLocaleLowerCase());
-      }else if(res.email.toLocaleLowerCase().match(this.sName.toLocaleLowerCase())){
-        return res.email.toLocaleLowerCase().match(this.sName.toLocaleLowerCase());
+      if(res.fullName.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase())){
+        return res.fullName.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if(res.role.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase())){
+        return res.role.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if(res.status.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase())){
+        return res.status.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if(res.email.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase())){
+        return res.email.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
       }
       /*else if(nowCreate.toString().toLocaleLowerCase().match(this.sName.toLocaleLowerCase())){
         return nowCreate.toString().toLocaleLowerCase().match(this.sName.toLocaleLowerCase());
        
       }*/
-      else if(nowActive.toLocaleLowerCase().match(this.sName.toLocaleLowerCase())){
-        return nowActive.toLocaleLowerCase().match(this.sName.toLocaleLowerCase());
-      } else if(res.department.toLocaleLowerCase().match(this.sName.toLocaleLowerCase())){
-        return res.department.toLocaleLowerCase().match(this.sName.toLocaleLowerCase());
-      } else if(res.position.toLocaleLowerCase().match(this.sName.toLocaleLowerCase())){
-        return res.position.toLocaleLowerCase().match(this.sName.toLocaleLowerCase());
+      else if(nowActive.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase())){
+        return nowActive.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      } else if(res.department.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase())){
+        return res.department.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      } else if(res.position.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase())){
+        return res.position.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
       }
     })
-    }else if(this.sName==""){
-      this.ngOnInit();
+    }else if(this.sNameM==""){
+      //this.ngOnInit();
     }
   }
 
+//used--avoiding null values--
+search(){
+  if(this.sNameM !=""){
+    this.userService.allUsers=this.userService.allUsers.filter(res=>{
+      //var nowCreate= this.getDate(res.createdAt);
+      var nowActive=this.userService.getDate(res.lastActive);
+      if((res.fullName != null)&&(res.fullName.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.fullName.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.role != null)&&(res.role.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.role.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.status != null)&&(res.status.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.status.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.email != null)&&(res.email.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.email.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((nowActive != null)&&(nowActive.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return nowActive.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.department != null)&&(res.department.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.department.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.position != null)&&(res.position.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.position.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }
+ })
+ 
 
+}else if(this.sNameM==""){
+    this.ngOnInit();
+  }
+}
 
- //to get profile data from backend 
+//to get profile data from backend 
  getOtherUserdetailes(email){
   this.userService.otherUserEmail.email=email;
   this.userService.viewOtherUserProfile(this.userService.otherUserEmail).subscribe(
@@ -251,11 +278,11 @@ resetSentModel(){
 //to refresh users
 refresh(){
   this.refreshUsersList();
-  this.sName='';
+  this.sNameM='';
 }
 //to view online users
 status(){
-   this.sName='online';
+   this.sNameM='online';
    this.search();
 }
 

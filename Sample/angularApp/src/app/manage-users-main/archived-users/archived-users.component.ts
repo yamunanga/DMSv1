@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import * as moment from 'moment';
 import { ToastrService } from 'ngx-toastr';
 
-import { ARCHIVEDUSERS } from '../shared/archivedUsers.model';
-import { UserService } from '../shared/user.service';
+import { ARCHIVEDUSERS } from '../../shared/archivedUsers.model';
+import { UserService } from '../../shared/user.service';
 
 @Component({
   selector: 'app-archived-users',

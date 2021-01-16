@@ -1,0 +1,18 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+<br>
+<div class="container-fluid border">
+    <br>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" (click)="viewUpload()" >UPLOAD</button>
+        <button type="button" class="btn btn-primary" (click)="viewDocs()">VIEW</button>
+      </div>
+    <br>
+    <div><!--*ngIf="this.tOfWMsg==true"-->
+        <app-manage-docs *ngIf="this.tOfuploadDocs==true"></app-manage-docs>
+        <app-view-docs *ngIf="this.tOfViewDocs==true"></app-view-docs>
+    </div>
+ 
+</div>
+

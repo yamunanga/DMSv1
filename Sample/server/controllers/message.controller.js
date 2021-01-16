@@ -61,7 +61,7 @@ module.exports.postMessage=(req,res,next)=>{
 }
 
 
-//test
+//test--not used--
 
 module.exports.postMessageWithFile=(req,res,next)=>{
     var datetime = new Date();

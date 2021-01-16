@@ -119,6 +119,8 @@ onSend(){
   }).subscribe(
     (res) => {
       this.showSucessMessage = true;
+      this.ngOnInit();
+      this.resetReplyModle();
       setTimeout(() => this.showSucessMessage = false, 4000);
       
     },

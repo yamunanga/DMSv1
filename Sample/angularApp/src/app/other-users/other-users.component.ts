@@ -6,6 +6,9 @@ import { OTHERUSERS } from '../shared/otherUsers.model';
 import { UserService } from '../shared/user.service';
 
 import * as moment from 'moment';
+import { DepartmentService } from '../shared/department.service';
+import { DEPARTMENTS } from '../shared/department.model';
+import { PositionService } from '../shared/position.service';
 
 @Component({
   selector: 'app-other-users',
@@ -25,7 +28,7 @@ export class OtherUsersComponent implements OnInit {
     _id:''
   }
 
-  constructor(public userService: UserService,private toastr: ToastrService) { }
+  constructor(public userService: UserService,private toastr: ToastrService,public departmentService:DepartmentService,public positionService:PositionService) { }
 
   ngOnInit(): void {
     //this.currentTime=moment().format('MMMM Do YYYY, h:mm:ss a'); //to display now date and time
@@ -129,6 +132,11 @@ export class OtherUsersComponent implements OnInit {
 
  getUserId(id){
    this.userService.userData._id=id;
+  
+ }
+ //This is for get other user id
+ getOtherId(id){
+  this.departmentService.otherUserId._id=id;
  }
  //this is for get selected user role from user list 
  getOtherUserRole(role){
@@ -196,10 +204,12 @@ search(){
   }
 }*/
 
-
-
-
-
-
+//to get dep list without selected user department
+/*refreshDepsList(_id) {
+  this.userService.otherUserDep._id=_id;
+  this.departmentService.toUpdateOtherDepartmentList(_id).subscribe((res) => {
+    this.departmentService.allDepsForOther = res as DEPARTMENTS[];
+  });
+}*/
 
 }

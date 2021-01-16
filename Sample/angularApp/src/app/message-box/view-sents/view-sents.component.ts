@@ -104,5 +104,48 @@ passAtach(arr){
 
 
 
+//To delete all sents
+delAll(){
+  //this.isSelectAll=true;
+  var len=  this.messageService.allSents.length;
+  //console.log(len);
+  if (confirm('Are you sure to Delete Message ?') == true) {
+  for(var i=0;i<len;i++){
+   this.msg._id= this.messageService.allSents[i]._id;
+   this.messageService.delSent(this.msg).subscribe((res) => {
+    }, err => {
+      if (err.status === 404) {
+        this.toastr.error('Message Not Found!');
+      }
+      else if (err.status === 422) {
+        this.toastr.error('Can Not Delete !');
+      }
+      else
+        this.toastr.error('Something went wrong!');
+      
+    },
+      
+    
+    );
+  }
+  this.toastr.success('Messages Deleted !');
+  this.refreshSentsList();
+ }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 }

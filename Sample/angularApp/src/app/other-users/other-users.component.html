@@ -1,16 +1,19 @@
 <br>
-<div class="container pt-3">
-<div style="text-align: center">
-<input type="text" [(ngModel)]="sName" (input)="search()" placeholder="Search here" /> <!-- (input)="search()"-->
+<div>
+<div style="text-align: center" class="centertb">
+<input type="text" [(ngModel)]="sName" (input)="search()" placeholder="Search here" />
 </div>
+{{this.departmentService.otherUserId._id}}
 <br>
-<div class="col s7">
+<div class="col s7" style="height:1000px;overflow:auto;">
     <table class="responsive-table highlight">
         <thead>
           <tr>
             <th>Name</th>
             <th>Email</th>
             <th>Role</th>
+            <th>Department</th>
+            <th>Designation</th>
             <th>Created Date</th>
             <th>Last Active</th>
             <th>Status</th>
@@ -21,13 +24,15 @@
           <td>{{user.fullName}}</td>
           <td>{{user.email}}</td>
           <td>{{user.role}}</td>
+          <td>{{user.department}}</td>
+          <td>{{user.position}}</td>
           <td>{{getDate(user.createdAt)}}</td>
           <td>{{getDate(user.lastActive)}}</td>
           <td>{{user.status}}</td>
           
          <td>
               <!--*ngIf="user.role=='admin'"-->
-              <a   (click)="getUserId(user._id)" (click)="getOtherUserRole(user.role)" >
+              <a (click)="getUserId(user._id)" (click)="getOtherUserRole(user.role)" (click)="departmentService.refreshDepsList(user._id)" (click)="positionService.refreshPostList(user._id)">
                 <app-model-for-other-user-role></app-model-for-other-user-role>
               </a>
               <a class="btn btn-outline-danger" (click)="onDelete(user._id)">

@@ -8,6 +8,8 @@ import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { NgbdModalBasic } from './modal-basic/modal-basic.component';
 import { ToastrService } from 'ngx-toastr';
 import { MessageServiceService } from '../shared/message-service.service';
+import { DepartmentService } from '../shared/department.service';
+import { DEPARTMENTS } from '../shared/department.model';
 
 @Component({
   selector: 'app-user-profile',
@@ -21,13 +23,15 @@ export class UserProfileComponent implements OnInit {
   delModel={
     _id:''
   }
+  department;//ng model for test redio
   //userDetails;
-  constructor(public userService: UserService, private router: Router,private toastr: ToastrService,public messageService: MessageServiceService) { }
+  constructor(public userService: UserService, private router: Router,private toastr: ToastrService,public messageService: MessageServiceService,public departmentService:DepartmentService) { }
   showSucessMessage: boolean;
   serverErrorMessages: string;
   message=true;
   ngOnInit() {
    this.getUserdetailes();
+   this.refreshDepList();
   };
 
   onLogout(){
@@ -88,8 +92,15 @@ export class UserProfileComponent implements OnInit {
   }
  }
 
+//for testing purposes
 
-
+//departmentService
+//To get departments
+refreshDepList() {
+  this.departmentService.getDepList().subscribe((res) => {
+    this.departmentService.allDeps= res as DEPARTMENTS[];
+  });
+}
   
 }
 
