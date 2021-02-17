@@ -1,0 +1,48 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Profile update</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <div class="a">
+          <h5 id="radioText">Select Department:</h5>
+          <div style="height:200px;overflow:auto;">
+          <table class="responsive-table highlight centertb" id="radioText" >
+            <tr *ngFor="let dep of departmentService.allDepWithout">
+             <td><input type="radio" id={{dep.name}}  required #department="ngModel"    name="department"  [(ngModel)]="dataModel.name"  value={{dep.name}}>
+             
+            </td>
+             <td>{{dep.name.toUpperCase()}}</td>
+            </tr>
+          </table>
+        </div>
+        </div>
+        <div class="a">
+        <br>
+        <div *ngIf="dataModel.name !='' ">
+          <button type="button" (click)="onSend()" class="btn btn-outline-success">Update</button>
+        </div>
+        <br>
+      </div>
+     <!-- Success message -->
+     <div class="success" *ngIf="showSucessMessage">
+        Your Department Has been Changed !
+    </div>
+    
+    <!-- Error message -->
+    <div class="alert" *ngIf="serverErrorMessages">
+      {{serverErrorMessages}}
+    </div>
+    </div>
+   <!--<div class="modal-footer">
+      <button type="button" class="btn btn-outline-dark" (click)="modal.close('Save click')">Save</button>
+    </div>-->
+  </ng-template>
+  <div *ngIf="this.userService.userDetails.role =='admin' ">
+  <button class="btn btn-outline-info" (click)="open(content)">Edit</button>
+  </div>
+  <!--<hr>-->
+  
+  <!--<pre>{{ closeResult }}</pre>-->

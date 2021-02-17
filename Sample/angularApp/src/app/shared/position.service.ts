@@ -14,6 +14,7 @@ import { UserService } from './user.service';
 export class PositionService {
   allPositions:POSITIONS[]; //For get the list
   allPositionsOther:POSITIONS[];//for get update other user position
+  allPositionWithout:POSITIONS[];//for get designation list without current user designation
   count;//for get the count of users in each designation
  
   constructor(private http: HttpClient,public userService: UserService) { }
@@ -29,7 +30,10 @@ postDesignation(degName){
 getDesigList() {
   return this.http.get(environment.apiBaseUrl + '/getDesignations');
 }
-
+//to get designation list without current user designation
+getDesigListWithout() {
+  return this.http.get(environment.apiBaseUrl + '/getPositionWithout');
+}
 //to delete designation
 deleteDesignation(_id: string) {
   return this.http.delete(environment.apiBaseUrl + `/designationDel/${_id}`);

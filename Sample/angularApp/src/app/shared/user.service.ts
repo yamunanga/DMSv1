@@ -140,10 +140,20 @@ export class UserService {
 changeOtherUserDepartment(data){
   return this.http.put(environment.apiBaseUrl+'/changeDep',data);
 } 
+
+//to change current user department
+changeUserDepartment(data){
+  return this.http.put(environment.apiBaseUrl+'/changeDepCurrent',data);
+} 
 //To change other user position/designation
 
 changeOtherUserPosition(data){
   return this.http.put(environment.apiBaseUrl+'/changePosition',data);
+} 
+
+//To change current user position
+changeUserPosition(data){
+  return this.http.put(environment.apiBaseUrl+'/changePositionCurrent',data);
 } 
 
 //------------------THIS IS FOR ARCHIVED USERs---------------------------
@@ -177,7 +187,7 @@ restoreArchivedUser(data){
   }
   //Custom
   getRole(){
-    return localStorage.getItem('user');
+    return localStorage.getItem('userRole');
   }
 
   deleteToken() {

@@ -6,9 +6,16 @@ var documentSchema = new mongoose.Schema({
         //required: 'name can\'t be empty'
     },
     type:{type:String,default:''},
-    file: { type: String, required:true },
+    file:{
+        type:String,
+       // default:[],
+        required:true
+    },
+    subCategory:{type:Array,default:null},
+    catPath:{type:String,required:true},
     size:{type:String,default:''},
     category:{type:String,default:''},
+    approvedBy:{type:String,default:null},
     department:{type:String,default:''},
     createdBy:{type:String,default:''},
     tags:{type:String,default:''}

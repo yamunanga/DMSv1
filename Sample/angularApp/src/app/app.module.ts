@@ -51,6 +51,12 @@ import { AuthGuard } from './auth/auth.guard';
 import { AuthInterceptor } from './auth/auth.interceptor';
 import { HashLocationStrategy, LocationStrategy } from '@angular/common';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { UploadDocComponent } from './manage-documents-main/upload-doc/upload-doc.component';
+import { CategoryAndSubComponent } from './manage-documents-main/category-and-sub/category-and-sub.component';
+import { ModelChangeDepComponent } from './user-profile/model-change-dep/model-change-dep.component';
+import { ModelChangePostComponent } from './user-profile/model-change-post/model-change-post.component';
+import { SubCatOnlyComponent } from './manage-documents-main/sub-cat-only/sub-cat-only.component';
+import { ModelAssaignDocComponent } from './manage-documents-main/upload-doc/model-assaign-doc/model-assaign-doc.component';
 
 
 
@@ -93,6 +99,12 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     ManagePositionsComponent,
     ManageUsersMainComponent,
     ManageDocumentsMainComponent,
+    UploadDocComponent,
+    CategoryAndSubComponent,
+    ModelChangeDepComponent,
+    ModelChangePostComponent,
+    SubCatOnlyComponent,
+    ModelAssaignDocComponent,
   
    
   ],

@@ -12,7 +12,7 @@ import * as moment from 'moment';
  // encapsulation: ViewEncapsulation.None //for the block global styles preventing home component
 })
 export class HomeComponent implements OnInit {
-  tOfP=false; //for user profile component to load 
+  tOfP=true; //for user profile component to load 
   tOfR=false;//for register component to load
   toflist=false;//for the userList component to load 
   tofdocs=false;//for the document upload component to load
@@ -28,9 +28,12 @@ export class HomeComponent implements OnInit {
   }
   showSucessMessage: boolean;
   serverErrorMessages: string;
+  role:string;//data come from local storage
 
   ngOnInit(): void {
-    this.getUserdetailes();
+    //this.getUserdetailes();
+    //this.userService.getUserdetailes();
+    this.getRole();
     
   }
   openNav() {
@@ -190,6 +193,18 @@ toPutuserStatus() {
     },
   );
 }
+
+
+//get user role
+getRole(){
+  this.role=this.userService.getRole()
+}
+
+
+
+
+
+
 
 
 }

@@ -1,0 +1,65 @@
+<br>
+    <div class="a">
+      <h5>Select File Upload Path </h5>
+      <h6>{{catService.uploadPath}}</h6> 
+      <button type="button" class="btn btn-secondary"  (click)="choosePath()">
+        Choose 
+     </button>
+      <br>
+      <br>
+      <h5>Select Files:</h5>
+      <div>
+        <input type="file"   #takeInput name="files" multiple (change)="selectMultipleFiles($event)" /> 
+      </div>
+      <div *ngIf="catService.uploadPath !=''  && isClicked ==true ">
+        <button type="button" (click)="onSend()" class="btn btn-outline-success">Send</button>
+      </div>
+      <br>
+      <div class='centertb' *ngIf="this.passModel._id !='' ">
+        <input type="text" [(ngModel)]="this.passModel.name"  placeholder="Enter New File Name"  />&nbsp;
+        <button type="button"  (click)="renameTemp()" class="btn btn-outline-info"  *ngIf="this.passModel.name !='' "><i class="fa fa-plus" aria-hidden="true"></i></button>
+      </div>
+      <br>
+      <div class="centertb" style="height:500px;overflow:auto;">
+        <div class="r" *ngIf=" this.countTemp !=0" >
+          <button type="button" class="btn btn-outline-primary" (click)="onPost()"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+           &nbsp;
+          <button type="button"  class="btn btn-outline-danger" (click)="deleteAllTemp()"><i class="fa fa-trash" aria-hidden="true"></i></button>
+        </div>
+        <!-- Success message -->
+       <div class="success" *ngIf="showSucessMessage2">
+        Uploaded !
+       </div>
+       <div class="alert" *ngIf="serverErrorMessages2">
+        {{serverErrorMessages2}}
+       </div>
+        <!-- Success message -->
+        <div class="success" *ngIf="showSucessMessage3">
+          All Deleted !
+         </div>
+         <div class="alert" *ngIf="serverErrorMessages3">
+          {{serverErrorMessages3}}
+         </div>
+        <br>
+        <table class="responsive-table highlight">
+          <tr *ngFor="let file of tempDocService.allDocsById">
+              <td>{{file.name.toUpperCase()}}</td>
+              <td>{{file.subCategory}}</td>
+              <td>{{tempDocService.getDate(file.createdAt)}}</td>
+              <td>
+                <button type="button" class="btn btn-danger" (click)="onDel(file._id)">Delete</button><br>
+                <button type="button" class="btn btn-success"(click)="getRenameId(file._id)">Rename</button><br>
+                <app-model-assaign-doc (click)="tempDocService.getCountApprovement(file._id)" (click)="getCheckListData(file._id)" (click)="toGetNeedApproveArray(file._id)"></app-model-assaign-doc>
+              </td>
+          </tr>
+      </table>
+     </div>
+       <!-- Success message -->
+      <!-- <div class="success" *ngIf="showSucessMessage">
+        Uploaded !
+       </div>
+    
+      <div class="alert" *ngIf="serverErrorMessages">
+        {{serverErrorMessages}}
+      </div>-->
+  </div>

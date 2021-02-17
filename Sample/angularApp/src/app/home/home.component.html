@@ -6,7 +6,7 @@
 </head>
 <body>
 <!--This is for Admin role-->
-<div id="mySidenav" class="sidenav" *ngIf="this.userService.userDetails.role=='admin'">
+<div id="mySidenav" class="sidenav" *ngIf="role=='admin'">
   <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
   <!--<a routerLink="/userprofile">About</a>-->
   <a (click)="profile()">Profile</a>
@@ -22,7 +22,7 @@
   <a href="#">Contact</a>
 </div>
 <!--This is for reader role-->
-<div id="mySidenav" class="sidenav" *ngIf="this.userService.userDetails.role=='reader'">
+<div id="mySidenav" class="sidenav" *ngIf="role=='reader'">
   <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
   <a (click)="profile()">Profile</a>
   <a (click)="viewMessageBox()">Message Box</a>
@@ -31,7 +31,7 @@
   <a href="#">Contact</a>
 </div>
 <!--This is for author role-->
-<div id="mySidenav" class="sidenav" *ngIf="this.userService.userDetails.role=='author'">
+<div id="mySidenav" class="sidenav" *ngIf="role=='author'">
   <a href="javascript:void(0)" class="closebtn" (click)="closeNav()">&times;</a>
   <a (click)="profile()">Profile</a>
   <!--<a (click)="registerUser()">Add User</a>-->

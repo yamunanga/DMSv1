@@ -1,0 +1,33 @@
+module.exports.authenticate = (req, res, next) => {
+    // call for passport authentication
+    passport.authenticate('local', (err, user, info) => {       
+        // error from passport middleware
+        if (err) return res.status(400).json(err);
+        // registered user
+        else if (user) return  res.status(200).json({ "token": user.generateJwt(),user : _.pick(user,['role'])}); //to get user role
+            
+        // unknown user or wrong password
+        else return res.status(404).json(info);
+    }) (req, res);
+}
+
+
+passport.use(
+    new localStrategy({ usernameField: 'email' }, // we use email as username
+        (username, password, done) => {
+            User.findOne({ email: username },
+                (err, user) => {
+                    if (err)
+                        return done(err);
+                    // unknown user
+                    else if (!user)
+                        return done(null, false, { message: 'Email is not registered' });
+                    // wrong password
+                    else if (!user.verifyPassword(password))
+                        return done(null, false, { message: 'Wrong password.' });
+                    // authentication succeeded
+                    else
+                        return done(null, user);
+                });
+        })
+);

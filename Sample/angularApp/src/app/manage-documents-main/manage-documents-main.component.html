@@ -5,13 +5,20 @@
 <div class="container-fluid border">
     <br>
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" (click)="viewUpload()" >UPLOAD</button>
-        <button type="button" class="btn btn-primary" (click)="viewDocs()">VIEW</button>
+        <button type="button" class="btn btn-primary" (click)="catService.openUpload()" >UPLOAD</button>
+        <button type="button" class="btn btn-primary" (click)="catService.viewUpload()" >UPLOAD 1</button>
+        <button type="button" class="btn btn-primary" (click)="catService.viewDocs()">VIEW</button>
+        <button type="button" class="btn btn-primary" (click)="catService.openManageCategory()">CATEGORY</button>
+        <button type="button" class="btn btn-primary" (click)="catService.openSubONly()">SUB-CATEGORY</button>
       </div>
     <br>
     <div><!--*ngIf="this.tOfWMsg==true"-->
-        <app-manage-docs *ngIf="this.tOfuploadDocs==true"></app-manage-docs>
-        <app-view-docs *ngIf="this.tOfViewDocs==true"></app-view-docs>
+        <app-upload-doc *ngIf="this.catService.tOfViewUpload==true"></app-upload-doc>
+        <app-manage-docs *ngIf="this.catService.tOfuploadDocs==true"></app-manage-docs>
+        <app-view-docs *ngIf="this.catService.tOfViewDocs==true"></app-view-docs>
+        <app-category-and-sub *ngIf="this.catService.tOfViewCategoryAndSub==true"></app-category-and-sub>
+        <app-sub-cat-only *ngIf="this.catService.tOfViewSubOnly==true"></app-sub-cat-only>
+        
     </div>
  
 </div>

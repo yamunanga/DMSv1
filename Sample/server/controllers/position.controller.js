@@ -117,3 +117,27 @@ module.exports.getPositionWithoutOther = (req, res, next) =>{
         }
     );
 }
+
+//to get position list for current user to update him/her position/designation
+
+module.exports.getPositionWithout = (req, res, next) =>{
+    User.findOne({_id:req._id},
+        (err, user) => {
+            if (!user){
+                return res.status(404).json({ status: false, message: 'User record not found.' });
+            }
+            else{
+                Position.find( {name:{$ne:user.position}},
+                    (err, deps) => {
+                        if (!deps)
+                            return res.status(404).send(['Eror retriving data !']);
+                        else
+                            return res.send(deps);
+                            //return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role']) });//im add role
+                    }
+                );
+            }
+                
+        }
+    );
+}

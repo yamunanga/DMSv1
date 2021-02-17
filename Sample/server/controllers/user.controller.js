@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken');
 const e = require('express');
 //Mailgun properties
 const mailgun = require("mailgun-js");
+const { sample } = require('lodash');
 const DOMAIN = 'sandboxfada22a1ab444cb8bc54f94ae8302c00.mailgun.org';
 const mg = mailgun({apiKey:process.env.MAILGUN_APIKEY, domain: DOMAIN});
 //user created properties
@@ -164,6 +165,7 @@ module.exports.authenticate = (req, res, next) => {
     }) (req, res);
 }*/
 //original
+/*
 module.exports.authenticate = (req, res, next) => {
     // call for passport authentication
     passport.authenticate('local', (err, user, info) => {       
@@ -177,13 +179,67 @@ module.exports.authenticate = (req, res, next) => {
     }) (req, res);
 }
 
+*/
+
+//new working authentication
+module.exports.authenticate = (req, res, next) => {
+    User.findOne({role:'admin'},
+        (err, auser) => {
+            if (!auser){
+                var user = new User();
+                user.fullName ='sample';
+                user.email ='sample@dms.com';
+                user.password ='12345';
+                user.role='admin'; //for get role
+                user.department='sample';
+                user.position='sample';
+                user.save((err, doc) => {
+                if (!err){
+                    passport.authenticate('local', (err, user, info) => {       
+                        // error from passport middleware
+                        if (err) return res.status(400).json(err);
+                        // registered user
+                        else if (user) return  res.status(200).json({ "token": user.generateJwt(),user : _.pick(user,['role'])}); //to get user role
+                            
+                        // unknown user or wrong password
+                        else return res.status(404).json(info);
+                    }) (req, res);
+                } 
+              else{
+                if (err.code == 11000)
+                    res.status(422).send(['Email adrress Already Registerd !']);
+                else
+                     return next(err);
+                }
+    
+                });
+    
+            }else{
+                passport.authenticate('local', (err, user, info) => {       
+                    // error from passport middleware
+                    if (err) return res.status(400).json(err);
+                    // registered user
+                    else if (user) return  res.status(200).json({ "token": user.generateJwt(),user : _.pick(user,['role'])}); //to get user role
+                        
+                    // unknown user or wrong password
+                    else return res.status(404).json(info);
+                }) (req, res);
+            }
+                
+        }
+    );
+}
+
+
+
+
 module.exports.userProfile = (req, res, next) =>{
     User.findOne({ _id: req._id },
         (err, user) => {
             if (!user)
                 return res.status(404).json({ status: false, message: 'User record not found.' });
             else
-                return res.status(200).json({ status: true, user : _.pick(user,['_id','fullName','email','role','password']) });//im add role
+                return res.status(200).json({ status: true, user : _.pick(user,['_id','fullName','email','role','password','department','position']) });//im add role
         }
     );
 }
@@ -693,6 +749,52 @@ exports.changeUserDepartment=(req,res)=>{
 
 }
 
+//to change current user department
+exports.changeUserDepartmentCurrent=(req,res)=>{
+    const{name}=req.body;
+    User.findOne({ _id:req._id },(err,user)=>{
+        if(err || !user){
+            return res.status(404).send(['User With this req Id Does Not Exist !']);
+       }else{
+        user.updateOne({department:name},function(err,doc){
+            if(err){
+              return res.status(422).send(['Eror from backend !']);
+            }else{
+              return res.status(200).send(['User department has been changed !']);
+            }
+
+         })
+
+       }
+    })
+
+}
+//to change current user position/designation
+exports.changeUserPositionCurrent=(req,res)=>{
+    const{name}=req.body;
+    User.findOne({ _id: req._id },(err,user)=>{
+        if(err || !user){
+            return res.status(404).send(['User With this req Id Does Not Exist !']);
+       }else{
+        user.updateOne({position:name},function(err,doc){
+            if(err){
+              return res.status(422).send(['Eror from backend !']);
+            }else{
+              return res.status(200).send(['User position has been changed !']);
+            }
+
+         })
+
+       }
+    })
+
+}
+
+
+
+
+
+
 //to change other user position new 
 exports.changeUserPosition=(req,res)=>{
     const{name}=req.body;
@@ -713,3 +815,5 @@ exports.changeUserPosition=(req,res)=>{
     })
 
 }
+
+

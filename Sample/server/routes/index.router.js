@@ -28,7 +28,8 @@ const ctrlDoc = require('../controllers/document.controller');
 const ctrlMsg =require('../controllers/message.controller');
 const ctrlDep=require('../controllers/department.controller');
 const ctrlPost=require('../controllers/position.controller');
-
+const ctrlTempD=require('../controllers/tempDocument.controller');
+const ctrlCat=require('../controllers/category.controller');
 const jwtHelper = require('../config/jwtHelper');
 
 
@@ -63,10 +64,15 @@ router.put('/updateOtherUserRole',jwtHelper.verifyJwtToken,ctrlUser.updateUserRo
 //findUserProfile
 router.put('/findUserProfile',jwtHelper.verifyJwtToken,ctrlUser.findUserProfile);
 
-//changeUserDepartment this is for change user department
+//changeUserDepartment this is for change other user department
 router.put('/changeDep',jwtHelper.verifyJwtToken,ctrlUser.changeUserDepartment);
+//to update current user departments
+router.put('/changeDepCurrent',jwtHelper.verifyJwtToken,ctrlUser.changeUserDepartmentCurrent);
 //this is for change user position
-router.put('/changePosition',ctrlUser.changeUserPosition);
+router.put('/changePosition',jwtHelper.verifyJwtToken,ctrlUser.changeUserPosition);
+//this is for change current user designation
+router.put('/changePositionCurrent',jwtHelper.verifyJwtToken,ctrlUser.changeUserPositionCurrent);
+
 /*
 //routs for documentSchema
 router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (req, res, next) {
@@ -122,7 +128,7 @@ router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (
            }
 })
 */
-
+//Document routes start
 //Test2
 router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (req, res, next) {
                   let extArray = req.file.originalname.split(".")
@@ -187,6 +193,49 @@ router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (
 })
 
 router.get('/getDocs',jwtHelper.verifyJwtToken,ctrlDoc.getDocs);
+
+
+router.post('/postDocFile',jwtHelper.verifyJwtToken,ctrlDoc.postDocWithFile);
+
+
+//Temp documents routes starts----------------------------------------------------------
+router.post('/postTempDocFile/:dep/:mC',jwtHelper.verifyJwtToken,ctrlTempD.postTempDocWithFile);
+router.post('/postTempDocFileSub/:path',jwtHelper.verifyJwtToken,ctrlTempD.postTempDocWithFile);
+//postDocNewLocation
+router.get('/changeLocation',ctrlTempD.postDocNewLocation);
+
+//to get to view temp docs
+router.get('/viewTempFiles',jwtHelper.verifyJwtToken,ctrlTempD.viewTempFiles);
+
+//to update need approvment array
+router.put('/pushNeedApprove',ctrlTempD.setApprovement);
+//to del user from approvment array
+router.put('/delApprovement',ctrlTempD.delApprovement);
+//to delete doc from tempdoc
+//deleteTempFile
+router.delete('/deleteTempFile/:id',jwtHelper.verifyJwtToken,ctrlTempD.deleteTempFile);
+//rename temp file
+router.put('/renameTemp',ctrlTempD.renameTempFile);
+//to transfer data from temp collection to document collection and needApprove collection
+//.transferToDocument
+router.get('/transferData/:id',ctrlTempD.transferToDocument);
+//to testing purpose
+router.post('/viewLog/:path',ctrlTempD.test);
+//getTempCount
+router.get('/getTempCount',jwtHelper.verifyJwtToken,ctrlTempD.getTempCount);
+// for pass need approvement data to front end 
+router.get('/getApprovementData/:id',ctrlTempD.getApprovementData);
+//to post checklist data to frontend
+router.get('/getCheckList/:id',jwtHelper.verifyJwtToken,ctrlTempD.getCheckList);
+// to pass count of need approve array 
+router.get('/getCountArr/:id',ctrlTempD.getCountApprovementData);
+
+
+
+
+
+
+
 //Archive user routes -------------------------------------------------------------------
 //To get Archived User
 router.put('/postArchivedUser',jwtHelper.verifyJwtToken,ctrlUser.postArchivedUser);
@@ -240,7 +289,8 @@ router.get('/getCount/:id',jwtHelper.verifyJwtToken,ctrlDep.countDepUsers);
 //to get departments without current departments
 router.get('/getDepsWithout',jwtHelper.verifyJwtToken,ctrlDep.getDepartmentWithout);
 //to get departments without current department to update other user department
-router.get('/getDepOther/:id',ctrlDep.getDepartmentWithoutOther);
+router.get('/getDepOther/:id',jwtHelper.verifyJwtToken,ctrlDep.getDepartmentWithoutOther);
+
 
 
 //this is for position/designation routes---------------------------
@@ -257,8 +307,34 @@ router.get('/getCountDesig/:id',ctrlPost.countDesignations);
 
 //to get position without current position to update other user position
 router.get('/getPositionOther/:id',ctrlPost.getPositionWithoutOther);
+//getPositionWithout current user position for update position via userprofile
+router.get('/getPositionWithout',jwtHelper.verifyJwtToken,ctrlPost.getPositionWithout);
 
 
+
+
+
+
+//this is for category routes------------------------------------------------------
+router.post('/postCategory',ctrlCat.createCategory);
+//to create sub category
+router.post('/postSubCategory',ctrlCat.createSubCategory);
+//to delete category
+router.delete('/delCategory/:id',ctrlCat.delCategory);
+//to delete subCategory
+router.delete('/delsubCategory/:id',ctrlCat.delSubCategory);
+//to get categories list 
+router.get('/getCats/:id',ctrlCat.getCategories);
+//to get sub categories list 
+router.get('/getsCats/:id',ctrlCat.getSubCategories);
+//to get count of categories of relevent dep
+router.get('/getCatCount/:id',ctrlCat.getCategoriesCount);
+//to get  sub categories inside another sub category by relevent sub category id
+router.get('/getSSCat/:id',ctrlCat.getSSubCategories);
+//to get subcategory count by catId getSubCategoriesCount
+router.get('/getSubCategoriesCount/:id',ctrlCat.getSubCategoriesCount);
+//to get count of subcategory inside of another sub category
+router.get('/getSubSubCategoriesCount/:id',ctrlCat.getSubSubCategoriesCount);
 module.exports = router;
 
 

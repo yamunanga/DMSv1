@@ -29,6 +29,16 @@
             <td>{{this.userService.userDetails.email}} </td> <!--{{userDetails.email}}-->
             <td></td>
         </tr>
+        <tr>
+            <td>Department</td>
+            <td>{{this.userService.userDetails.department}} </td> <!--{{userDetails.email}}-->
+            <td><app-model-change-dep></app-model-change-dep></td>
+        </tr>
+        <tr>
+            <td>Designation</td>
+            <td>{{this.userService.userDetails.position}} </td> <!--{{userDetails.email}}-->
+            <td><app-model-change-post></app-model-change-post></td>
+        </tr>
         <!--<tr>
             <td>Role</td>
             <td>{{userDetails.role}}</td>
@@ -62,9 +72,5 @@
 
     </tbody>
   </table>
-  <form *ngFor="let dep of departmentService.allDeps">
-    <input type="radio" id={{dep.name}} name="department"  [(ngModel)]="department"  value={{dep.name}}> {{dep.name.toUpperCase()}}<br>
-  </form> 
-  {{department}}
 </body>
 </html>

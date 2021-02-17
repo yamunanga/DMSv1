@@ -1,0 +1,22 @@
+/** 
+* Paste one or more documents here
+*/
+{
+    "lastActive": "2021-01-16 18:34:08",
+    "arcStatus": "no",
+    "fullName": "york",
+    "email": "yamunangalkh@gmail.com",
+    "password": "$2a$10$5bw6YT07tgBiNI4z/58ROusk5vGzo0792HboMKvdERc8JZfdL040O",
+    "role": "admin",
+    "department": "finance",
+    "position": "manager",
+    "createdAt": {
+        "$date": "2021-01-07T12:08:00.413Z"
+    },
+    "updatedAt": {
+        "$date": "2021-01-29T17:13:12.131Z"
+    },
+    "saltSecret": "$2a$10$5bw6YT07tgBiNI4z/58ROu",
+    "__v": 0,
+    "status": "online"
+}

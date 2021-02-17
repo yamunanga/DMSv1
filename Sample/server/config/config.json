@@ -7,7 +7,9 @@
         "MAILGUN_APIKEY":"884dee9792d999549e3d2641cc93c84d-4879ff27-1badd7cf",
         "JWT_ACC_ACTIVATE":"acc123",
         "CLIENT_URL":"http://localhost:4200",
-        "RESET_PASSWORD_KEY":"acc12345"
+        "RESET_PASSWORD_KEY":"acc12345",
+        "UPLOAD_LOCATION":"./uploads/",
+        "TO_DB_TO_UP_LOCATION":"uploads\\"
     },
     "production": {
         "PORT": 80,

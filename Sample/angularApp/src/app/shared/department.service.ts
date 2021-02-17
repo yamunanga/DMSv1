@@ -14,6 +14,7 @@ import { UserService } from './user.service';
 export class DepartmentService {
   allDeps:DEPARTMENTS[]; //For get the users
   allDepsForOther:DEPARTMENTS[];//to show dep list for update other user department
+  allDepWithout:DEPARTMENTS[];//to show dep list without user current department
   allDepUsers:OTHERUSERS[];//For get count of users in each department
   //for get dep list without current user department
   otherUserId={
@@ -47,7 +48,10 @@ toUpdateOtherDepartmentList(_id:String) {
   return this.http.get(environment.apiBaseUrl + `/getDepOther/${_id}`);
 }
 
-
+//to get departments without current user department
+toUpdateDepartmentListCurrent() {
+  return this.http.get(environment.apiBaseUrl + `/getDepsWithout`);
+}
 
 //use for convert utc to now 
 getDate(date){

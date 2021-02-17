@@ -1,0 +1,122 @@
+<br>
+<div class="a">
+  <div style="text-align: center" *ngIf="catService.currentPath !='' ">
+     <h4>Current Path:</h4>
+     <h5>{{catService.currentPath}}</h5> 
+     <!--data-toggle="tooltip" data-placement="bottom" title="Tooltip on bottom"-->
+     <button type="button" class="btn btn-secondary"  (click)="swapPath()">
+       Set As Upload Location
+    </button>
+  </div>
+</div>
+<br>
+<div class="row">
+  <div class="column a">
+    <div class="a">
+      <h4>Create New</h4>
+      <h5>Select Department</h5>
+      <br>
+      <div class="centertb" style="height:300px;overflow:auto;">
+        <table class="responsive-table highlight">
+          <tr *ngFor="let dep of depService.allDeps">
+              <td><input type="radio" id={{dep._id}}  required #department="ngModel" name="department"  [(ngModel)]="viewDepModel._id"  value={{dep._id}} (click)="refreshCatList(dep._id)" (click)="passName(dep.name,dep._id)" >
+              </td>
+              <td>{{dep.name.toUpperCase()}}</td>
+          </tr>
+      </table>
+     </div>
+     <br>
+     <div  class="centertb" style="height:500px;overflow:auto;"  *ngIf="viewDepModel._id !='' ">
+      <h4>Available Categories</h4>
+     <div style="text-align: center">
+         <input type="text" [(ngModel)]="sNameM" (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here"  />
+     </div>
+     <br>
+     <h5> {{CountCat}} Main Categories In {{depName.toUpperCase()}} Department  </h5>
+     <br>
+     <table class="responsive-table highlight" style="height:300px;overflow:auto;">
+         <tr *ngFor="let cat of catService.allCatsById;index as i">
+             <td><input type="radio" id={{cat._id}}  required #category="ngModel" name="categori"  [(ngModel)]="addSubModel._id"  value={{cat._id}} (click)="refreshScatList(cat._id)" (click)="passMainCatData(cat.name,cat.path)" (click)="getSubCount(cat._id,cat.name)" (click)="currentPath(cat.path)">
+             <td>{{cat.name.toUpperCase()}}</td>
+             <td>{{catService.getDate(cat.createdAt)}}</td>
+            <!--<td><button type="button"  (click)="onDel(cat._id)" class="btn btn-outline-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>-->
+         </tr>
+     </table>
+  </div>
+  <br>
+  <div class="centertb" *ngIf="addSubModel._id !='' ">
+    <h5>Enter New Sub Category to {{this.mainCatName}} </h5>
+    <h5>{{this.mainCatPath}}</h5>
+    <input type="text" [(ngModel)]="addSubModel.sC"  placeholder="New Sub Category Name"  />&nbsp;<button type="button"  (click)="onAdd1()" class="btn btn-outline-info"  *ngIf="addSubModel.sC !='' "><i class="fa fa-plus" aria-hidden="true"></i></button>
+  </div>
+  </div>
+   <br>
+<!-- Success message -->
+<div class="success" *ngIf="showSucessMessage">
+    Sub Category Created !
+</div>
+
+ <!-- Error message -->
+<div class="alert" *ngIf="serverErrorMessages">
+    {{serverErrorMessages}}
+</div>
+</div>
+ <div class="column a">
+  <div *ngIf="addSubModel._id !='' ">
+    <h4> {{this.CountSub}} Sub Categories Inside {{this.selectedCubName.toUpperCase()}} </h4>
+  <br>
+    <div class="centertb" *ngIf="addSubSubModel._id !='' " >
+      <h5>YOU ARE IN  {{subPath}} </h5>
+      <input type="text" [(ngModel)]="addSubSubModel.sC"  placeholder="Enter New Sub Category Name"  />&nbsp;<button type="button"  (click)="onAdd2()" class="btn btn-outline-info"  *ngIf="addSubSubModel.sC !='' "><i class="fa fa-plus" aria-hidden="true"></i></button>
+    </div>
+    <br>
+    <!-- Success message -->
+    <div class="success" *ngIf="showSucessMessage2">
+    Sub Category Created !
+    </div>
+    
+    <!-- Error message -->
+    <div class="alert" *ngIf="serverErrorMessages2">
+    {{serverErrorMessages}}
+    </div>
+    <div style="height:400px;overflow:auto;">
+     <div style="text-align: center" class="centertb" *ngIf="this.CountSub !=0 ">
+        <input type="text" [(ngModel)]="sNameS" (input)="searchS()" (keydown)="onKeydown1($event)" placeholder="Search here"  />
+        <br>
+        <h5>Click To Add New Sub Category </h5>
+    </div>
+      <table class="responsive-table highlight" >
+        <tr *ngFor="let scat of catService.allScatsById;index as i">
+            <td><input type="radio" id={{scat._id}}  required #subcategory="ngModel" name="subcategori"  [(ngModel)]="addSubSubModel._id"  value={{scat._id}} (click)="toHidden()" (click)="refreshSScatList(scat._id)" (click)="passPath(scat.path)" (click)="passMainRootCatname(scat.name)" (click)="getSubSubCount(scat._id,scat.name)" (click)="currentPath(scat.path)">
+            <td>{{scat.name.toUpperCase()}}</td>
+            <td>{{catService.getDate(scat.createdAt)}}</td>
+            <td><button type="button"  (click)="onDel(scat._id)" class="btn btn-outline-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+           <!--<td><button type="button"  (click)="onDel(cat._id)" class="btn btn-outline-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>-->
+        </tr>
+    </table>
+  </div>
+  <br>
+ <br>
+<div style="height:400px;overflow:auto;" *ngIf="addSubSubModel._id !='' ">
+  <h5>{{this.CountSubSub}} SUBCATEGORIES INSIDE OF {{subName.toUpperCase()}} SUB CATEGORY </h5>&nbsp;
+  <!--For search-->
+  <div style="text-align: center" class="centertb" *ngIf="this.CountSubSub !=0 ">
+    <input type="text" [(ngModel)]="sNameSs" (input)="searchSs()" (keydown)="onKeydown2($event)" placeholder="Search here"  />
+  </div>
+  <button *ngIf="this.CountSubSub !=0 " type="button" class="btn btn-outline-success" (click)="refreshSScatList(addSubSubModel._id)" (click)="passMainSubNameAgain(this.rootName)" >ROOT</button>
+  <br>
+  <table class="responsive-table highlight" >
+    <tr *ngFor="let sscat of catService.allSScatsById;index as i">
+        <td><input type="radio" id={{sscat._id}}  required #ssubcategory="ngModel" name="ssubcategori"  [(ngModel)]="addSubSubModel._id"  value={{sscat._id}} (click)="passPath(sscat.path)" (click)="currentPath(sscat.path)">
+        <td>{{sscat.name.toUpperCase()}}</td>
+        <td>{{catService.getDate(sscat.createdAt)}}</td>
+        <td><button type="button" class="btn btn-outline-info" (click)="refreshSScatList(sscat._id)" (click)="passMainSubName(sscat.name)">Inside</button></td>
+        <td><button type="button"  (click)="onDel(sscat._id)" class="btn btn-outline-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+       <!--<td><button type="button"  (click)="onDel(cat._id)" class="btn btn-outline-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>-->
+    </tr>
+</table>
+</div>
+<br>
+</div>
+</div>
+</div>

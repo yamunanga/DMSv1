@@ -1,0 +1,63 @@
+<br>
+<div class="row">
+  <div class="column a">
+    <h4>Create New</h4>
+    <h5>Select Department</h5>
+    <br>
+    <div class="centertb" style="height:300px;overflow:auto;">
+      <table class="responsive-table highlight">
+        <tr *ngFor="let dep of depService.allDeps">
+            <td><input type="radio" id={{dep._id}}  required #department="ngModel" name="department"  [(ngModel)]="addCatModel._id"  value={{dep._id}} (click)="refreshCatList(dep._id)" (click)="passName(dep.name,dep._id)">
+            </td>
+            <td>{{dep.name.toUpperCase()}}</td>
+        </tr>
+    </table>
+   </div>
+   <br>
+   <div class="centertb" *ngIf="addCatModel._id !='' ">
+    <h5>Enter New Category name </h5>
+    <input type="text" [(ngModel)]="addCatModel.mC"  placeholder="Category Name"  />&nbsp;<button type="button"  (click)="onAdd()" class="btn btn-outline-info"  *ngIf="addCatModel.mC !='' "><i class="fa fa-plus" aria-hidden="true"></i></button>
+   </div>
+   <br>
+    <!-- Success message -->
+    <div class="success" *ngIf="showSucessMessage">
+        Category Created !
+    </div>
+    
+     <!-- Error message -->
+    <div class="alert" *ngIf="serverErrorMessages">
+        {{serverErrorMessages}}
+    </div>
+
+</div>
+  <div class="column a">
+    <h4>View</h4>
+    <div  style="height:400px;overflow:auto;"  *ngIf="addCatModel._id !='' ">
+    <div style="text-align: center">
+        <input type="text" [(ngModel)]="sNameM" (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here"  /><!--(keydown)="onKeydown($event)"-->
+    </div>
+    <br>
+    <h5> {{CountCat}} Main Categories In {{depName.toUpperCase()}} Department  </h5>
+    <br>
+    <table class="responsive-table highlight">
+        <tr *ngFor="let cat of catService.allCatsById;index as i">
+            <td>{{i+1}}</td>
+            <td>{{cat.name.toUpperCase()}}</td>
+            <td>{{catService.getDate(cat.createdAt)}}</td>
+            <td><button type="button"  (click)="onDel(cat._id)" class="btn btn-outline-danger"><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+        </tr>
+    </table>
+    </div>
+     <!-- Success message -->
+   <div class="success" *ngIf="showSucessMessageList">
+    Category Removed !
+   </div>
+ 
+  <!-- Error message -->
+  <div class="alert" *ngIf="serverErrorMessagesList">
+    {{serverErrorMessages}}
+  </div>
+   
+ 
+  </div>
+</div>
