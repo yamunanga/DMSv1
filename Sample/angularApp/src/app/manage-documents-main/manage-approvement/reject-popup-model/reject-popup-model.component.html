@@ -1,0 +1,30 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Reject Message</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body centertb">
+        <div>
+          <h4>Reason For Reject:</h4> <textarea matInput rows="10" cols="30" [(ngModel)]="rejectData.msg" placeholder="Type here"></textarea>
+        </div>
+        <div *ngIf="rejectData.msg !='' ">
+          <button type="button" class="btn btn-outline-info" (click)="toReject()">Send </button>
+        </div>
+        <br>
+        <!-- Success message -->
+       <div class="success" *ngIf="showSucessMessage">
+        Rejected !
+       </div>
+       <div class="alert" *ngIf="serverErrorMessages">
+        {{serverErrorMessages}}
+       </div>
+    </div>
+  </ng-template>
+  
+  <button class="btn btn-outline-danger" (click)="open(content)">Reject</button>
+  
+  
+
+

@@ -30,6 +30,7 @@ const ctrlDep=require('../controllers/department.controller');
 const ctrlPost=require('../controllers/position.controller');
 const ctrlTempD=require('../controllers/tempDocument.controller');
 const ctrlCat=require('../controllers/category.controller');
+const ctrlApprove=require('../controllers/approvement.controller');
 const jwtHelper = require('../config/jwtHelper');
 
 
@@ -72,6 +73,11 @@ router.put('/changeDepCurrent',jwtHelper.verifyJwtToken,ctrlUser.changeUserDepar
 router.put('/changePosition',jwtHelper.verifyJwtToken,ctrlUser.changeUserPosition);
 //this is for change current user designation
 router.put('/changePositionCurrent',jwtHelper.verifyJwtToken,ctrlUser.changeUserPositionCurrent);
+//getUserDetailes by id for other
+router.get('/getUserDetailesById/:id',jwtHelper.verifyJwtToken,ctrlUser.getUserDetailes);
+
+
+
 
 /*
 //routs for documentSchema
@@ -231,8 +237,16 @@ router.get('/getCheckList/:id',jwtHelper.verifyJwtToken,ctrlTempD.getCheckList);
 router.get('/getCountArr/:id',ctrlTempD.getCountApprovementData);
 
 
+//Doc Approvement routes start 
 
-
+//to send approvement data for assaigned admins
+router.get('/getApprovementData',jwtHelper.verifyJwtToken,ctrlApprove.getApprovementDataList);
+//approved doc moved to documents
+router.get('/saveApprovment/:id',jwtHelper.verifyJwtToken,ctrlApprove.saveApprovementData);
+//reject doc from approvment
+router.put('/rejectApprovment/:id',jwtHelper.verifyJwtToken,ctrlApprove.rejectApprovementData);
+//to send cound of need approvment data
+router.get('/getApprovmentDataCount',jwtHelper.verifyJwtToken,ctrlApprove.getApprovmentDataCount);
 
 
 

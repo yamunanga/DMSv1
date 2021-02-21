@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CategoryService } from '../shared/category.service';
+import { ManageDocMainService } from '../shared/manage-doc-main.service';
+import { UserService } from '../shared/user.service';
 
 @Component({
   selector: 'app-manage-documents-main',
@@ -15,10 +17,24 @@ export class ManageDocumentsMainComponent implements OnInit {
   tOfViewSubOnly=false;//to view  sub category only
 */
 
-  constructor(public catService:CategoryService) { }
+  constructor(public catService:CategoryService,private userService: UserService,public manageDocMainService:ManageDocMainService) { }
+  role:string;//data come from local storage
   ngOnInit(): void {
-
+   this.getRole();
   }
+
+//to get user role
+getRole(){
+  this.role=this.userService.getRole()
+}
+
+
+//all the configuration in manage document main service
+
+
+
+
+
 /*
 //to load upload component
 viewUpload(){

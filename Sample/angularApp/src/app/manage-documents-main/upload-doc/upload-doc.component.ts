@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { CategoryService } from 'src/app/shared/category.service';
 import { DEPARTMENTS } from 'src/app/shared/department.model';
 import { DepartmentService } from 'src/app/shared/department.service';
+import { ManageDocMainService } from 'src/app/shared/manage-doc-main.service';
 import { NEEDAPPROVEDATA } from 'src/app/shared/needApproveBy.model';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { TempDocService } from 'src/app/shared/temp-doc.service';
@@ -38,7 +39,7 @@ export class UploadDocComponent implements OnInit {
     _id:'',
     name:''
   }
-  constructor(private http: HttpClient,public departmentService:DepartmentService,public catService:CategoryService,private toastr: ToastrService,public tempDocService:TempDocService) { }
+  constructor(private http: HttpClient,public departmentService:DepartmentService,public catService:CategoryService,private toastr: ToastrService,public tempDocService:TempDocService,private manageDocMainService:ManageDocMainService) { }
   
   ngOnInit(): void {
     this.reset();
@@ -145,7 +146,7 @@ resetNativeElement(){
 
 //choose file upload path
 choosePath(){
-  this.catService.openSubONly();
+  this.manageDocMainService.openSubONly();
 }
 
 //to get temp documents

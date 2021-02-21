@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserService } from '../shared/user.service';
 
 import * as moment from 'moment';
+import { CategoryService } from '../shared/category.service';
 
 @Component({
   selector: 'app-home',
@@ -22,7 +23,7 @@ export class HomeComponent implements OnInit {
   tofviewOrganisation=false;//for the organization component to load
   tofviewManageUsersMain=false;//for the manage users main to load 
   tofviewMangaDocMain=false;//for the manage documents main to load 
-  constructor(public userService: UserService, private router: Router) { }
+  constructor(public userService: UserService, private router: Router,private catService:CategoryService) { }
   lastData={
     lastActive:'',
   }
@@ -53,6 +54,8 @@ export class HomeComponent implements OnInit {
     this.userService.deleteToken();
     localStorage.removeItem('userRole');
     this.router.navigate(['/login']);
+    //to reset file upload paths
+    this.catService.uploadPath=''; 
     
   }
   profile(){

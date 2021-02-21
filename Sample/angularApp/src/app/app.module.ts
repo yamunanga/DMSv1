@@ -57,6 +57,8 @@ import { ModelChangeDepComponent } from './user-profile/model-change-dep/model-c
 import { ModelChangePostComponent } from './user-profile/model-change-post/model-change-post.component';
 import { SubCatOnlyComponent } from './manage-documents-main/sub-cat-only/sub-cat-only.component';
 import { ModelAssaignDocComponent } from './manage-documents-main/upload-doc/model-assaign-doc/model-assaign-doc.component';
+import { ManageApprovementComponent } from './manage-documents-main/manage-approvement/manage-approvement.component';
+import { RejectPopupModelComponent } from './manage-documents-main/manage-approvement/reject-popup-model/reject-popup-model.component';
 
 
 
@@ -105,6 +107,8 @@ import { ModelAssaignDocComponent } from './manage-documents-main/upload-doc/mod
     ModelChangePostComponent,
     SubCatOnlyComponent,
     ModelAssaignDocComponent,
+    ManageApprovementComponent,
+    RejectPopupModelComponent,
   
    
   ],

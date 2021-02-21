@@ -817,3 +817,14 @@ exports.changeUserPosition=(req,res)=>{
 }
 
 
+//to find user name acording to user id
+exports.getUserDetailes=(req,res)=>{
+    User.findOne({ _id: req.params.id },(err,user)=>{
+        if(err || !user){
+            return res.status(404).send(['User With this req Id Does Not Exist !']);
+       }else{
+            return res.status(200).send(user);
+       } 
+    })
+
+}

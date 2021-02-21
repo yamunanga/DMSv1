@@ -5,19 +5,21 @@
 <div class="container-fluid border">
     <br>
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" (click)="catService.openUpload()" >UPLOAD</button>
-        <button type="button" class="btn btn-primary" (click)="catService.viewUpload()" >UPLOAD 1</button>
-        <button type="button" class="btn btn-primary" (click)="catService.viewDocs()">VIEW</button>
-        <button type="button" class="btn btn-primary" (click)="catService.openManageCategory()">CATEGORY</button>
-        <button type="button" class="btn btn-primary" (click)="catService.openSubONly()">SUB-CATEGORY</button>
+        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openUpload()" >UPLOAD</button>
+        <button type="button" class="btn btn-primary" (click)="manageDocMainService.viewUpload()" >UPLOAD 1</button>
+        <button type="button" class="btn btn-primary" (click)="manageDocMainService.viewDocs()">VIEW</button>
+        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openManageCategory()">CATEGORY</button>
+        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openSubONly()">SUB-CATEGORY</button>
+        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openApprovement() " *ngIf="this.role=='admin' ">APPROVEMENT</button>
       </div>
     <br>
     <div><!--*ngIf="this.tOfWMsg==true"-->
-        <app-upload-doc *ngIf="this.catService.tOfViewUpload==true"></app-upload-doc>
-        <app-manage-docs *ngIf="this.catService.tOfuploadDocs==true"></app-manage-docs>
-        <app-view-docs *ngIf="this.catService.tOfViewDocs==true"></app-view-docs>
-        <app-category-and-sub *ngIf="this.catService.tOfViewCategoryAndSub==true"></app-category-and-sub>
-        <app-sub-cat-only *ngIf="this.catService.tOfViewSubOnly==true"></app-sub-cat-only>
+        <app-upload-doc *ngIf="this.manageDocMainService.tOfViewUpload==true"></app-upload-doc>
+        <app-manage-docs *ngIf="this.manageDocMainService.tOfuploadDocs==true"></app-manage-docs>
+        <app-view-docs *ngIf="this.manageDocMainService.tOfViewDocs==true"></app-view-docs>
+        <app-category-and-sub *ngIf="this.manageDocMainService.tOfViewCategoryAndSub==true"></app-category-and-sub>
+        <app-sub-cat-only *ngIf="this.manageDocMainService.tOfViewSubOnly==true"></app-sub-cat-only>
+        <app-manage-approvement *ngIf="this.manageDocMainService.tOfViewApprovement==true"></app-manage-approvement>
         
     </div>
  

@@ -15,7 +15,7 @@
  <!-- <a (click)="viewArcUsers()">View Archived Users</a>-->
   <!--<a (click)="addDoc()">Add Document</a>-->
   <!--<a (click)="viewDoc()">View Documents</a>-->
-  <a (click)="viewMessageBox()">Message Box</a>
+  <a (click)="viewMessageBox()">Message Box  <i *ngIf="role=='admin'" class="fa fa-bell-o" aria-hidden="true"></i> </a>
   <a (click)="viewOrganization()">Manage Organization</a>
   <a (click)="viewManageMain()">Manage Users</a>
   <a (click)="viewDocMain()">Manage Documents</a>
@@ -45,6 +45,8 @@
    &nbsp;Welcome!
   </span>
   <div class="subButton">
+  <button type="button" class="btn btn-outline-info">  <i *ngIf="role=='admin'" class="fa fa-bell-o" aria-hidden="true"></i></button>
+   &nbsp;
   <button type="button" class="btn btn-outline-info" (click)="onLogout()" ><i class="fa fa-power-off" aria-hidden="true"></i></button>
   </div>
   </div>

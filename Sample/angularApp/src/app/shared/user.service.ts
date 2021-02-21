@@ -65,6 +65,7 @@ export class UserService {
    userInfo;
    otherUserRole;//this for get current user role from userList
    //otherUserId;//this is for get userId from userList
+   otherUserData;//to get other user email by id
 
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
   localTimeService: string;
@@ -155,6 +156,11 @@ changeOtherUserPosition(data){
 changeUserPosition(data){
   return this.http.put(environment.apiBaseUrl+'/changePositionCurrent',data);
 } 
+//get user detailes by user id
+getUserDetailesById(_id: string) {
+  return this.http.get(environment.apiBaseUrl + `/getUserDetailesById/${_id}`);
+}
+
 
 //------------------THIS IS FOR ARCHIVED USERs---------------------------
 

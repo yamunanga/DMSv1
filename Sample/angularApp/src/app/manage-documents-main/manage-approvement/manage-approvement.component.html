@@ -1,0 +1,38 @@
+<br>
+<h5 style="text-align: center;"  *ngIf="this.manageApprovment.approveDataCount==0">You Don't Have Any Request</h5>
+<div class="table-responsive" *ngIf="this.manageApprovment.approveDataCount !=0">
+    <table class="responsive-table highlight ">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Size(Mb)</th>
+            <th>Category</th>
+            <th>Department</th>
+            <th>CreatedBy</th>
+            <th>Tags</th>
+            <th>File</th>
+            <th>CreatedAt</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let doc of manageApprovment.approveData">
+          <td>{{doc.name}}</td>
+          <td>{{doc.type}}</td>
+          <td>{{byteToMb(doc.size)}}</td>
+          <td>{{doc.category}}</td>
+          <td>{{doc.department}}</td>
+          <td>
+            <app-popup-userprofile (click)="getUserEmail(doc.createdBy)"></app-popup-userprofile>
+          </td>
+          <td>{{doc.tags}}</td>
+          <td>
+            <button type="button" class="btn btn-outline-info"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
+          </td>
+          <td>{{doc.createdAt}}</td>
+          <td>
+            <app-reject-popup-model (click)="passReject(doc._id)"></app-reject-popup-model>
+            <button type="button" class="btn btn-outline-success" (click)="toAccept(doc._id)">Approve</button>
+          </td>
+        </tr>
+      </table>
+</div>
