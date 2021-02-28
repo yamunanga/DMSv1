@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../shared/user.service';
 import { Router } from "@angular/router";
 
-import { User } from '../shared/user.model';
+import { User } from '../models/user.model';
 import { NgForm } from '@angular/forms';
 import {NgbModal, ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
 import { NgbdModalBasic } from './modal-basic/modal-basic.component';

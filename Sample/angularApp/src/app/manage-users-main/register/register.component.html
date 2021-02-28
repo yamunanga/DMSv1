@@ -66,7 +66,7 @@
              <td><input type="radio" id={{post.name}}  required #position="ngModel"    name="position"  [(ngModel)]="userService.selectedUser.position"  value={{post.name}}>
             </td>
              <td>{{post.name.toUpperCase()}}</td>
-             <td  *ngIf="signUpForm.submitted && !designation.valid">
+             <td  *ngIf="signUpForm.submitted && !position.valid">
                 <label class="validation-message">Designation is required.</label>
              </td>
             </tr>

@@ -7,6 +7,7 @@ mongoose.connect(process.env.MONGODB_URI,{ useFindAndModify: false }, (err) => {
 
 require('./user.model');
 require('./document.model.js');
+require('./archiveDoc.model');
 require('./archivedUsers.model');
 require('./message.model');
 require('./department.model');

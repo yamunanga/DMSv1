@@ -11,6 +11,14 @@
       <div>
         <input type="file"   #takeInput name="files" multiple (change)="selectMultipleFiles($event)" /> 
       </div>
+      <div class="centertb" *ngIf=" this.countTemp ==0">
+         <h5>Set Expiration Date</h5>
+         <div class="centertb">
+             <div style="text-align: center;margin: auto;width:50%;">
+                  <app-data-picker></app-data-picker>
+             </div>
+        </div>
+      </div>
       <div *ngIf="catService.uploadPath !=''  && isClicked ==true ">
         <button type="button" (click)="onSend()" class="btn btn-outline-success">Send</button>
       </div>
@@ -50,6 +58,7 @@
                 <button type="button" class="btn btn-danger" (click)="onDel(file._id)">Delete</button><br>
                 <button type="button" class="btn btn-success"(click)="getRenameId(file._id)">Rename</button><br>
                 <app-model-assaign-doc (click)="tempDocService.getCountApprovement(file._id)" (click)="getCheckListData(file._id)" (click)="toGetNeedApproveArray(file._id)"></app-model-assaign-doc>
+                <app-picker-popup (click)="passFileId(file._id)"></app-picker-popup>
               </td>
           </tr>
       </table>

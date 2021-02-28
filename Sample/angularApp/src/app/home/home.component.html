@@ -45,7 +45,10 @@
    &nbsp;Welcome!
   </span>
   <div class="subButton">
-  <button type="button" class="btn btn-outline-info">  <i *ngIf="role=='admin'" class="fa fa-bell-o" aria-hidden="true"></i></button>
+    <a (click)="viewMessageBox()" class="notification"  *ngIf="this.messageService.countNewMsg !=0">
+      <span><i class="fa fa-envelope" aria-hidden="true"></i></span>
+      <span class="badge">{{this.messageService.countNewMsg}}</span>
+    </a>
    &nbsp;
   <button type="button" class="btn btn-outline-info" (click)="onLogout()" ><i class="fa fa-power-off" aria-hidden="true"></i></button>
   </div>

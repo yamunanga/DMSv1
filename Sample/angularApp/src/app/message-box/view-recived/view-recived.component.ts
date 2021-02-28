@@ -19,6 +19,7 @@ sName;//Ng model for search name
   ngOnInit(): void {
     this.refreshRecivedList();
     this.reset();
+    this.messageService.getNewMsgCount();
   }
   
 //To get recived messages 
@@ -37,7 +38,7 @@ sName;//Ng model for search name
 //pass recived attachments
 passAtach(arr){
   this.messageService.recivedAttachments=arr;
-  console.log(this.messageService.recivedAttachments);
+  //console.log(this.messageService.recivedAttachments);
 }
   
 

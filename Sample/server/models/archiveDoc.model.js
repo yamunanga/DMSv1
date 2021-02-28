@@ -1,10 +1,18 @@
 const mongoose = require('mongoose');
-var tempDocumentSchema = new mongoose.Schema({
+var arcDocumentSchema = new mongoose.Schema({
+    docId:{
+        type:String,
+        required:true
+    },
     name: {
         type: String,
         required:false,
         //unique: true
         //required: 'name can\'t be empty'
+    },
+    arcBy: {
+        type: String,
+        default:null
     },
     type:{type:String,default:''},
     file:{
@@ -23,7 +31,8 @@ var tempDocumentSchema = new mongoose.Schema({
     department:{type:String,default:''},
     createdBy:{type:String,default:''},
     tags:{type:String,default:''},
-    expDate:{type:String,default:null}
+    expDate:{type:String,default:null},
+    arcPath:{type:String,default:null}
 },{timestamps:true});
 
-mongoose.model('tempDocument',tempDocumentSchema);
+mongoose.model('arcDocument',arcDocumentSchema);

@@ -8,7 +8,7 @@ const fs = require('fs-extra')
 const router = e.Router();
 const URIpath = require('uri-path');
 const url = require('url');
-const date = require('date-and-time')
+const date = require('date-and-time');
 const User = mongoose.model('User');
 //const needApprove=mongoose.model('needApprove');
 //const pathU = require('../uploads/hrm');
@@ -104,6 +104,7 @@ module.exports.postTempDocWithFile=(req,res,next)=>{
               document.department=dep;
               document.createdBy=req._id;
               document.tags=req.body.tags;
+              document.expDate=req.body.expDate;
               document.save(function(err,result){ 
                 if (err){ 
                     console.log(err);
@@ -137,6 +138,7 @@ module.exports.postTempDocWithFile=(req,res,next)=>{
               document.department=dep;
               document.createdBy=req._id;
               document.tags=req.body.tags;
+              document.expDate=req.body.expDate;
               document.save(function(err,result){ 
                 if (err){ 
                     console.log(err);
@@ -286,101 +288,6 @@ module.exports.deleteTempFile=(req,res,next)=>{
   
   }
 
-
-
-
-//to rename document via temp-doc --not work--
-
-
-module.exports.renameTempFile1=(req,res,next)=>{
-  const{_id,name}=req.body;
-  tempDocument.findOne( {name:name},
-    function(err,files) {
-      if (!files){
-        //secound logic start 
-        tempDocument.findOne({ _id: _id },(err,file)=>{
-          if(err || !file){
-              return res.status(404).send(['Doc With this req Id Does Not Exist !']);
-         }else{
-              if(file.name==name){
-                return res.status(422).send(['File name already use !']);
-              }else{
-                var myJSON = JSON.stringify(file.file);
-                console.log(myJSON);
-                var str=myJSON.split('\\');
-                console.log(str);
-                var nStr=str[str.length-1].split('"');
-                var multerDate=nStr[0].split('-');
-                console.log(nStr);
-                if(file.subCategory ==null){
-                  //new filename+type
-                  var newName=name+'.'+file.type;
-                  var opath=config.development.UPLOAD_LOCATION+file.department+'/'+file.category+'/'+multerDate[0]+'-'+file.name;
-                  var npath=config.development.UPLOAD_LOCATION+file.department+'/'+file.category+'/'+multerDate[0]+'-'+name+'.'+file.type;
-                  var toDbPath=config.development.TO_DB_TO_UP_LOCATION+file.department+'\\'+file.category+'\\'+multerDate[0]+'-'+name+'.'+file.type;
-                  console.log(npath.toString());
-                  console.log(opath);
-                  console.log(toDbPath);
-                  
-                  fs.rename(opath.toString(),npath.toString(), function (err) {
-                    if (err){
-                      return res.status(422).send(['Cannot rename !']);
-                    }
-                    console.log('File Renamed.');
-                    tempDocument.findOneAndUpdate({_id:_id},{name:newName,file:toDbPath},function(err,doc){
-                      if(err){
-                        return res.status(422).send(['Eror from DB!']);
-                      }else{
-                        return res.status(200).send(['File name has been changed !']);
-                      }
-            
-                   })
-                  });
-
-                 
-                  
-                }else{
-                  var newName=name+'.'+file.type;
-                  var opath=config.development.UPLOAD_LOCATION+file.department+'/'+file.category+'/'+file.subCategory+'/'+multerDate[0]+'-'+file.name;
-                  var npath=config.development.UPLOAD_LOCATION+file.department+'/'+file.category+'/'+file.subCategory+'/'+multerDate[0]+'-'+name+'.'+file.type;
-                  var toDbPath=config.development.TO_DB_TO_UP_LOCATION+file.department+'\\'+file.category+'\\'+file.subCategory+'\\'+multerDate[0]+'-'+name+'.'+file.type;
-                  console.log(opath);
-                  console.log(npath);
-                  fs.rename(opath.toString(),npath.toString(), function (err) {
-                    if (err){
-                      return res.status(422).send(['Cannot rename !']);
-                    }
-                    console.log('File Renamed.');
-                    tempDocument.findOneAndUpdate({_id:_id},{name:newName,file:toDbPath},function(err,doc){
-                      if(err){
-                        return res.status(422).send(['Eror from DB!']);
-                      }else{
-                        return res.status(200).send(['File name has been changed !']);
-                      }
-            
-                   })
-                  });
-                  
-                  
-                }
-                
-               
-              }
-         
-    
-         }
-      })
-    }
-    else{
-
-        return res.status(422).send(['Duplicate name found !']);
-      }
-          
-          
-  }
-);
-}
-
 //to rename document via temp-doc --work--
 module.exports.renameTempFile=(req,res,next)=>{
   const{_id,name}=req.body;
@@ -392,7 +299,8 @@ module.exports.renameTempFile=(req,res,next)=>{
           if(err || !file){
               return res.status(404).send(['Doc With this req Id Does Not Exist !']);
          }else{
-              if(file.name==name){
+              var conFileName=file.name.split('.'); 
+              if(conFileName[0]==name){
                 return res.status(422).send(['File name already use !']);
               }else{
                 var myJSON = JSON.stringify(file.file);
@@ -412,7 +320,7 @@ module.exports.renameTempFile=(req,res,next)=>{
                     }
                   }
                 //Over
-                console.log(nStr);
+                //console.log(nStr);
                   //new filename+type
                   var newName=name+'.'+file.type;
                   var oldpath=file.catPath+multerDate[0]+'-'+file.name;
@@ -420,15 +328,15 @@ module.exports.renameTempFile=(req,res,next)=>{
                   //var toDbPath=config.development.TO_DB_TO_UP_LOCATION+file.department+'\\'+file.category+'\\'+multerDate[0]+'-'+name+'.'+file.type;
                   
                   var toDbPath=config.development.TO_DB_TO_UP_LOCATION+dbPath(arr)+multerDate[0]+'-'+name+'.'+file.type;
-                  console.log(newpath.toString());
-                  console.log(oldpath);
-                  console.log(toDbPath);
+                 // console.log(newpath.toString());
+                 // console.log(oldpath);
+                 // console.log(toDbPath);
                   
                   fs.rename(oldpath.toString(),newpath.toString(), function (err) {
                     if (err){
                       return res.status(422).send(['Cannot rename !']);
                     }
-                    console.log('File Renamed.');
+                    //console.log('File Renamed.');
                     tempDocument.findOneAndUpdate({_id:_id},{name:newName,file:toDbPath},function(err,doc){
                       if(err){
                         return res.status(422).send(['Eror from DB!']);
@@ -453,24 +361,6 @@ module.exports.renameTempFile=(req,res,next)=>{
   }
 );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //to set need approve to relevent documents
 module.exports.setApprovement=(req,res,next)=>{
@@ -611,7 +501,7 @@ module.exports.getCheckList=(req,res,next)=>{
           if (!file){
               return res.status(404).send( 'Can not find !' );
           }else{
-            User.find({_id:{$ne:req._id},role:'admin'},
+            User.find({_id:{$ne:req._id},role:'admin',arcStatus: {$ne:'yes'}},
               (err, users) => {
                   if (!users){
                       //arr.push(null);
@@ -645,29 +535,6 @@ module.exports.getCheckList=(req,res,next)=>{
             );
 */
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //not use-----
 function PUSH(e) 
 { 
@@ -675,14 +542,7 @@ function PUSH(e)
   console.log(arr.length); 
 }
 
-
-
-
-
 //User.findOne( {email:{$elemMatch:{$ne:file.needApproveBy[i]}},_id:{$ne:req._id},role:'admin'}
-
-
-
 
 //to rename and save file in new location--not used--
 module.exports.postDocNewLocation=(req,res,next)=>{
@@ -733,6 +593,7 @@ module.exports.transferToDocument=(req,res,next)=>{
         document.department=file.department;
         document.createdBy=file.createdBy;
         document.tags=file.tags;
+        document.expDate=file.expDate;
         document.save(function(err,result){ 
           if (err){ 
               console.log(err);
@@ -770,6 +631,7 @@ module.exports.transferToDocument=(req,res,next)=>{
           document.department=file.department;
           document.createdBy=file.createdBy;
           document.tags=file.tags;
+          document.expDate=file.expDate;
           document.save(function(err,result){ 
             if (err){ 
                 console.log(err);
@@ -788,16 +650,8 @@ module.exports.transferToDocument=(req,res,next)=>{
                 }) 
                
             } 
-        }) 
-
-
-
-
-
-
-
-
-         }
+        })
+      }
         })
 
        }
@@ -805,6 +659,45 @@ module.exports.transferToDocument=(req,res,next)=>{
    }
 })
 }
+
+
+//to set doc expiration date individually
+module.exports.setExpSingle=(req,res,next)=>{
+    tempDocument.findOne({_id:req.params.id}, //post tempDoc id from frontend
+      (err,file)=>{
+          if (!file){
+              return res.status(404).send( 'Can not find !' );
+          }else{
+            file.updateOne({expDate:req.body.expDate},function(err,doc){
+              if(err){
+                 return res.status(422).send('Backend Eror !');
+             
+              }else{
+                 return res.status(200).send('Date Set!');
+               
+              }
+  
+           })
+          }
+      })
+      
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 path='./uploads/finance/paysheet2'

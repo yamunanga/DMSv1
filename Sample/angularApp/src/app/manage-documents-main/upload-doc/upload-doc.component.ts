@@ -9,8 +9,9 @@ import { NEEDAPPROVEDATA } from 'src/app/shared/needApproveBy.model';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { TempDocService } from 'src/app/shared/temp-doc.service';
 import { TEMPDOCUMENTS } from 'src/app/shared/tempDoc.model';
-import { User } from 'src/app/shared/user.model';
+import { User } from 'src/app/models/user.model';
 import { environment } from 'src/environments/environment';
+import { DatePickerService } from 'src/app/shared/date-picker.service';
 
 @Component({
   selector: 'app-upload-doc',
@@ -39,7 +40,7 @@ export class UploadDocComponent implements OnInit {
     _id:'',
     name:''
   }
-  constructor(private http: HttpClient,public departmentService:DepartmentService,public catService:CategoryService,private toastr: ToastrService,public tempDocService:TempDocService,private manageDocMainService:ManageDocMainService) { }
+  constructor(public datePickerService:DatePickerService,private http: HttpClient,public departmentService:DepartmentService,public catService:CategoryService,private toastr: ToastrService,public tempDocService:TempDocService,private manageDocMainService:ManageDocMainService) { }
   
   ngOnInit(): void {
     this.reset();
@@ -70,6 +71,11 @@ onSend(){
  //${_id}
   for(let file of this.multipleFiles){
     formData.append('files',file);
+    //console.log(formData);
+  }
+  if(this.datePickerService.pickerModel.day > 0){
+    var date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString()
+    formData.append('expDate',date)
   }
   //'/postTempDocFile/:dep/:mC'
   var path=this.conPath(this.catService.uploadPath);
@@ -156,7 +162,6 @@ refreshTempDocList() {
   });
   this.tempDocService.tempCount().subscribe((res) => {
     this.countTemp= res[0];
-    console.log(this.countTemp);
   });
 }
 
@@ -234,7 +239,7 @@ onPost(){
   this.tempDocService.postToDoc(file._id).subscribe(
     res => {
       this.showSucessMessage2 = true;
-      setTimeout(() => this.showSucessMessage2 = false, 4000);
+      setTimeout(() => this.showSucessMessage2 = false, 3000);
       //this.toastr.success('File Upload Successful');
       this.serverErrorMessages2='';
       this.refreshTempDocList();
@@ -262,10 +267,10 @@ deleteAllTemp(){
     for (let file of this.tempDocService.allDocsById) {
       this.tempDocService.deleteCat(file._id).subscribe(
         res => {
-          this.showSucessMessage2= true;
+          this.showSucessMessage3= true;
           setTimeout(() => this.showSucessMessage3 = false, 4000);
           //this.toastr.success('Deleted Successful');
-          this.serverErrorMessages2='';
+          this.serverErrorMessages3='';
           this.refreshTempDocList();
         },
         err => {
@@ -294,5 +299,13 @@ getCheckListData(_id){
     this.tempDocService.checkListData = res as OTHERUSERS[];
   });
 }
+
+//to set _id for exp date for doc 
+passFileId(_id){
+  this.tempDocService.passFileId=_id;
+}
+
+
+
 
 }

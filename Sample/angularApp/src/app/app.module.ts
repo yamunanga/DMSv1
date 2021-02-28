@@ -59,6 +59,9 @@ import { SubCatOnlyComponent } from './manage-documents-main/sub-cat-only/sub-ca
 import { ModelAssaignDocComponent } from './manage-documents-main/upload-doc/model-assaign-doc/model-assaign-doc.component';
 import { ManageApprovementComponent } from './manage-documents-main/manage-approvement/manage-approvement.component';
 import { RejectPopupModelComponent } from './manage-documents-main/manage-approvement/reject-popup-model/reject-popup-model.component';
+import { DataPickerComponent } from './data-picker/data-picker.component';
+import { PickerPopupComponent } from './data-picker/picker-popup/picker-popup.component';
+import { ArchivedDocsComponent } from './manage-documents-main/archived-docs/archived-docs.component';
 
 
 
@@ -109,6 +112,9 @@ import { RejectPopupModelComponent } from './manage-documents-main/manage-approv
     ModelAssaignDocComponent,
     ManageApprovementComponent,
     RejectPopupModelComponent,
+    DataPickerComponent,
+    PickerPopupComponent,
+    ArchivedDocsComponent,
   
    
   ],

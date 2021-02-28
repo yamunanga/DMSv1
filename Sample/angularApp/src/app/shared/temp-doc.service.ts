@@ -5,7 +5,7 @@ import { environment } from 'src/environments/environment';
 import { NEEDAPPROVEDATA } from './needApproveBy.model';
 import { OTHERUSERS } from './otherUsers.model';
 import { TEMPDOCUMENTS } from './tempDoc.model';
-import { User } from './user.model';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,8 @@ export class TempDocService {
   checkListData:OTHERUSERS[] //for show checklist data
   needAproveArr:NEEDAPPROVEDATA[]//to get need approve array
   tempDocId:String //this is for delete user from need approvement
-  countNeeds//to get count of need approve array 
+  countNeeds;//to get count of need approve array
+  passFileId;//to set _id for exp date for doc 
   constructor(private http: HttpClient) { }
  
 //to get tempory docs by user id
@@ -63,6 +64,10 @@ sendNeedApprove(data){
   return this.http.put(environment.apiBaseUrl+'/pushNeedApprove',data);
 }
 
+//to set doc expiration date individually
+setSingleExpDate(_id: string,data){
+  return this.http.put(environment.apiBaseUrl+`/setExpSingle/${_id}`,data);
+}
 
 //use for convert utc to now 
 getDate(date){

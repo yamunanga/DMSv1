@@ -156,15 +156,19 @@ module.exports.postMessageWithFiles=(req,res,next)=>{
       })
 }*/
 
+//to get count of new messages for current user
+module.exports.countNewMessages=(req,res,next)=>{
+    Message.countDocuments({toId:req._id,isRead:'NEW'},
+        (err,count)=>{
+            if (!count){
+                var zero=0;
+                return res.status(404).send(zero.toString());
+            }else{
+                return res.send(count.toString());
+            }
+        })
 
-
-
-
-
-
-
-
-
+}
 
 //to view sent messages 
 module.exports.viewSentMessage=(req,res,next)=>{
@@ -194,11 +198,13 @@ module.exports.viewRecievedMessage=(req,res,next)=>{
 
 //to delete sent message
 module.exports.deleteSentMessage=(req,res,next)=>{
+    //find one use for find to exact data 
       Message.findOne({_id:req.body._id}, //post message id from frontend
            (err,msg)=>{
             if (!msg){
                 return res.status(404).json({ status: false, message: 'Can not find !' });
             }else{
+                //this is for update relevent data
                 msg.updateOne({fromId:null},function(err,doc){
                     if(err){
                       return res.status(422).send(['Cannot update message data !']);
@@ -249,3 +255,4 @@ module.exports.readReciveMessage=(req,res,next)=>{
             }
         })
 }
+

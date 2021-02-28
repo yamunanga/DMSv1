@@ -8,6 +8,7 @@ import { MESSAGE } from './message.model';
   providedIn: 'root'
 })
 export class MessageServiceService {
+  countNewMsg;//for count unread message for current user
   allRecived:MESSAGE[]; //For get all recived
   allSents:MESSAGE[];//For get all sents
   attachments=[]//for pass attachments to model
@@ -48,8 +49,10 @@ viewSents(){
 delSent(dataModel){
   return this.http.put(environment.apiBaseUrl + '/deleteSentMessage',dataModel);
 }
-
-
+//to get count of new messages for current user
+getNewCount(){
+  return this.http.get(environment.apiBaseUrl + '/countnew');
+}
 
 
 
@@ -62,7 +65,15 @@ getDate(date){
    return currentTime;
 }
 
-
+//to get new message count
+getNewMsgCount(){
+  this.getNewCount().subscribe((res) => {
+    this.countNewMsg= res;
+  },err=>{
+    this.countNewMsg=0;
+  });
+ 
+}
 
 
 }

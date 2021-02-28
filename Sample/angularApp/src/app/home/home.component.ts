@@ -5,6 +5,7 @@ import { UserService } from '../shared/user.service';
 
 import * as moment from 'moment';
 import { CategoryService } from '../shared/category.service';
+import { MessageServiceService } from '../shared/message-service.service';
 
 @Component({
   selector: 'app-home',
@@ -23,7 +24,7 @@ export class HomeComponent implements OnInit {
   tofviewOrganisation=false;//for the organization component to load
   tofviewManageUsersMain=false;//for the manage users main to load 
   tofviewMangaDocMain=false;//for the manage documents main to load 
-  constructor(public userService: UserService, private router: Router,private catService:CategoryService) { }
+  constructor(public userService: UserService, private router: Router,private catService:CategoryService,public messageService: MessageServiceService) { }
   lastData={
     lastActive:'',
   }
@@ -35,6 +36,7 @@ export class HomeComponent implements OnInit {
     //this.getUserdetailes();
     //this.userService.getUserdetailes();
     this.getRole();
+    this.messageService.getNewMsgCount();
     
   }
   openNav() {

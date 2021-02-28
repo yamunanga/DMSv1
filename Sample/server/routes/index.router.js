@@ -199,9 +199,32 @@ router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (
 })
 
 router.get('/getDocs',jwtHelper.verifyJwtToken,ctrlDoc.getDocs);
-
-
 router.post('/postDocFile',jwtHelper.verifyJwtToken,ctrlDoc.postDocWithFile);
+//if document expire it automattically move to archivedoc
+router.get('/chkDocs',ctrlDoc.checkExpiration);
+//to manual  archive doc
+router.get('/toArc/:id',jwtHelper.verifyJwtToken,ctrlDoc.toArchived);
+//to manual restore archive doc
+router.put('/fromArc/:id',jwtHelper.verifyJwtToken,ctrlDoc.fromArcDoc);
+//to pass archived docs/files
+router.get('/getArc',ctrlDoc.getArcDocs);
+//to pass count of document schema
+router.get('/getCountDocs',ctrlDoc.getCountDocs);
+//to pass count of archive documents schema
+router.get('/getArcCountDocs',ctrlDoc.getArcCountDocs );
+//to delete an archived file
+router.delete('/delArcFile/:id',ctrlDoc.delArcDoc);
+//to rename file via doc list 
+router.put('/renameFile',ctrlDoc.renameFile);
+//to delete document/file from list
+router.delete('/delDoc/:id',ctrlDoc.deleteFile);
+//to extend doc expire data via list
+router.put('/extendExp',ctrlDoc.extendExp);
+//testing file movement
+router.get('/test22',ctrlDoc.tM);
+
+
+
 
 
 //Temp documents routes starts----------------------------------------------------------
@@ -235,6 +258,10 @@ router.get('/getApprovementData/:id',ctrlTempD.getApprovementData);
 router.get('/getCheckList/:id',jwtHelper.verifyJwtToken,ctrlTempD.getCheckList);
 // to pass count of need approve array 
 router.get('/getCountArr/:id',ctrlTempD.getCountApprovementData);
+//to set doc expiration date individually
+router.put('/setExpSingle/:id',jwtHelper.verifyJwtToken,ctrlTempD.setExpSingle);
+
+
 
 
 //Doc Approvement routes start 
@@ -286,6 +313,14 @@ router.put('/deleteSentMessage',jwtHelper.verifyJwtToken,ctrlMsg.deleteSentMessa
 router.put('/deleteReciveMessage',jwtHelper.verifyJwtToken,ctrlMsg.deleteReciveMessage);
 //readReciveMessage
 router.put('/readReciveMessage',jwtHelper.verifyJwtToken,ctrlMsg.readReciveMessage);
+// to get count of new messages for current user
+router.get('/countnew',jwtHelper.verifyJwtToken,ctrlMsg.countNewMessages);
+
+
+
+
+
+
 
 
 //Department routes Started----------------------------------------------------------------------------------

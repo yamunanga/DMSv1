@@ -6,21 +6,21 @@
     <br>
     <div class="btn-group">
         <button type="button" class="btn btn-primary" (click)="manageDocMainService.openUpload()" >UPLOAD</button>
-        <button type="button" class="btn btn-primary" (click)="manageDocMainService.viewUpload()" >UPLOAD 1</button>
         <button type="button" class="btn btn-primary" (click)="manageDocMainService.viewDocs()">VIEW</button>
+        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openArchived()" >ARCHIVED</button>
         <button type="button" class="btn btn-primary" (click)="manageDocMainService.openManageCategory()">CATEGORY</button>
         <button type="button" class="btn btn-primary" (click)="manageDocMainService.openSubONly()">SUB-CATEGORY</button>
         <button type="button" class="btn btn-primary" (click)="manageDocMainService.openApprovement() " *ngIf="this.role=='admin' ">APPROVEMENT</button>
       </div>
     <br>
-    <div><!--*ngIf="this.tOfWMsg==true"-->
+    <div>
         <app-upload-doc *ngIf="this.manageDocMainService.tOfViewUpload==true"></app-upload-doc>
         <app-manage-docs *ngIf="this.manageDocMainService.tOfuploadDocs==true"></app-manage-docs>
         <app-view-docs *ngIf="this.manageDocMainService.tOfViewDocs==true"></app-view-docs>
         <app-category-and-sub *ngIf="this.manageDocMainService.tOfViewCategoryAndSub==true"></app-category-and-sub>
         <app-sub-cat-only *ngIf="this.manageDocMainService.tOfViewSubOnly==true"></app-sub-cat-only>
         <app-manage-approvement *ngIf="this.manageDocMainService.tOfViewApprovement==true"></app-manage-approvement>
-        
+        <app-archived-docs *ngIf="this.manageDocMainService.tOfViewArchived==true"></app-archived-docs>
     </div>
  
 </div>

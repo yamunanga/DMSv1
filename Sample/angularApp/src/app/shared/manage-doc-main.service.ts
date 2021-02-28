@@ -11,7 +11,8 @@ export class ManageDocMainService {
   tOfViewUpload=true;//to document upload panel
   tOfViewCategoryAndSub=false;//to view manage category 
   tOfViewSubOnly=false;//to view  sub category only
-  tOfViewApprovement=false;//to view manage approvement
+  tOfViewApprovement=false;//to view manage approve
+  tOfViewArchived=false;//to view/manage archived docs/files
 
   constructor(public userService: UserService) { }
   
@@ -43,13 +44,16 @@ openSubONly(){
   this.reset();
   this.tOfViewSubOnly=true;
 }
-//to view manage approvement
+//to view manage approve
 openApprovement(){
   this.reset();
   this.tOfViewApprovement=true;
 }
-
-
+//to view/manage archived docs/files
+openArchived(){
+  this.reset();
+  this.tOfViewArchived=true;
+}
 
 //reset variables
 reset(){
@@ -59,6 +63,7 @@ reset(){
   this.tOfViewCategoryAndSub=false;
   this.tOfViewSubOnly=false;
   this.tOfViewApprovement=false;
+  this.tOfViewArchived=false;
   }
 //over 
 

@@ -5,7 +5,7 @@ import { environment } from '../../environments/environment';
 
 import * as moment from 'moment';
 
-import { User } from './user.model';
+import { User } from '../models/user.model';
 import { Email} from './email.model';
 import { RESETPASS } from './resetPassword.model';
 import { OTHERUSERS } from './otherUsers.model';
@@ -15,7 +15,6 @@ import { ARCHIVEDUSERS } from './archivedUsers.model';
 @Injectable({
   providedIn: 'root'
 })
-
 
 export class UserService {
   selectedUser: User = {

@@ -9,7 +9,8 @@
         "CLIENT_URL":"http://localhost:4200",
         "RESET_PASSWORD_KEY":"acc12345",
         "UPLOAD_LOCATION":"./uploads/",
-        "TO_DB_TO_UP_LOCATION":"uploads\\"
+        "TO_DB_TO_UP_LOCATION":"uploads\\",
+        "ARC_PATH":"./archived/"
     },
     "production": {
         "PORT": 80,

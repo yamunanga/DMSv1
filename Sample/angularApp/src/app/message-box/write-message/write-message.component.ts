@@ -115,7 +115,8 @@ search(){
        this.userService.otherUserProfile= res['user'];
     },
     err => { 
-      console.log(err);
+      //console.log(err);
+      this.toastr.error(err);
       
     }
   )

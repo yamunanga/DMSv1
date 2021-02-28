@@ -11,6 +11,10 @@ var documentSchema = new mongoose.Schema({
        // default:[],
         required:true
     },
+    arcStatus:{
+        type:String,
+        default:null
+     },
     subCategory:{type:Array,default:null},
     catPath:{type:String,required:true},
     size:{type:String,default:''},
@@ -18,7 +22,8 @@ var documentSchema = new mongoose.Schema({
     approvedBy:{type:String,default:null},
     department:{type:String,default:''},
     createdBy:{type:String,default:''},
-    tags:{type:String,default:''}
+    tags:{type:String,default:''},
+    expDate:{type:String,default:null}
 },{timestamps:true});
 
 mongoose.model('Document', documentSchema);

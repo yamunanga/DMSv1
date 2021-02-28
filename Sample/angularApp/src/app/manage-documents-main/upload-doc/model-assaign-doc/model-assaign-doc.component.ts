@@ -3,7 +3,8 @@ import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NEEDAPPROVEDATA } from 'src/app/shared/needApproveBy.model';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { TempDocService } from 'src/app/shared/temp-doc.service';
-import { User } from 'src/app/shared/user.model';
+import { User } from 'src/app/models/user.model';
+
 
 @Component({
   selector: 'app-model-assaign-doc',
