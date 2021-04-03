@@ -12,6 +12,9 @@ import { TEMPDOCUMENTS } from 'src/app/shared/tempDoc.model';
 import { User } from 'src/app/models/user.model';
 import { environment } from 'src/environments/environment';
 import { DatePickerService } from 'src/app/shared/date-picker.service';
+import { NgbCalendar, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import { WorkflowService } from 'src/app/shared/workflow.service';
+import { WORKFLOWDATA } from 'src/app/models/workFlow.model';
 
 @Component({
   selector: 'app-upload-doc',
@@ -29,7 +32,7 @@ export class UploadDocComponent implements OnInit {
   selectDepartment:String;
   mainCategory:String;
   newPath:String;//this is for upload path conversion
-  countTemp;//this is for get temp document count
+  //countTemp;//this is for get temp document count
   isClicked=false;
   // ViewChild is used to access the input element. 
   @ViewChild('takeInput', {static: false}) 
@@ -40,14 +43,20 @@ export class UploadDocComponent implements OnInit {
     _id:'',
     name:''
   }
-  constructor(public datePickerService:DatePickerService,private http: HttpClient,public departmentService:DepartmentService,public catService:CategoryService,private toastr: ToastrService,public tempDocService:TempDocService,private manageDocMainService:ManageDocMainService) { }
+  //this is for get today data 
+  model: NgbDateStruct;
+
+  constructor(public workflow:WorkflowService,public datePickerService:DatePickerService,private http: HttpClient,public departmentService:DepartmentService,public catService:CategoryService,private toastr: ToastrService,public tempDocService:TempDocService,private manageDocMainService:ManageDocMainService,private calendar: NgbCalendar) { }
   
   ngOnInit(): void {
     this.reset();
     this.refreshDepList();
     this.refreshTempDocList();
   }
-  
+  //this is for get today
+   selectToday() {
+    this.model = this.calendar.getToday();
+  }
    
  //This is for select file event
 selectMultipleFiles(event){
@@ -63,8 +72,8 @@ router.post('/postTempDocFileSub/:dep/:mC/:sC',jwtHelper.verifyJwtToken,ctrlTemp
 
 */
 
-
-onSend(){
+//old function
+onSendOld(){
  
   const formData = new FormData();
  // formData.append('fromEmail',this.userService.userDetails.email);
@@ -102,6 +111,69 @@ onSend(){
 
 }
 
+//working 
+onSend(){
+  this.selectToday();
+  const formData = new FormData();
+ // formData.append('fromEmail',this.userService.userDetails.email);
+ //${_id}
+  for(let file of this.multipleFiles){
+    formData.append('files',file);
+  }
+  if(this.datePickerService.pickerModel.day > 0){
+    if(this.datePickerService.pickerModel.year >=this.model.year && this.datePickerService.pickerModel.month >=this.model.month && this.datePickerService.pickerModel.day >=this.model.day){
+      var date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString()
+      formData.append('expDate',date)
+      var path=this.conPath(this.catService.uploadPath);
+  this.http.post<any>(environment.apiBaseUrl+'/postTempDocFileSub/'+path, formData,{
+    reportProgress: true,
+  }).subscribe(
+    (res) => {
+      //this.showSucessMessage = true;
+      //setTimeout(() => this.showSucessMessage = false, 4000);
+      this.toastr.success('File Added Successful');
+      this.reset();
+      this.resetNativeElement();
+      this.refreshTempDocList();
+      
+    },
+    (err) =>{
+      //this.serverErrorMessages = err.error.join('<br/>');
+      if (err.status === 422) {
+        //this.serverErrorMessages2 = err.error.join('<br/>');
+        this.toastr.error('File upload unsuccessfull !');
+      }
+    }
+ );
+    }else{
+      this.toastr.error('Incorrect Date !');
+    }
+  }else{
+    var path=this.conPath(this.catService.uploadPath);
+    this.http.post<any>(environment.apiBaseUrl+'/postTempDocFileSub/'+path, formData,{
+      reportProgress: true,
+    }).subscribe(
+      (res) => {
+        //this.showSucessMessage = true;
+        //setTimeout(() => this.showSucessMessage = false, 4000);
+        this.toastr.success('File Added Successful');
+        this.reset();
+        this.resetNativeElement();
+        this.refreshTempDocList();
+        
+      },
+      (err) =>{
+        //this.serverErrorMessages = err.error.join('<br/>');
+        if (err.status === 422) {
+          //this.serverErrorMessages2 = err.error.join('<br/>');
+          this.toastr.error('File upload unsuccessfull !');
+        }
+      }
+   );
+  }
+  
+}
+
 
 //to convert  file upload location to text
 conPath(path){
@@ -130,9 +202,17 @@ toGetNeedApproveArray(_id){
   this.tempDocService.tempDocId=_id;
   this.tempDocService.getApprovementData(_id).subscribe((res) => {
     this.tempDocService.needAproveArr= res as NEEDAPPROVEDATA[];
-    console.log( this.tempDocService.needAproveArr);
   });
   //console.log(this.tempDocService.needAproveArr);
+}
+//to get workflow array data
+toGetWorkflowArray(_id){
+  this.workflow.getWorkflowData(_id).subscribe((res) => {
+    this.workflow.workflowArr= res as WORKFLOWDATA[];
+  });
+  this.workflow.getWorkflowDataLen(_id).subscribe((res) => {
+    this.workflow.workflowArrCount= res[0];
+  });
 }
 
 //to reset values
@@ -161,7 +241,7 @@ refreshTempDocList() {
     this.tempDocService.allDocsById = res as TEMPDOCUMENTS[];
   });
   this.tempDocService.tempCount().subscribe((res) => {
-    this.countTemp= res[0];
+    this.tempDocService.countTemp= res[0];
   });
 }
 
@@ -174,18 +254,8 @@ onDel(_id){
       this.refreshTempDocList();
     },
     err => {
-      if (err.status === 422) {
-        //this.serverErrorMessages2 = err.error.join('<br/>');
-         this.toastr.error('Eror from Backend!');
-      }
-      else if( err.status==404){
-        //this.serverErrorMessages2 = err.error.join('<br/>');
-        this.toastr.error('Doc not find !');
-      }
-      else
-        //this.serverErrorMessages2= 'Something went wrong.Please contact admin.';
-        this.toastr.error('Something went wrong.Please contact admin.');
-      
+      this.serverErrorMessages =err.error;
+      this.toastr.error(this.serverErrorMessages);
     },
   );
  }
@@ -300,10 +370,32 @@ getCheckListData(_id){
   });
 }
 
-//to set _id for exp date for doc 
+//to set _id for exp date and lock status for doc 
 passFileId(_id){
   this.tempDocService.passFileId=_id;
 }
+
+//to lock doc
+/*
+toLock(_id){
+  if (confirm('Are you sure to delete this record ?') == true) {
+  this.tempDocService.setTlock(_id,data).subscribe(
+    res => {
+      this.toastr.success('Deleted Successful');
+      
+    },
+    err => {
+      this.serverErrorMessages= err.error;
+      this.toastr.error( this.serverErrorMessages);
+      
+    },
+  );
+ }
+}
+
+*/
+
+
 
 
 

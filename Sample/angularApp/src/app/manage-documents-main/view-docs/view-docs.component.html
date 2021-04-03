@@ -27,10 +27,15 @@
               <td>{{doc.createdBy}}</td>
               <td>{{doc.tags}}</td>
               <td>
-                <button type="button" class="btn btn-outline-info"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
+                <button type="button" class="btn btn-outline-info"  *ngIf="doc.isLock===null"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
               </td>
               <td>{{doc.createdAt}}</td>
-              <td><button type="button" class="btn btn-outline-info" (click)="toArc(doc._id)">Archive</button></td>
+              <td>
+                <button type="button" class="btn btn-outline-info" (click)="toArc(doc._id)">Archive</button>
+                <button type="button" class="btn btn-outline-danger" (click)="onDel(doc._id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                <app-model-unlock (click)="passFileId(doc._id) " *ngIf="doc.isLock===true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-unlock>
+                <app-model-set-pass (click)="passFileId(doc._id)" *ngIf="doc.isLock===null && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-set-pass>
+              </td>
             </tr>
           </table>
     </div>

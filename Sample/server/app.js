@@ -19,8 +19,8 @@ app.use(cors());
 app.use(passport.initialize());
 app.use('/api', rtsIndex);
 app.use('/uploads', express.static('uploads')); //to global to uploads folder
-app.use('/attachments', express.static('attachments')); //to global to uploads folder
-
+app.use('/attachments', express.static('attachments')); //to global to attachments folder
+app.use('/archived', express.static('archived')); //to global to archived folder
 // error handler
 app.use((err, req, res, next) => {
     if (err.name === 'ValidationError') {

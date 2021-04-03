@@ -129,7 +129,7 @@ onKeydown(event) {
   if (event.key === "Backspace") {
    // this.refreshUsersList();
     //this.search();
-    console.log(event);
+    //console.log(event);
   }
 }
 

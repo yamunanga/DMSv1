@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgbModal,ModalDismissReasons} from '@ng-bootstrap/ng-bootstrap';
+import { OTHERUSERS } from '../shared/otherUsers.model';
 import { UserService } from '../shared/user.service';
 
 @Component({
@@ -44,7 +45,7 @@ reset(){
   this.userService.otherUserEmail={
     email:''
   }
-  this.userService.otherUserProfile='';
+ //this.userService.otherUserProfile;
 }
 
 }

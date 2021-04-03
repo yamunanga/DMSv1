@@ -46,7 +46,7 @@ export class UserService {
    allUsers:OTHERUSERS[]; //For get the users
    allArchivedUsers:ARCHIVEDUSERS[];//For get the archived users
    userDetails;
-   otherUserProfile;//for the popup profile
+   otherUserProfile:OTHERUSERS[];//for the popup profile
    //for pass to other user email to backend
    otherUserEmail={
      email:''
@@ -65,7 +65,8 @@ export class UserService {
    otherUserRole;//this for get current user role from userList
    //otherUserId;//this is for get userId from userList
    otherUserData;//to get other user email by id
-
+   userInfoWork;//to user department
+   userDesig;//to user designation
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
   localTimeService: string;
   constructor(private http: HttpClient) { }
@@ -155,11 +156,18 @@ changeOtherUserPosition(data){
 changeUserPosition(data){
   return this.http.put(environment.apiBaseUrl+'/changePositionCurrent',data);
 } 
+//to send department by user email
+getUserDepByMail(data) {
+  return this.http.put(environment.apiBaseUrl + `/getUserDepByMail`,data);
+}
+//to send designation by user email
+getUserDesigByMail(_id: string) {
+  return this.http.get(environment.apiBaseUrl + `/getUserDesigByMail/${_id}`);
+}
 //get user detailes by user id
 getUserDetailesById(_id: string) {
   return this.http.get(environment.apiBaseUrl + `/getUserDetailesById/${_id}`);
 }
-
 
 //------------------THIS IS FOR ARCHIVED USERs---------------------------
 
@@ -251,12 +259,14 @@ getDate(date){
 }
 
 
-//THIS IS FOR ARCHIVED USER LIST
 
-
-
-
-
+//this is for to send designation by user email
+getDesignation(mail){
+  this.getUserDesigByMail(mail).subscribe((res) => {
+    this.userDesig= res as User[];
+  });
+  //return this.userDesig.position;
+}
 
 
 

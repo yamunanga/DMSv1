@@ -6,6 +6,7 @@ const router = e.Router();
 const date = require('date-and-time');
 var config = require('../config/config.json');
 const fs = require('fs-extra')
+const { encrypt, decrypt } = require('../config/crypto');
 //Multer configuration
 const multer = require('multer');
 var storage1 = multer.diskStorage({
@@ -182,15 +183,12 @@ module.exports.deleteFile=(req,res,next)=>{
      }else{
           var myJSON = JSON.stringify(file.file);
           var str=myJSON.split('\\');
-          console.log(str);
           var nStr=str[str.length-1].split('"');
-          console.log(nStr[0]);
           var multerDate=nStr[0].split('-');
           var myPath=file.catPath+'/'+multerDate[0]+'-'+file.name;
-          console.log(myPath);
           fs.unlink(myPath, (err) => {
             if (err) {
-              return res.status(404).send(['File can not delete !']);
+              return res.status(404).send(['File Not found in Local Storage !']);
             }
              //file removed
           Document.findOneAndRemove({_id:req.params.id},(err,file)=>{
@@ -390,7 +388,7 @@ module.exports.fromArcDoc=(req,res,next)=>{
   arcDocument.findOne({_id:req.params.id}, 
       (err,file)=>{
           if (!file){
-              return res.status(404).send( 'Can not find !' );
+              return res.status(404).send( ['Can not find !']);
           }else{
             //for get file destination path
             var myJSON = JSON.stringify(file.file);
@@ -401,9 +399,9 @@ module.exports.fromArcDoc=(req,res,next)=>{
             //over
             fs.move(file.arcPath,desPath, err => {
               if (err){
-                return res.status(422).send('fs eror !');
+                return res.status(422).send(['fs eror !']);
               }else{
-                Document.findOneAndUpdate({_id:file.docId},{arcStatus:'no',expDate:req.body.expDate},function(err,doc){
+                Document.findOneAndUpdate({_id:file.docId},{arcStatus:null,expDate:req.body.expDate},function(err,doc){
                   if(err){
                      return res.status(422).send(['File Restore Unsuccessful !']);
                   }else{
@@ -411,9 +409,9 @@ module.exports.fromArcDoc=(req,res,next)=>{
                     arcDocument.findOneAndRemove({_id:req.params.id},
                     (err,rfile) => {
                       if (!rfile){
-                          return res.status(404).send('not found');
+                          return res.status(404).send(['not found']);
                       }else{
-                           return res.status(200).send('File Restored!');
+                           return res.status(200).send(['File Restored!']);
                       }
                     }
                    );
@@ -518,7 +516,7 @@ module.exports.tM = (req, res, next) =>{
 
 //to pass docs without archived docs
 module.exports.getDocs = (req, res, next) =>{
-    Document.find({arcStatus: {$ne:'yes'}},
+    Document.find({arcStatus:null},
         function (err, docs) {
             if (!docs)
                 return res.status(404).json({ status: false, message: ' record not found.' });
@@ -587,10 +585,61 @@ module.exports.delArcDoc = (req, res, next) =>{
   );
 }
 
+//to unlock document
+module.exports.unlockDoc = (req, res, next) =>{
+  Document.findOne({_id:req.params.id,isLock: {$ne:null}},
+    function (err,file) {
+        if (!file)
+            return res.status(404).send(['not found']);
+        else{
+            const dPath = decrypt(file.ePath[0]);
+            const dFile = decrypt(file.eFile[0]);
+            const dPass = decrypt(file.pass[0]);
+            if(dPass==req.body.pass){
+              Document.findOneAndUpdate({_id:req.params.id},{isLock:null,eFile:null,ePath:null,file:dFile,catPath:dPath,pass:null},
+                function (err,rfile) {
+                    if (!rfile)
+                        return res.status(404).send(['not found']);
+                    else{
+                       return res.status(200).send(['File unLocked!']);
+                      
+                     }
+                }
+            );
+  
+            }else{
+              return res.status(422).send(['Wrong Password']);
+            }
+         }
+    }
+);
+}
 
 
-
-
+//to lock document
+module.exports.lockDoc = (req, res, next) =>{
+  Document.findOne({_id:req.params.id,isLock: {$ne:true}},
+    function (err,file) {
+        if (!file)
+            return res.status(404).send(['not found']);
+        else{
+          const hashF = encrypt(file.file);
+          const hashP = encrypt(file.catPath);
+          const hashPa= encrypt(req.body.pass);
+         Document.findOneAndUpdate({_id:req.params.id},{isLock:true,eFile:hashF,ePath:hashP,file:null,catPath:null,pass:hashPa},
+            function (err,rfile) {
+                if (!rfile)
+                    return res.status(404).send(['not found']);
+                else{
+                   return res.status(200).send(['File Locked!']);
+                  
+                 }
+            }
+        );
+      }
+    }
+);
+}
 
 
 

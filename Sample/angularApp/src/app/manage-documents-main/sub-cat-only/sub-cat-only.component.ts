@@ -85,8 +85,8 @@ getSubCount(_id,name){
   this.selectedCubName=name;
   this.catService.getSubCount(_id).subscribe((res) => {
     this.CountSub = res[0];
-    console.log(this.CountSub);
-    console.log(this.selectedCubName);
+    //console.log(this.CountSub);
+    //console.log(this.selectedCubName);
   });
 }
 //to get subcategory count inside of another sub category
@@ -94,8 +94,8 @@ getSubSubCount(_id,name){
    this. selectedScubName=name;
   this.catService.getSubSubCount(_id).subscribe((res) => {
     this.CountSubSub = res[0];
-    console.log(this.CountSubSub);
-    console.log(this.selectedScubName);
+    //console.log(this.CountSubSub);
+    //console.log(this.selectedScubName);
   });
 }
 
@@ -105,7 +105,7 @@ onKeydown(event) {
    // this.refreshUsersList();
     this.refreshCatList(this.depId);
     //this.search();
-    console.log(event);
+    //console.log(event);
   }
 }
 
@@ -114,14 +114,14 @@ onKeydown(event) {
 onKeydown1(event) {
   if (event.key === "Backspace") {
     this.refreshScatList(this.fromGetScat);
-    console.log(event);
+    //console.log(event);
   }
 }
 //for detect backspace for search sub category inside subcategory (sscat)
 onKeydown2(event){
   if (event.key === "Backspace") {
     this.refreshSScatList(this.fromGetSScat); 
-    console.log(event);
+    //console.log(event);
   }
 }
 //used--avoiding null values for search sub category (scat)

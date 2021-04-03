@@ -112,7 +112,8 @@ search(){
   this.userService.otherUserEmail.email=email;
   this.userService.viewOtherUserProfile(this.userService.otherUserEmail).subscribe(
     res => {
-       this.userService.otherUserProfile= res['user'];
+      //this.userService.otherUserProfile= res['user']; 
+      this.userService.otherUserProfile= res as OTHERUSERS[]; 
     },
     err => { 
       //console.log(err);
@@ -292,7 +293,7 @@ onKeydown(event) {
   if (event.key === "Backspace") {
     this.refreshUsersList();
     //this.search();
-    console.log(event);
+    //console.log(event);
   }
 }
 

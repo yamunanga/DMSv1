@@ -124,6 +124,102 @@ module.exports.postMessageWithFiles=(req,res,next)=>{
 }
 
 
+//post multiple attachments with message for popup use(toEmail)
+module.exports.postMessagePopupFromEmail=(req,res,next)=>{
+    uploadAMulti(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+          // A Multer error occurred when uploading.
+          return res.status(422).send(['multer error!']);
+        } else if (err) {
+          // An unknown error occurred when uploading.
+          return res.status(422).send(['unknown !']);
+        }
+        // Everything went fine.
+        var len=req.files.length;
+        var arr = new Array();
+        for(var i=0;i<len;i++){
+            arr.push(req.files[i].path)
+        }
+        //console.log(arr);
+        User.findOne({email:req.body.toEmail},
+            (err,toUser)=>{
+                if (!toUser)
+                return res.status(404).json({ status: false, message: 'User record not found.' });
+            else{
+                User.findOne({_id:req._id},
+                    (err,fromUser)=>{
+                        if (!fromUser)
+                        return res.status(404).json({ status: false, message: 'User record not found.' });
+                    else{
+                        var msg = new Message;
+                        msg.fromId=req._id;
+                        msg.toId=toUser._id;
+                        msg.from=fromUser.email;
+                        msg.to=toUser.email;
+                        msg.body=req.body.msgBody;
+                        msg.file=arr;
+                        msg.save((err,doc)=>{
+                            if(err){
+                                return res.status(422).send(['Sent failed !']);
+                            }else{
+                                return res.status(200).send(['Message sent !']);
+                            }
+                        })
+                     }
+                })
+             }
+        })
+     })
+}
+
+//post multiple attachments with message for popup use(toId)
+module.exports.postMessagePopupFromId=(req,res,next)=>{
+    uploadAMulti(req, res, function (err) {
+        if (err instanceof multer.MulterError) {
+          // A Multer error occurred when uploading.
+          return res.status(422).send(['multer error!']);
+        } else if (err) {
+          // An unknown error occurred when uploading.
+          return res.status(422).send(['unknown !']);
+        }
+        // Everything went fine.
+        var len=req.files.length;
+        var arr = new Array();
+        for(var i=0;i<len;i++){
+            arr.push(req.files[i].path)
+        }
+        //console.log(arr);
+        User.findOne({_id:req.body.toId},
+            (err,toUser)=>{
+                if (!toUser)
+                return res.status(404).json({ status: false, message: 'User record not found.' });
+            else{
+                User.findOne({_id:req._id},
+                    (err,fromUser)=>{
+                        if (!fromUser)
+                        return res.status(404).json({ status: false, message: 'User record not found.' });
+                    else{
+                        var msg = new Message;
+                        msg.fromId=req._id;
+                        msg.toId=toUser._id;
+                        msg.from=fromUser.email;
+                        msg.to=toUser.email;
+                        msg.body=req.body.msgBody;
+                        msg.file=arr;
+                        msg.save((err,doc)=>{
+                            if(err){
+                                return res.status(422).send(['Sent failed !']);
+                            }else{
+                                return res.status(200).send(['Message sent !']);
+                            }
+                        })
+                     }
+                })
+             }
+        })
+     })
+}
+
 
 
 
@@ -218,7 +314,6 @@ module.exports.deleteSentMessage=(req,res,next)=>{
 }
 
 //to delete recived message 
-
 module.exports.deleteReciveMessage=(req,res,next)=>{
     Message.findOne({_id:req.body._id}, //post message id from frontend
          (err,msg)=>{

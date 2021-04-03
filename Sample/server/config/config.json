@@ -5,6 +5,7 @@
         "JWT_SECRET": "SECRET#123",
         "JWT_EXP": "50m",
         "MAILGUN_APIKEY":"884dee9792d999549e3d2641cc93c84d-4879ff27-1badd7cf",
+        "CRYPTO_KEY":"vOVH6sdmpNWjRRIqCc7rdxs01lwHzfr3",
         "JWT_ACC_ACTIVATE":"acc123",
         "CLIENT_URL":"http://localhost:4200",
         "RESET_PASSWORD_KEY":"acc12345",

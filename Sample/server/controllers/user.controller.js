@@ -552,7 +552,8 @@ module.exports.findUserProfile = (req, res, next) =>{
             if (!user)
                 return res.status(404).json({ status: false, message: 'User record not found.' });
             else
-                return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role','createdAt','lastActive','status', 'department','position']) });
+                //return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role','createdAt','lastActive','status', 'department','position']) });
+                return res.status(200).send(user);
         }
     );
 }
@@ -824,6 +825,28 @@ exports.getUserDetailes=(req,res)=>{
             return res.status(404).send(['User With this req Id Does Not Exist !']);
        }else{
             return res.status(200).send(user);
+       } 
+    })
+
+}
+//to send department by user email
+exports.getUserDepByMail=(req,res,next)=>{
+    User.findOne({email:req.body.mail},(err,user)=>{
+        if(err || !user){
+            return res.status(404).send(['User With this req Id Does Not Exist !']);
+       }else{
+            return res.status(200).send(user.department);
+       } 
+    })
+
+}
+//to send designation by user email
+exports.getUserDesigByMail=(req,res)=>{
+    User.findOne({email: req.params.id },(err,user)=>{
+        if(err || !user){
+            return res.status(404).send(['User With this req Id Does Not Exist !']);
+       }else{
+            return res.status(200).send([user]);
        } 
     })
 

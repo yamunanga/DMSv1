@@ -16,7 +16,8 @@ export class TempDocService {
   needAproveArr:NEEDAPPROVEDATA[]//to get need approve array
   tempDocId:String //this is for delete user from need approvement
   countNeeds;//to get count of need approve array
-  passFileId;//to set _id for exp date for doc 
+  countTemp;//to get count of temp docs
+  passFileId='';//to set _id for exp date for doc 
   constructor(private http: HttpClient) { }
  
 //to get tempory docs by user id
@@ -65,10 +66,17 @@ sendNeedApprove(data){
 }
 
 //to set doc expiration date individually
-setSingleExpDate(_id: string,data){
-  return this.http.put(environment.apiBaseUrl+`/setExpSingle/${_id}`,data);
+setSingleExpDate(data){
+  return this.http.put(environment.apiBaseUrl+`/setExpSingle`,data);
 }
-
+//to lock doc
+setTlock(_id: string,data){
+  return this.http.put(environment.apiBaseUrl+`/lockTdoc/${_id}`,data);
+}
+//to unlock doc
+tounlockT(_id: string,data){
+  return this.http.put(environment.apiBaseUrl+`/unlockTdoc/${_id}`,data);
+}
 //use for convert utc to now 
 getDate(date){
   var stillUtc = moment.utc(date).toDate();
@@ -80,7 +88,7 @@ getDate(date){
 getCountApprovement(_id){
   this.getApprovementDataCount(_id).subscribe((res) => {
     this.countNeeds= res;
-    console.log(this.countNeeds);
+    //console.log(this.countNeeds);
   });
 }
 

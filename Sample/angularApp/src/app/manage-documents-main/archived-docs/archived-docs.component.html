@@ -26,9 +26,12 @@
               <td>{{doc.createdBy}}</td>
               <td>{{doc.tags}}</td>
               <td>
-                <button type="button" class="btn btn-outline-info"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
+                <button type="button" class="btn btn-outline-info"><a href="{{getLink(doc.arcPath)}}"  target="_blank">View</a></button>
               </td>
               <td>{{doc.createdAt}}</td>
+              <td>
+                <app-model-restore-arc-doc (click)='passFileId(doc._id)'></app-model-restore-arc-doc>
+              </td>
             </tr>
           </table>
     </div>

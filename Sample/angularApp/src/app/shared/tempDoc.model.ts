@@ -3,10 +3,12 @@ export class TEMPDOCUMENTS {
     _id: string;
     type:String;
     size:String;
+    isLock:String;
     category: string; 
     catPath:String;
     subCategory:String;
     needApproveBy:String;
+    workflow:String;
     department:string;
     createdBy:String;
     tags:String;

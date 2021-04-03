@@ -9,6 +9,7 @@ const router = e.Router();
 const URIpath = require('uri-path');
 const url = require('url');
 const date = require('date-and-time');
+const { encrypt, decrypt } = require('../config/crypto');
 const User = mongoose.model('User');
 //const needApprove=mongoose.model('needApprove');
 //const pathU = require('../uploads/hrm');
@@ -33,7 +34,7 @@ var storage3 = multer.diskStorage({
      //var originalPath=JSON.parse(req.params.path);
       //var opath=".-uploads-finance-paysheet2-last";
      let path=conPath(req.params.path)
-     console.log(path);
+     //console.log(path);
      fs.mkdirsSync(path);
      cb(null,path);
 
@@ -49,6 +50,8 @@ var uploadTemp = multer({ storage: storage3}).array('files');
 const Document = mongoose.model('Document');
 const tempDocument = mongoose.model('tempDocument');
 const approvement=mongoose.model('approvment');
+const workflow=mongoose.model('workFlow');
+
 
 /*
  let path = `./uploads/`+req.params.dep+'/'+req.params.mC;
@@ -82,7 +85,7 @@ module.exports.postTempDocWithFile=(req,res,next)=>{
            arr.push(str[x]);
         }
       }
-      console.log(arr);
+      //console.log(arr);
       if(arr.length != 0){ //req.params.sC !=null
         var len=req.files.length;
         for(var i = 0; i < len; i++){
@@ -261,15 +264,15 @@ module.exports.deleteTempFile=(req,res,next)=>{
      }else{
           var myJSON = JSON.stringify(file.file);
           var str=myJSON.split('\\');
-          console.log(str);
+          //console.log(str);
           var nStr=str[str.length-1].split('"');
-          console.log(nStr[0]);
+          //console.log(nStr[0]);
           var multerDate=nStr[0].split('-');
           var myPath=file.catPath+'/'+multerDate[0]+'-'+file.name;
-          console.log(myPath);
+          //console.log(myPath);
           fs.unlink(myPath, (err) => {
             if (err) {
-              return res.status(404).send(['File can not delete !']);
+              return res.status(404).send(['File can not delete Or Unlock Before Delete !']);
             }
              //file removed
           tempDocument.findOneAndRemove({_id:req.params.id},(err,file)=>{
@@ -575,8 +578,8 @@ module.exports.postDocNewLocation=(req,res,next)=>{
 }
 
 
-//to post data from temp to documents
-module.exports.transferToDocument=(req,res,next)=>{
+//to post data from temp to documents--old
+module.exports.transferToDocumentT=(req,res,next)=>{
   tempDocument.findOne({ _id:req.params.id },(err,file)=>{
     if(err || !file){
       return res.status(404).send(['Cannot find !']);
@@ -594,6 +597,12 @@ module.exports.transferToDocument=(req,res,next)=>{
         document.createdBy=file.createdBy;
         document.tags=file.tags;
         document.expDate=file.expDate;
+        if(file.isLock==true){
+          document.isLock=file.isLock;
+          document.ePath=file.ePath;
+          document.eFile=file.eFile;
+          document.pass=file.pass;
+        }
         document.save(function(err,result){ 
           if (err){ 
               console.log(err);
@@ -632,6 +641,12 @@ module.exports.transferToDocument=(req,res,next)=>{
           document.createdBy=file.createdBy;
           document.tags=file.tags;
           document.expDate=file.expDate;
+          if(file.isLock==true){
+            document.isLock=file.isLock;
+            document.ePath=file.ePath;
+            document.eFile=file.eFile;
+            document.pass=file.pass;
+          }
           document.save(function(err,result){ 
             if (err){ 
                 console.log(err);
@@ -661,26 +676,150 @@ module.exports.transferToDocument=(req,res,next)=>{
 }
 
 
-//to set doc expiration date individually
-module.exports.setExpSingle=(req,res,next)=>{
-    tempDocument.findOne({_id:req.params.id}, //post tempDoc id from frontend
-      (err,file)=>{
-          if (!file){
-              return res.status(404).send( 'Can not find !' );
-          }else{
-            file.updateOne({expDate:req.body.expDate},function(err,doc){
-              if(err){
-                 return res.status(422).send('Backend Eror !');
+//to post data from temp to documents ---new--work
+module.exports.transferToDocument=(req,res,next)=>{
+  tempDocument.findOne({ _id:req.params.id },(err,file)=>{
+    if(err || !file){
+      return res.status(404).send(['Cannot find !']);
+   }else{
+       if((file.needApproveBy.length== 0|| file.needApproveBy==null || file.needApproveBy==[]) && (file.workflow.length== 0|| file.workflow==null || file.workflow==[])){
+        var document = new Document();
+        document.name =file.name;
+        document.file =file.file;
+        document.type =file.type;
+        document.size =file.size;
+        document.category=file.category;
+        document.catPath=file.catPath;
+        document.subCategory=file.subCategory;
+        document.department=file.department;
+        document.createdBy=file.createdBy;
+        document.tags=file.tags;
+        document.expDate=file.expDate;
+        if(file.isLock==true){
+          document.isLock=file.isLock;
+          document.ePath=file.ePath;
+          document.eFile=file.eFile;
+          document.pass=file.pass;
+        }
+        document.save(function(err,result){ 
+          if (err){ 
+              console.log(err);
+              //return res.status(422).send(['Eror from backend !']);
+          } 
+          else{ 
+              //console.log(result) 
+              tempDocument.findOneAndRemove({_id:req.params.id},(err,file)=>{
+                if (!file){
+                  return res.status(404).send(['File Not found !']); 
+                }
+                 
+                else{
+                  return res.status(200).send(['File Saved !']); 
+                }
+              }) 
              
-              }else{
-                 return res.status(200).send('Date Set!');
-               
-              }
-  
-           })
+          } 
+      }) 
+      }else if( (file.needApproveBy !== null || file.needApproveBy.length != 0 || file.needApproveBy !==[] ) && (file.workflow.length== 0|| file.workflow==null || file.workflow==[] ) ){
+        //return res.status(400).send(['eror happen !']); needApproveDoc
+        tempDocument.findOne({ _id:req.params.id },(err,file)=>{
+          if(err || !file){
+            return res.status(404).send(['Cannot find !']);
+         }else{
+          var document = new approvement();
+          document.name =file.name;
+          document.file =file.file;
+          document.type =file.type;
+          document.size =file.size;
+          document.category=file.category;
+          document.catPath=file.catPath;
+          document.subCategory=file.subCategory;
+          document.needApproveBy=file.needApproveBy;
+          document.department=file.department;
+          document.createdBy=file.createdBy;
+          document.tags=file.tags;
+          document.expDate=file.expDate;
+          if(file.isLock==true){
+            document.isLock=file.isLock;
+            document.ePath=file.ePath;
+            document.eFile=file.eFile;
+            document.pass=file.pass;
           }
-      })
-      
+          document.save(function(err,result){ 
+            if (err){ 
+                console.log(err);
+                //return res.status(422).send(['Eror from backend !']);
+            } 
+            else{ 
+                //console.log(result) 
+                tempDocument.findOneAndRemove({_id:req.params.id},(err,file)=>{
+                  if (!file){
+                    return res.status(404).send(['File Not found !']); 
+                  }
+                   
+                  else{
+                    return res.status(200).send(['File Saved !']); 
+                  }
+                }) 
+               
+            } 
+        })
+      }
+        })
+
+       }else if((file.workflow.length != 0 || file.workflow !== null || file.workflow !== [] ) && (file.needApproveBy.length== 0|| file.needApproveBy==null || file.needApproveBy==[])){
+        tempDocument.findOne({ _id:req.params.id },(err,file)=>{
+          if(err || !file){
+            return res.status(404).send(['Cannot find !']);
+         }else{
+          var document = new workflow();
+          document.name =file.name;
+          document.file =file.file;
+          document.type =file.type;
+          document.size =file.size;
+          document.category=file.category;
+          document.catPath=file.catPath;
+          document.subCategory=file.subCategory;
+          document.department=file.department;
+          document.createdBy=file.createdBy;
+          document.workflow=file.workflow;
+          document.workflowData=file.workflow[0];
+          document.workflowNext=file.workflow[1];
+          document.workFlowList=file.workflow;
+          document.tags=file.tags;
+          document.expDate=file.expDate;
+          if(file.isLock==true){
+            document.isLock=file.isLock;
+            document.ePath=file.ePath;
+            document.eFile=file.eFile;
+            document.pass=file.pass;
+          }
+          document.save(function(err,result){ 
+            if (err){ 
+                console.log(err);
+                //return res.status(422).send(['Eror from backend !']);
+            } 
+            else{ 
+                //console.log(result) 
+                tempDocument.findOneAndRemove({_id:req.params.id},(err,file)=>{
+                  if (!file){
+                    return res.status(404).send(['File Not found !']); 
+                  }
+                   
+                  else{
+                    return res.status(200).send(['File Saved !']); 
+                  }
+                }) 
+               
+            } 
+        })
+      }
+        })
+
+       }
+
+   }
+})
 }
 
 
@@ -698,6 +837,101 @@ module.exports.setExpSingle=(req,res,next)=>{
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//to set doc expiration date individually
+module.exports.setExpSingle=(req,res,next)=>{
+    tempDocument.findOne({_id:req.body.id}, //post tempDoc id from frontend
+      (err,file)=>{
+          if (!file){
+              return res.status(404).send( ['Can not find !']);
+          }else{
+            file.updateOne({expDate:req.body.expDate},function(err,doc){
+              if(err){
+                 return res.status(422).send(['Backend Eror !']);
+             
+              }else{
+                 return res.status(200).send(['Date Set!']);
+               
+              }
+  
+           })
+          }
+      })
+      
+}
+
+
+//to lock document
+module.exports.lockDoc = (req, res, next) =>{
+  tempDocument.findOne({_id:req.params.id,isLock: {$ne:true}},
+    function (err,file) {
+        if (!file)
+            return res.status(404).send(['Already Locked !']);
+        else{
+          const hashF = encrypt(file.file);
+          const hashP = encrypt(file.catPath);
+          const hashPa= encrypt(req.body.pass);
+         tempDocument.findOneAndUpdate({_id:req.params.id},{isLock:true,eFile:hashF,ePath:hashP,file:null,catPath:null,pass:hashPa},
+            function (err,rfile) {
+                if (!rfile)
+                    return res.status(404).send(['not found']);
+                else{
+                   return res.status(200).send(['File Locked!']);
+                  
+                 }
+            }
+        );
+      }
+    }
+);
+}
+
+
+
+//to unlock document
+module.exports.unlockDoc = (req, res, next) =>{
+  tempDocument.findOne({_id:req.params.id,isLock: {$ne:null}},
+    function (err,file) {
+        if (!file)
+            return res.status(404).send(['not found or already unlocked!']);
+        else{
+            const dPath = decrypt(file.ePath[0]);
+            const dFile = decrypt(file.eFile[0]);
+            const dPass = decrypt(file.pass[0]);
+            if(dPass==req.body.pass){
+              tempDocument.findOneAndUpdate({_id:req.params.id},{isLock:null,eFile:null,ePath:null,file:dFile,catPath:dPath,pass:null},
+                function (err,rfile) {
+                    if (!rfile)
+                        return res.status(404).send(['not found']);
+                    else{
+                       return res.status(200).send(['File unLocked!']);
+                      
+                     }
+                }
+            );
+  
+            }else{
+              return res.status(422).send(['Wrong Password']);
+            }
+         }
+    }
+);
+}
+
+//---------workflow----------------------------------------------------
 
 /*
 path='./uploads/finance/paysheet2'

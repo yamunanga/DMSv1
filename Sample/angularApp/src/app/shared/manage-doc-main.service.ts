@@ -13,6 +13,7 @@ export class ManageDocMainService {
   tOfViewSubOnly=false;//to view  sub category only
   tOfViewApprovement=false;//to view manage approve
   tOfViewArchived=false;//to view/manage archived docs/files
+  tofViewWorkflow=false;//to view workflow data
 
   constructor(public userService: UserService) { }
   
@@ -54,6 +55,12 @@ openArchived(){
   this.reset();
   this.tOfViewArchived=true;
 }
+//to view workflow data
+openWorkflow(){
+  this.reset();
+  this.tofViewWorkflow=true;
+}
+
 
 //reset variables
 reset(){
@@ -64,6 +71,7 @@ reset(){
   this.tOfViewSubOnly=false;
   this.tOfViewApprovement=false;
   this.tOfViewArchived=false;
+  this.tofViewWorkflow=false;
   }
 //over 
 

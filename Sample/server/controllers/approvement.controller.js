@@ -16,13 +16,6 @@ const tempDocument = mongoose.model('tempDocument');
 const approvement=mongoose.model('approvment');
 const Message=mongoose.model('Message');
 
-
-
-
-
-
-
-
 //for pass need approvement data to front end--work--
 
 module.exports.getApprovementDataList=(req,res,next)=>{
@@ -32,7 +25,7 @@ module.exports.getApprovementDataList=(req,res,next)=>{
                  return res.status(404).send( 'Can not find !' );
             }else{
                 var mail=user.email;
-                console.log(mail);
+                //console.log(mail);
                 approvement.find({needApproveBy:user.email},
                     (err,files)=>{
                         if (!files){
@@ -54,7 +47,7 @@ module.exports.getApprovmentDataCount=(req,res,next)=>{
                 approvement.countDocuments({needApproveBy:user.email},
                     (err,cd)=>{
                         if (err)
-                         return res.status(404).send(['Category not find !']);
+                         return res.status(404).send(['Docs not find !']);
                     else{
                        // return res.send(cats);
                         return res.status(200).send([cd]);
@@ -62,28 +55,7 @@ module.exports.getApprovmentDataCount=(req,res,next)=>{
                 })
             }
         })
- 
-
-
-
-
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
   //approved doc moved to documents

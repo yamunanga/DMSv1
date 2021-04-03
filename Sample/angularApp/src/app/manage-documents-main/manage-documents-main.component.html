@@ -11,6 +11,7 @@
         <button type="button" class="btn btn-primary" (click)="manageDocMainService.openManageCategory()">CATEGORY</button>
         <button type="button" class="btn btn-primary" (click)="manageDocMainService.openSubONly()">SUB-CATEGORY</button>
         <button type="button" class="btn btn-primary" (click)="manageDocMainService.openApprovement() " *ngIf="this.role=='admin' ">APPROVEMENT</button>
+        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openWorkflow() " *ngIf="this.role=='admin' " data-toggle="tooltip" data-placement="top" title="Manage Workflow Data"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
       </div>
     <br>
     <div>
@@ -21,6 +22,7 @@
         <app-sub-cat-only *ngIf="this.manageDocMainService.tOfViewSubOnly==true"></app-sub-cat-only>
         <app-manage-approvement *ngIf="this.manageDocMainService.tOfViewApprovement==true"></app-manage-approvement>
         <app-archived-docs *ngIf="this.manageDocMainService.tOfViewArchived==true"></app-archived-docs>
+        <app-work-flow *ngIf="this.manageDocMainService.tofViewWorkflow==true"></app-work-flow>
     </div>
  
 </div>

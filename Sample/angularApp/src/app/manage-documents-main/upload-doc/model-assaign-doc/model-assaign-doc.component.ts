@@ -4,6 +4,7 @@ import { NEEDAPPROVEDATA } from 'src/app/shared/needApproveBy.model';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { TempDocService } from 'src/app/shared/temp-doc.service';
 import { User } from 'src/app/models/user.model';
+import { TEMPDOCUMENTS } from 'src/app/shared/tempDoc.model';
 
 
 @Component({
@@ -58,15 +59,15 @@ export class ModelAssaignDocComponent implements OnInit {
 getId(e:any,id:String){
   if(e.target.checked)
   {
-    console.log(id+' checkec');
+  //  console.log(id+' checkec');
     this.selectedItems.push(id);
   }
   else
   {
-    console.log(id+' unchecked');
+    //console.log(id+' unchecked');
     this.selectedItems=this.selectedItems.filter(m=>m!=id);
   }
-  console.log(this.selectedItems);
+ //console.log(this.selectedItems);
 }
 
 
@@ -79,6 +80,7 @@ onDel(mail){
     res => {
       this.showSucessMessage1 = true;
       setTimeout(() => this.showSucessMessage1= false, 2000);
+      this.refreshTempDocList();
       this.toGetNeedApproveArray(this.tempDocService.tempDocId);
       this.tempDocService.getCountApprovement(this.tempDocService.tempDocId);
       this.getCheckListData(this.tempDocService.tempDocId);
@@ -110,6 +112,7 @@ onSend(){
        res => {
          this.showSucessMessage2 = true;
          setTimeout(() => this.showSucessMessage2= false, 2000);
+         this.refreshTempDocList();
          this.toGetNeedApproveArray(this.tempDocService.tempDocId);
          this.tempDocService.getCountApprovement(this.tempDocService.tempDocId);
          this.getCheckListData(this.tempDocService.tempDocId);
@@ -179,7 +182,7 @@ toEmpty(arr){
  for(var x=0;x<len;x++){
     arr.pop()
  }
- console.log(arr);
+// console.log(arr);
 }
 
 
@@ -235,7 +238,7 @@ onKeydown(event) {
   if (event.key === "Backspace") {
     this.getCheckListData(this.tempDocService.tempDocId);
     //this.search();
-    console.log(event);
+    //console.log(event);
   }
 }
 
@@ -251,6 +254,14 @@ refresh(){
   this.sNameM='';
 }
 
-
+//to get temp documents
+refreshTempDocList() {
+  this.tempDocService.getTempDocs().subscribe((res) => {
+    this.tempDocService.allDocsById = res as TEMPDOCUMENTS[];
+  });
+  this.tempDocService.tempCount().subscribe((res) => {
+    this.tempDocService.countTemp= res[0];
+  });
+}
 
 }

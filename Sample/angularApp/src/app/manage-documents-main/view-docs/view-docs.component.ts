@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { TempDocService } from 'src/app/shared/temp-doc.service';
+import { UserService } from 'src/app/shared/user.service';
 import { environment } from 'src/environments/environment';
 
 import{DOCUMENTS} from '../../shared/document.model';
@@ -13,10 +15,13 @@ import { DocumentService } from '../../shared/document.service';
 export class ViewDocsComponent implements OnInit {
   serverErrorMessages='';
   countDocs;//for get count of docs
-  constructor(public documentService:DocumentService,private toastr: ToastrService) { }
+  role;
+  constructor(public documentService:DocumentService,public userService: UserService,private toastr: ToastrService,public tempDocService:TempDocService) { }
 
   ngOnInit(): void {
     this.refreshDocList();
+    this.getUserdetailes();
+    this.getRole();
   }
 
   refreshDocList() {
@@ -64,13 +69,47 @@ toArc(_id){
  }
 }
 
+//to delete an file from  documents
+onDel(_id){
+  if (confirm('Are you sure to delete this record ?') == true) {
+  this.documentService.deleteDoc(_id).subscribe(
+    res => {
+      this.toastr.success('Deleted Successful');
+      this.refreshDocList();
+      
+    },
+    err => {
+      this.serverErrorMessages= err.error;
+      this.toastr.error( this.serverErrorMessages);
+      
+    },
+  );
+ }
+}
 
 
+//to set _id for exp date and lock status for doc 
+passFileId(_id){
+  this.documentService.toPassDocId=_id;
+}
 
+//get user detailes
+getUserdetailes(){
+  this.userService.getUserProfile().subscribe(
+    res => {
+       this.userService.userDetails = res['user'];
+    },
+    err => { 
+      //console.log(err);
+      
+    }
+  )
+}
 
-
-
-
+//get user role
+getRole(){
+  this.role=this.userService.getRole()
+}
 
 
 }

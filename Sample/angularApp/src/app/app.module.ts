@@ -62,7 +62,16 @@ import { RejectPopupModelComponent } from './manage-documents-main/manage-approv
 import { DataPickerComponent } from './data-picker/data-picker.component';
 import { PickerPopupComponent } from './data-picker/picker-popup/picker-popup.component';
 import { ArchivedDocsComponent } from './manage-documents-main/archived-docs/archived-docs.component';
-
+import { ModelSetPassComponent } from './manage-documents-main/upload-doc/model-set-pass/model-set-pass.component';
+import { ModelUnlockComponent } from './manage-documents-main/upload-doc/model-unlock/model-unlock.component';
+import { ModelRestoreArcDocComponent } from './manage-documents-main/archived-docs/model-restore-arc-doc/model-restore-arc-doc.component';
+import { ModelWorkflowComponent } from './manage-documents-main/upload-doc/model-workflow/model-workflow.component';
+import { WorkFlowComponent } from './manage-documents-main/work-flow/work-flow.component';
+import { NewWorkflowComponent } from './manage-documents-main/work-flow/new-workflow/new-workflow.component';
+import { OldWorkflowComponent } from './manage-documents-main/work-flow/old-workflow/old-workflow.component';
+import { ModelDocUpdateComponent } from './manage-documents-main/work-flow/new-workflow/model-doc-update/model-doc-update.component';
+import { ModelViewListComponent } from './manage-documents-main/work-flow/new-workflow/model-view-list/model-view-list.component';
+import { ModelSentMsgComponent } from './message-box/model-sent-msg/model-sent-msg.component';
 
 
 
@@ -115,6 +124,16 @@ import { ArchivedDocsComponent } from './manage-documents-main/archived-docs/arc
     DataPickerComponent,
     PickerPopupComponent,
     ArchivedDocsComponent,
+    ModelSetPassComponent,
+    ModelUnlockComponent,
+    ModelRestoreArcDocComponent,
+    ModelWorkflowComponent,
+    WorkFlowComponent,
+    NewWorkflowComponent,
+    OldWorkflowComponent,
+    ModelDocUpdateComponent,
+    ModelViewListComponent,
+    ModelSentMsgComponent,
   
    
   ],

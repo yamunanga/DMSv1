@@ -1,26 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-//Multer configuration
-const multer = require('multer');
-var storage1 = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'uploads/')
-    },
-   
-    filename: function (req, file, cb) {
-       let extArray = file.originalname.split(".")
-       let extension = extArray[extArray.length - 1];
-       if(req.body.name==''){
-        cb(null,file.originalname) //this can store file as original
-       }else{
-        cb(null,req.body.name +'.'+extension)//this can store file by user given name
-       }
-      }
-
-})
-var upload = multer({ storage: storage1});
-//Doc upload config over
 const User = mongoose.model('User');
 const Document = mongoose.model('Document');
 const ctrlUser = require('../controllers/user.controller');
@@ -31,11 +11,8 @@ const ctrlPost=require('../controllers/position.controller');
 const ctrlTempD=require('../controllers/tempDocument.controller');
 const ctrlCat=require('../controllers/category.controller');
 const ctrlApprove=require('../controllers/approvement.controller');
+const ctrlWorkflow=require('../controllers/workflow.controller');
 const jwtHelper = require('../config/jwtHelper');
-
-
-
-
 
 
 //This routs for UserSchema
@@ -64,7 +41,6 @@ router.put('/deleteUser',jwtHelper.verifyJwtToken,ctrlUser.deleteUser);
 router.put('/updateOtherUserRole',jwtHelper.verifyJwtToken,ctrlUser.updateUserRolefromList);
 //findUserProfile
 router.put('/findUserProfile',jwtHelper.verifyJwtToken,ctrlUser.findUserProfile);
-
 //changeUserDepartment this is for change other user department
 router.put('/changeDep',jwtHelper.verifyJwtToken,ctrlUser.changeUserDepartment);
 //to update current user departments
@@ -75,128 +51,12 @@ router.put('/changePosition',jwtHelper.verifyJwtToken,ctrlUser.changeUserPositio
 router.put('/changePositionCurrent',jwtHelper.verifyJwtToken,ctrlUser.changeUserPositionCurrent);
 //getUserDetailes by id for other
 router.get('/getUserDetailesById/:id',jwtHelper.verifyJwtToken,ctrlUser.getUserDetailes);
+//to send department by user email
+router.put('/getUserDepByMail',ctrlUser.getUserDepByMail);
+//to send designation by user email
+router.get('/getUserDesigByMail/:id',jwtHelper.verifyJwtToken,ctrlUser.getUserDesigByMail);
 
-
-
-
-/*
-//routs for documentSchema
-router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (req, res, next) {
-    var document = new Document();
-    let nameArray= req.file.originalname.split(".");
-    let name=nameArray[nameArray.length-2];
-    document.name =name;
-    document.file= req.file.path ;
-    document.save((err, doc) => {
-        if (!err)
-            //res.send(doc);
-            return res.status(200).send(['File Uploaded Successfully !']);
-        else {
-            return next(err);
-                
-        }
-
-    });
-    
-  })*/
-//Test
-/*
-router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (req, res, next) {
-           if(req.body.name ==''){
-            var document = new Document();
-           // let nameArray= req.file.originalname.split(".");
-            //let name=nameArray[nameArray.length-2];
-            document.name =req.file.originalname;
-            document.file= req.file.path ;
-            document.save((err, doc) =>{
-              if (!err){
-                return res.status(200).send(['File Uploaded Successfully !']);
-              }else if(err){
-                return next(err);
-              }else{
-                return res.status(422).send(['Eror from backend !']);
-              }
-             })
-           }else{
-            var document = new Document();
-            document.name =req.body.name;
-            document.file= req.file.path ;
-            document.save((err, doc) =>{
-              if (!err){
-                return res.status(200).send(['File Uploaded Successfully !']);
-              }else if(err){
-                return next(err);
-              }else{
-                return res.status(422).send(['Eror from backend !']);
-              }
-             })
-
-           }
-})
-*/
-//Document routes start
-//Test2
-router.post('/postDoc',upload.single('file'),jwtHelper.verifyJwtToken,function (req, res, next) {
-                  let extArray = req.file.originalname.split(".")
-                  let extension = extArray[extArray.length - 1];
-                                  
-                  if(req.body.name ==''){
-                    
-                    Document.findOne({name:req.file.originalname},(err,doc)=>{
-                       if(doc){
-                        return res.status(422).send(['Duplicate name Found!']);
-                       }else{
-                        var document = new Document();
-                        // let nameArray= req.file.originalname.split(".");
-                        //let name=nameArray[nameArray.length-2];
-                         document.name =req.file.originalname;
-                         document.file= req.file.path ;
-                         document.type=extension;
-                         document.size=req.file.size;
-                         document.category=req.body.category;
-                         document.department=req.body.department;
-                         document.createdBy=req.body.createdBy;
-                         document.tags=req.body.tags;
-                         document.save((err, doc) =>{
-                           if (!err){
-                             return res.status(200).send(['File Uploaded Successfully !']);
-                           }else if(err){
-                             return next(err);
-                           }else{
-                             return res.status(422).send(['Eror from backend !']);
-                           }
-                          })
-                        }
-                    })
-              }else{
-                Document.findOne({name:req.body.name},(err,doc)=>{
-                if(doc){
-                  return res.status(422).send(['Duplicate name Found!']);
-                }else{
-                  var document = new Document();
-                  document.name =req.body.name;
-                  document.file= req.file.path ;
-                  document.type=extension;
-                  document.size=req.file.size;
-                  document.category=req.body.category;
-                  document.department=req.body.department;
-                  document.createdBy=req.body.createdBy;
-                  document.tags=req.body.tags;
-                  document.save((err, doc) =>{
-                    if (!err){
-                      return res.status(200).send(['File Uploaded Successfully !']);
-                    }else if(err){
-                      return next(err);
-                    }else{
-                      return res.status(422).send(['Eror from backend !']);
-                    }
-                   })
-
-                }
-              })
-            }
-
-})
+//Document Routes Start--------------------------------------------------------
 
 router.get('/getDocs',jwtHelper.verifyJwtToken,ctrlDoc.getDocs);
 router.post('/postDocFile',jwtHelper.verifyJwtToken,ctrlDoc.postDocWithFile);
@@ -222,9 +82,10 @@ router.delete('/delDoc/:id',ctrlDoc.deleteFile);
 router.put('/extendExp',ctrlDoc.extendExp);
 //testing file movement
 router.get('/test22',ctrlDoc.tM);
-
-
-
+//testing crypto
+router.put('/unlockDoc/:id',ctrlDoc.unlockDoc);
+//to lock document
+router.put('/lockDoc/:id',ctrlDoc.lockDoc);
 
 
 //Temp documents routes starts----------------------------------------------------------
@@ -259,12 +120,14 @@ router.get('/getCheckList/:id',jwtHelper.verifyJwtToken,ctrlTempD.getCheckList);
 // to pass count of need approve array 
 router.get('/getCountArr/:id',ctrlTempD.getCountApprovementData);
 //to set doc expiration date individually
-router.put('/setExpSingle/:id',jwtHelper.verifyJwtToken,ctrlTempD.setExpSingle);
+router.put('/setExpSingle',jwtHelper.verifyJwtToken,ctrlTempD.setExpSingle);
+//to lock temp doc
+router.put('/lockTdoc/:id',ctrlTempD.lockDoc);
+//to unlock temp doc
+router.put('/unlockTdoc/:id',ctrlTempD.unlockDoc);
 
 
-
-
-//Doc Approvement routes start 
+//Doc Approvement routes start ----------------------------------------------------------
 
 //to send approvement data for assaigned admins
 router.get('/getApprovementData',jwtHelper.verifyJwtToken,ctrlApprove.getApprovementDataList);
@@ -272,10 +135,37 @@ router.get('/getApprovementData',jwtHelper.verifyJwtToken,ctrlApprove.getApprove
 router.get('/saveApprovment/:id',jwtHelper.verifyJwtToken,ctrlApprove.saveApprovementData);
 //reject doc from approvment
 router.put('/rejectApprovment/:id',jwtHelper.verifyJwtToken,ctrlApprove.rejectApprovementData);
-//to send cound of need approvment data
+//to send count of need approvment data
 router.get('/getApprovmentDataCount',jwtHelper.verifyJwtToken,ctrlApprove.getApprovmentDataCount);
 
+//Doc Workflow routes start----------------------------------------------------------------
 
+//to send workflow data for relevent admins
+router.get('/getWorkflowData',jwtHelper.verifyJwtToken,ctrlWorkflow.getWorkflowDataList);
+//to sent count of workflow data
+router.get('/getWorkflowDataCount',jwtHelper.verifyJwtToken,ctrlWorkflow.getWorkflowDataCount);
+//to post file to workflow
+router.put('/postWorkflowFile/:path',jwtHelper.verifyJwtToken,ctrlWorkflow.postWorkflowFile);
+//to rename workflow file
+router.put('/renameWorkflowFile',jwtHelper.verifyJwtToken,ctrlWorkflow.renameWorkflowFile);
+//to process workflow
+router.get('/toWorkflow/:id',jwtHelper.verifyJwtToken,ctrlWorkflow.getWorkflowProcess);
+//for pass admin users for select workflow
+router.get('/userForWork',jwtHelper.verifyJwtToken,ctrlWorkflow.getUsersWork);
+//to add workflow to temp doc
+router.put('/addWorkflow/:id',ctrlWorkflow.paasWorkflow);
+//to remove user from workflow 
+router.put('/delWorkflowUser/:id',ctrlWorkflow.delWorkflowUser);
+//for pass workflow data to front end 
+router.get('/getWorkflowData/:id',ctrlWorkflow.getWorkflowData);
+//to check workflow
+router.put('/chkWorkflow/:id',ctrlWorkflow.checkWorkflow);
+//for pass workflow data array length to frontend
+router.get('/getWorkflowDataLen/:id',ctrlWorkflow.getWorkflowDataLen);
+//to lock doc via workflow
+router.put('/lockWorkFile/:id',ctrlWorkflow.lockDoc);
+//to unlock doc via workflow
+router.put('/unlockWorkFile/:id',ctrlWorkflow.unlockDoc);
 
 //Archive user routes -------------------------------------------------------------------
 //To get Archived User
@@ -292,23 +182,20 @@ router.put('/deleteArchivedUser',jwtHelper.verifyJwtToken,ctrlUser.deleteArchive
 //Message Routes-----------------------------------------------------------------------------
 //send message--not used--
 router.post('/postmessage',jwtHelper.verifyJwtToken,ctrlMsg.postMessage);
-
 //postMessageWithFile ---not used---
 router.post('/postFile',jwtHelper.verifyJwtToken,ctrlMsg.postMessageWithFile);
-
 //postMessageWith multiple files
-
 router.post('/postFiles',jwtHelper.verifyJwtToken,ctrlMsg.postMessageWithFiles);
-
+//post multiple attachments with message for popup use(toEmail)
+router.post('/postMsgToEmail',jwtHelper.verifyJwtToken,ctrlMsg.postMessagePopupFromEmail);
+//post multiple attachments with message for popup use(toId)
+router.post('/postMsgToId',jwtHelper.verifyJwtToken,ctrlMsg.postMessagePopupFromId);
 //view sent messages
 router.get('/viewSents',jwtHelper.verifyJwtToken,ctrlMsg.viewSentMessage);
-//view recived messages
 //viewRecievedMessage
 router.get('/viewRecived',jwtHelper.verifyJwtToken,ctrlMsg.viewRecievedMessage);
 //to delete sent message
-//deleteSentMessage
 router.put('/deleteSentMessage',jwtHelper.verifyJwtToken,ctrlMsg.deleteSentMessage);
-//deleteReciveMessage
 //To delete recive message 
 router.put('/deleteReciveMessage',jwtHelper.verifyJwtToken,ctrlMsg.deleteReciveMessage);
 //readReciveMessage

@@ -90,7 +90,7 @@ resetListMessages(){
 onCount(_id,name){
   this.depService.countDepUsers(_id).subscribe((res) => {
     this.depService.count = res;
-    console.log(res);
+    //console.log(res);
     this.myFunction(res,name);
   });
  

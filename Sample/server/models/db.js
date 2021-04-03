@@ -13,6 +13,7 @@ require('./message.model');
 require('./department.model');
 require('./position.model');
 require('./tempDocument.model');
+require('./workFlow.model');
 require('./approvment.model');
 require('./category.model');
 require('./subCategory.model');

@@ -24,6 +24,11 @@ var approvmentSchema = new mongoose.Schema({
     createdBy:{type:String,default:''},
     tags:{type:String,default:''},
     approvedBy:{type:String,default:null},
+    expDate:{type:String,default:null},
+    pass:{type:Array,default:null},
+    isLock:{type:Boolean,default:null},
+    ePath:{type:Array,default:null},
+    eFile:{type:Array,default:null}
 },{timestamps:true});
 
 mongoose.model('approvment',approvmentSchema);

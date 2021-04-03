@@ -1,0 +1,68 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Create Workflow </h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div *ngIf="this.workflow.workflowArrCount !=0">
+        <h5 style="text-align: center;" >Workflow Hierarchy:</h5>
+        <div style="height:250px;overflow:auto;">
+        <table class="responsive-table highlight">
+          <tr *ngFor="let mail of this.workflow.workflowArr;index as i">
+              <td>{{i+1}}</td>
+              <td>{{mail}}</td>
+              <td><button type="button"  class="btn btn-outline-danger" (click)="onDel(mail)" ><i class="fa fa-trash-o" aria-hidden="true"></i></button></td>
+          </tr>
+      </table>
+    </div>
+      <br>
+       <!-- Success message -->
+      <div class="success" *ngIf="showSucessMessage1">
+          User Removed !
+      </div>
+    
+      <!-- Error message -->
+      <div class="alert" *ngIf="serverErrorMessages1">
+        {{serverErrorMessages1}}
+      </div>
+      </div>
+      <div class="centertb">
+      <h5 style="text-align: center;" >Select Users:</h5>
+      <p id="demo" style="text-align: center;"></p>
+      <br>
+      <div style="text-align: center">
+        <input type="text" [(ngModel)]="sNameM" (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here"  /><!--(keydown)="onKeydown($event)"-->
+      </div>
+    </div>
+      <div style="height:100px;overflow:auto;">
+        <div *ngFor="let user of workflow.checkListData">
+           <input  class="form-check-input" type="checkbox" name="{{user.name}}" [value]="user.email" (change)="getId($event,user.email)"> &nbsp;
+           <label class="form-check-label" style="font-size:large" >{{user.email}}</label> 
+            &nbsp;
+           <label><i class="fa fa-info-circle" aria-hidden="true"  data-toggle="tooltip" data-placement="top" title={{displayInfo(user.fullName,user.position,user.department)}}></i> </label>
+           <!--<button type="button" class="btn btn-outline-info" (click)="displayInfo(user.name,user.position,user.department) " data-toggle="tooltip" data-placement="top" title="User Info"><i class="fa fa-info-circle" aria-hidden="true"></i></button>-->
+        </div>
+      </div>
+      <br>
+      <div style="text-align: center;" *ngIf="this.selectedItems.length !=0">
+        <button type="button" class="btn btn-outline-success" (click)="onSend()">SET</button>
+       </div>
+        <br>
+        <!-- Success message -->
+        <div class="success" *ngIf="showSucessMessage2">
+            User Set !
+        </div>
+      
+        <!-- Error message -->
+        <div class="alert" *ngIf="serverErrorMessages2">
+          {{serverErrorMessages2}}
+        </div>
+    </div>
+  </ng-template>
+  
+  <button class="btn btn-outline-info" (click)="open(content)" data-toggle="tooltip" data-placement="top" title="Create Workflow"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
+  
+  
+

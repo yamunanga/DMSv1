@@ -11,7 +11,7 @@
       <div>
         <input type="file"   #takeInput name="files" multiple (change)="selectMultipleFiles($event)" /> 
       </div>
-      <div class="centertb" *ngIf=" this.countTemp ==0">
+      <div class="centertb" *ngIf="this.tempDocService.countTemp ==0">
          <h5>Set Expiration Date</h5>
          <div class="centertb">
              <div style="text-align: center;margin: auto;width:50%;">
@@ -29,10 +29,12 @@
       </div>
       <br>
       <div class="centertb" style="height:500px;overflow:auto;">
-        <div class="r" *ngIf=" this.countTemp !=0" >
-          <button type="button" class="btn btn-outline-primary" (click)="onPost()"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+        <div class="r" *ngIf="this.tempDocService.countTemp !=0" >
+          <button type="button" class="btn btn-outline-info" (click)="refreshTempDocList()" data-toggle="tooltip" data-placement="top" title="Refresh"><i class="fa fa-refresh" aria-hidden="true"></i></button>
            &nbsp;
-          <button type="button"  class="btn btn-outline-danger" (click)="deleteAllTemp()"><i class="fa fa-trash" aria-hidden="true"></i></button>
+          <button type="button" class="btn btn-outline-primary" (click)="onPost()" data-toggle="tooltip" data-placement="top" title="Save All"><i class="fa fa-floppy-o" aria-hidden="true"></i></button>
+           &nbsp;
+          <button type="button"  class="btn btn-outline-danger" (click)="deleteAllTemp()" data-toggle="tooltip" data-placement="top" title="Delete All"><i class="fa fa-trash" aria-hidden="true"></i></button>
         </div>
         <!-- Success message -->
        <div class="success" *ngIf="showSucessMessage2">
@@ -57,8 +59,11 @@
               <td>
                 <button type="button" class="btn btn-danger" (click)="onDel(file._id)">Delete</button><br>
                 <button type="button" class="btn btn-success"(click)="getRenameId(file._id)">Rename</button><br>
-                <app-model-assaign-doc (click)="tempDocService.getCountApprovement(file._id)" (click)="getCheckListData(file._id)" (click)="toGetNeedApproveArray(file._id)"></app-model-assaign-doc>
+                <app-model-assaign-doc (click)="tempDocService.getCountApprovement(file._id)" *ngIf="file.workflow.length == 0" (click)="getCheckListData(file._id)" (click)="toGetNeedApproveArray(file._id)"></app-model-assaign-doc>
                 <app-picker-popup (click)="passFileId(file._id)"></app-picker-popup>
+                <app-model-set-pass (click)="passFileId(file._id)" *ngIf="file.isLock===null "></app-model-set-pass>
+                <app-model-unlock (click)="passFileId(file._id)" *ngIf="file.isLock===true"></app-model-unlock>
+                <app-model-workflow (click)="passFileId(file._id)" *ngIf="file.needApproveBy.length == 0"(click)="toGetWorkflowArray(file._id)"></app-model-workflow>
               </td>
           </tr>
       </table>

@@ -9,21 +9,30 @@ var documentSchema = new mongoose.Schema({
     file:{
         type:String,
        // default:[],
-        required:true
+        default:null
     },
     arcStatus:{
         type:String,
         default:null
      },
+     workFlowList:{
+        type:Array,
+        default:null
+     },
     subCategory:{type:Array,default:null},
-    catPath:{type:String,required:true},
+    isLock:{type:Boolean,default:null},
+    catPath:{type:String,default:null},
     size:{type:String,default:''},
     category:{type:String,default:''},
     approvedBy:{type:String,default:null},
     department:{type:String,default:''},
     createdBy:{type:String,default:''},
     tags:{type:String,default:''},
-    expDate:{type:String,default:null}
+    expDate:{type:String,default:null},
+    pass:{type:Array,default:null},
+    ePath:{type:Array,default:null},
+    eFile:{type:Array,default:null},
+    isWorkFlowed:{type:Boolean,default:null},
 },{timestamps:true});
 
 mongoose.model('Document', documentSchema);

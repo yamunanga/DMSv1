@@ -20,6 +20,17 @@ export class MessageServiceService {
     toEmail:'',
     msgBody:''
   }
+//post multiple attachments with message for popup use(toEmail)
+  msgForEmail={
+    toEmail:'',
+    msgBody:''
+  }
+//post multiple attachments with message for popup use(toId)
+msgForId={
+  toId:'',
+  msgBody:''
+}
+
   constructor(private http: HttpClient) { }
 
 //to get all recived messages
@@ -53,9 +64,14 @@ delSent(dataModel){
 getNewCount(){
   return this.http.get(environment.apiBaseUrl + '/countnew');
 }
-
-
-
+//post multiple attachments with message for popup use(toEmail)
+postMsgForEmail(data){
+  return this.http.post(environment.apiBaseUrl+`/postMsgToEmail`,data);
+}
+//post multiple attachments with message for popup use(toId)
+postMsgForId(data){
+  return this.http.post(environment.apiBaseUrl+`/postMsgToId`,data);
+}
 
 //Helpers
 //for convert date coming from db

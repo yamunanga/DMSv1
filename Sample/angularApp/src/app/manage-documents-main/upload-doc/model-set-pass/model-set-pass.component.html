@@ -1,0 +1,34 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Lock File</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h5 style="text-align: center;">Set Password </h5>
+      <h6 style="text-align: center;">Min Length 5 characters</h6>
+      <div style="text-align: center;">
+        <input type="password" name="newPassword" #password="ngModel" [(ngModel)]="newPassword" placeholder="New Password" required minlength="5">
+        <br>
+        <input type="password" *ngIf="this.newPassword.length > 4" name="confirmPassword" #password="ngModel" [(ngModel)]="confirmPassword" placeholder="Confirm Password" required minlength="5">
+        <br>
+        <div *ngIf="this.newPassword===this.confirmPassword && this.confirmPassword.length > 4">
+          <input type="submit" (click)="onSubmit()" value="Set">
+       </div>
+     </div>
+      <br>
+      <!-- Success message -->
+      <div class="success" *ngIf="showSucessMessage">
+        Password Set !
+       </div>
+       <div class="alert" *ngIf="serverErrorMessages">
+        {{serverErrorMessages}}
+      </div>
+    </div>
+  </ng-template>
+<button type="button" class="btn btn-outline-info" (click)="open(content)" data-toggle="tooltip" data-placement="top" title="Lock"><i class="fa fa-lock" aria-hidden="true"></i></button>
+  
+  
+
+

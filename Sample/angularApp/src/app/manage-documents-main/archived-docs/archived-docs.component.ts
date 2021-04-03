@@ -45,7 +45,10 @@ byteToMb(byte){
 
 
 
-
+//to set _id for exp date and lock status for doc 
+passFileId(_id){
+  this.documentService.toPassArcId=_id;
+}
 
 
 

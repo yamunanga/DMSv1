@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ModalDismissReasons, NgbCalendar, NgbDateStruct, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { DatePickerService } from 'src/app/shared/date-picker.service';
 import { TempDocService } from 'src/app/shared/temp-doc.service';
 
@@ -15,7 +15,10 @@ export class PickerPopupComponent implements OnInit {
   serverErrorMessages: string;
   //to set doc expiration date individually data model
   date;
-  constructor(public datePickerService:DatePickerService,private modalService: NgbModal,public tempDocService:TempDocService) { }
+  //this is for get today data 
+  model: NgbDateStruct;
+
+  constructor(public datePickerService:DatePickerService,private modalService: NgbModal,public tempDocService:TempDocService,private calendar: NgbCalendar) { }
 
   ngOnInit(): void {
   }
@@ -29,30 +32,86 @@ export class PickerPopupComponent implements OnInit {
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
+      this.resetData();
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      this.resetData();
       return 'by clicking on a backdrop';
     } else {
+      this.resetData();
       return `with: ${reason}`;
     }
 }
 
-//to set doc expiration date individually
-setExpDate() {
+//to set doc expiration date individually--old--
+setExpDateT() {
   this.date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString();
-  this.tempDocService.setSingleExpDate(this.tempDocService.passFileId,this.date).subscribe(
+  var setDateData={
+    id:this.tempDocService.passFileId,
+    expDate:this.date
+  }
+  this.tempDocService.setSingleExpDate(setDateData).subscribe(
    res => {
       this.showSucessMessage = true;
       setTimeout(() => this.showSucessMessage = false, 3000);
+      this.serverErrorMessages='';
    },
    err => {
-     this.serverErrorMessages = err.error;
+      this.serverErrorMessages =err.error;
    },
  );
 }
 
+//this is for get today
+ selectToday() {
+  this.model = this.calendar.getToday();
+}
+
+//to set doc expiration date individually working
+setExpDate(){
+  this.selectToday();
+  if(this.datePickerService.pickerModel.year >=this.model.year && this.datePickerService.pickerModel.month >=this.model.month && this.datePickerService.pickerModel.day >=this.model.day){
+    this.date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString();
+    var setDateData={
+      id:this.tempDocService.passFileId,
+      expDate:this.date
+    }
+    this.tempDocService.setSingleExpDate(setDateData).subscribe(
+     res => {
+        this.showSucessMessage = true;
+        setTimeout(() => this.showSucessMessage = false, 3000);
+        this.serverErrorMessages='';
+     },
+     err => {
+        this.serverErrorMessages =err.error;
+     },
+   );
+
+  }else{
+    this.serverErrorMessages ='Incorect Date !';
+  }
+}
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+resetData(){
+  this.serverErrorMessages='';
+}
 
 
 

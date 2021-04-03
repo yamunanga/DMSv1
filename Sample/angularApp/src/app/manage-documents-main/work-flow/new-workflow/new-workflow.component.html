@@ -1,0 +1,45 @@
+<br>
+    <div *ngIf="this.workflow.workflowDataCount== 0">
+        <h5 style="text-align: center;">Empty List!</h5>
+    </div>
+    <div class="table-responsive " *ngIf="this.workflow.workflowDataCount > 0">
+        <table class="responsive-table highlight table-sm ">
+            <thead>
+              <tr>
+                <th style="text-align:center">Name</th>
+                <th style="text-align:center">Type</th>
+                <th style="text-align:center">Size(Mb)</th>
+                <th style="text-align:center">Category</th>
+                <th style="text-align:center">Department</th>
+                <th style="text-align:center">CreatedBy</th>
+                <th style="text-align:center">Workflow Next</th>
+                <th style="text-align:center">Workflow List</th>
+                <th style="text-align:center">File</th>
+                <th style="text-align:center">CreatedAt</th>
+                <th style="text-align:center">Options</th>
+              </tr>
+            </thead>
+            <tr *ngFor="let doc of this.workflow.workflowDataList">
+              <td>{{doc.name}}</td>
+              <td>{{doc.type}}</td>
+              <td>{{byteToMb(doc.size)}}</td>
+              <td>{{doc.category}}</td>
+              <td>{{doc.department}}</td>
+              <td>{{doc.createdBy}}</td>
+              <td>{{doc.workflowNext}}</td>
+              <td>
+                <app-model-view-list (click)="toPassListandNext(doc.workFlowList,doc.workflowNext,doc.workflowData)"></app-model-view-list>
+              </td>
+              <td>
+                <button type="button" class="btn btn-outline-info"  *ngIf="doc.isLock===null"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
+              </td>
+              <td>{{doc.createdAt}}</td>
+              <td>
+                <app-model-unlock (click)="passFileId(doc._id) " *ngIf="doc.isLock===true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-unlock>
+                <app-model-set-pass (click)="passFileId(doc._id)" *ngIf="doc.isLock===null && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-set-pass>
+                <app-model-doc-update (click)="passFilePathandId(doc._id,doc.catPath)" *ngIf="doc.isLock===null"></app-model-doc-update>
+                <button type="button" class="btn btn-outline-info btn-lg" (click)="toValidate(doc._id)" data-toggle="tooltip" data-placement="top" title="Validate"><i class="fa fa-check" aria-hidden="true"></i></button>
+              </td>
+            </tr>
+          </table>
+    </div>

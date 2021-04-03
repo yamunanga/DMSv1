@@ -1,0 +1,35 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Unlock File</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <h5 style="text-align: center;">Enter Password </h5>
+      <div style="text-align: center;">
+        <form #unlockPasswordForm="ngForm" (ngSubmit)="unlockPasswordForm.valid && onSubmit(unlockPasswordForm)">
+          <input type="password" name="Password" #password="ngModel" [(ngModel)]="exPass" placeholder="Type Here" required minlength="5"
+            [ngClass]="{'invalid-textbox' :unlockPasswordForm.submitted && !password.valid }">
+          <div *ngIf="unlockPasswordForm.submitted && password.errors?.minlength">
+            <label class="validation-message">Minimum 5 characters.</label>
+          </div>
+          <br>
+          <input type="submit"  value="unLock">
+        </form>
+       </div>
+      <br>
+      <!-- Success message -->
+      <div class="success" *ngIf="showSucessMessage">
+        File Unlocked!
+       </div>
+       <div class="alert" *ngIf="serverErrorMessages">
+        {{serverErrorMessages}}
+      </div>
+    </div>
+  </ng-template>
+<button type="button" class="btn btn-outline-info" (click)="open(content)" data-toggle="tooltip" data-placement="top" title="unLock"><i class="fa fa-unlock" aria-hidden="true"></i></button>
+  
+  
+
+

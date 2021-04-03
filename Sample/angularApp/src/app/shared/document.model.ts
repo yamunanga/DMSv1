@@ -3,6 +3,7 @@ export class DOCUMENTS {
     _id: string;
     type:String;
     size:String;
+    isLock:String;
     category: string; 
     department:string;
     createdBy:String;

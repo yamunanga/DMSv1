@@ -70,7 +70,7 @@ export class HomeComponent implements OnInit {
          this.userService.userDetails = res['user'];
       },
       err => { 
-        console.log(err);
+        //console.log(err);
         
       }
     )

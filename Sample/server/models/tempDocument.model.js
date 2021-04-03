@@ -10,20 +10,28 @@ var tempDocumentSchema = new mongoose.Schema({
     file:{
         type:String,
        // default:[],
-        required:true
+        default:null
     },
     size:{type:String,default:''},
     needApproveBy:{
         type:Array,
-        default:[]
+        default:null
     },
-    catPath:{type:String,required:true},
+    workflow:{
+        type:Array,
+        default:null
+    },
+    catPath:{type:String,default:null},
+    isLock:{type:Boolean,default:null},
     category:{type:String,required:true},
     subCategory:{type:Array,default:null},
     department:{type:String,default:''},
     createdBy:{type:String,default:''},
     tags:{type:String,default:''},
-    expDate:{type:String,default:null}
+    pass:{type:Array,default:null},
+    expDate:{type:String,default:null},
+    ePath:{type:Array,default:null},
+    eFile:{type:Array,default:null}
 },{timestamps:true});
 
 mongoose.model('tempDocument',tempDocumentSchema);
