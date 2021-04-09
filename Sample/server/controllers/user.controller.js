@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
+var nodemailer = require('nodemailer');
 const e = require('express');
 //Mailgun properties
 const mailgun = require("mailgun-js");
@@ -12,6 +13,8 @@ const mg = mailgun({apiKey:process.env.MAILGUN_APIKEY, domain: DOMAIN});
 const User = mongoose.model('User');
 const ArchivedUser = mongoose.model('archivedUser');
 const Dep=mongoose.model('Department');
+var config = require('../config/config.json');
+const date = require('date-and-time');
 
 
 
@@ -29,42 +32,39 @@ module.exports.register = (req, res, next) => {
         if(user){
              return res.status(422).send(['Duplicate email adrress found.']);
         }else{
-    
-         //To send Token VIA Mailgun
-           const Emailtoken=jwt.sign({fullName,email,password,role,department,position},process.env.JWT_ACC_ACTIVATE,{expiresIn:'10m'});
-           //Mailgun Property
-           const data = {
-            from: 'noReply@hello.com',
-            to:req.body.email,
-            subject: 'ACCOUNT ACTIVATION LINK',
-            html:
-            `
-            <h2>Please Activate Your Account</h2>
-            </br>
-            <h3>To Activate your acount please go to this link!</h3>
-            </br>
-            <h4> ${process.env.CLIENT_URL}/activateAccount/${Emailtoken}</h4>
-            </br>
-            <h3>Thank You!</h4>
-            `
-        };
-        mg.messages().send(data, function (error, body) {
-            //eror handling not don properly----------!!!!!
-            if(error){
-               /*return res.json({
-                    //eror:err.message
-                    message:'Email Server Failure !'
-                })*/
-                res.status(503).send(['Email Server Eror']);
-            }else{
-            res.status(200).send(['Email has been sent,Kindly activate your account']);
-           // return res.json({message:'Email has been sent,Kindly activate your account'})
-            }
-        });
+            const Emailtoken=jwt.sign({fullName,email,password,role,department,position},process.env.JWT_ACC_ACTIVATE,{expiresIn:'10m'});
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user:config.development.NODE_MAILER_EMAIL,
+                  pass:config.development.NODE_MAILER_PASS
+                }
+              });
+              
+              var mailOptions = {
+                from:'documentmanagementsystemv2@gmail.com',
+                to:req.body.email,
+                subject: 'ACCOUNT ACTIVATION LINK',
+                //text: `'
+                html: '<h2>Please Activate Your Account</h2></br>'.concat(
+                      '<h3>To Activate your acount please go to this link!</h3> </br>'+
+                      '<a href='+process.env.CLIENT_URL+'/activateAccount/'+Emailtoken+'>Click Me</a>'+
+                      '<h4>Thank You!</h4>')
+              };
+              
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  //console.log(error);
+                  res.status(503).send(['Email Server Eror']);
+                } else {
+                  //console.log('Email sent: ' + info.response);
+                  res.status(200).send(['Email has been sent,Kindly activate your account']);
+                }
+              });
+         
     }
   })
 }
-
 
 
 //After send mail to user user have to activate his account
@@ -77,7 +77,7 @@ module.exports.activateAccount = (req, res, next) =>{
     if(token){
         jwt.verify(token,process.env.JWT_ACC_ACTIVATE,function(err,decodedToken){
             if(err){
-                return res.status(400).send(['Incorrect or Expired link Contact Admin!']);
+                return res.status(400).send(['Incorrect or Expired link Contact an Admin!']);
                 //return res.status(400).json({eror:'Incorrect or Expired link.'})
             }
             const{fullName,email,password,role,department,position}=decodedToken;
@@ -91,7 +91,34 @@ module.exports.activateAccount = (req, res, next) =>{
             user.position=position;
             user.save((err, doc) => {
             if (!err){
-                res.send(doc);
+               // res.send(doc);
+                var transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                      user:config.development.NODE_MAILER_EMAIL,
+                      pass:config.development.NODE_MAILER_PASS
+                    }
+                  });
+                  
+                  var mailOptions = {
+                    from:config.development.NODE_MAILER_EMAIL,
+                    to:email,
+                    subject: 'ACCOUNT ACTIVATION DONE',
+                    //text: `'
+                    html: '<h2>Your Account Is Activated !</h2></br>'.concat(
+                          "<h3>Login to your account and reset password if you don't know current password ask an Admin.</h3> </br>"+
+                          '<h4>Thank You!</h4>')
+                  };
+                  
+                  transporter.sendMail(mailOptions, function(error, info){
+                    if (error) {
+                      //console.log(error);
+                      res.status(503).send(['Email Server Eror']);
+                    } else {
+                      //console.log('Email sent: ' + info.response);
+                      res.status(200).send(['Account Activation Successful !']);
+                    }
+                  });
             } 
        else{
            if (err.code == 11000)
@@ -254,39 +281,39 @@ module.exports.forgotPassword = (req, res, next) =>{
        //To send Token VIA Mailgun
        const forgetPasstoken=jwt.sign({_id:user._id},process.env.RESET_PASSWORD_KEY,{expiresIn:'20m'});
        //Mailgun Property
-       const data = {
-        from: 'noReply@hello.com',
+       var transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user:config.development.NODE_MAILER_EMAIL,
+          pass:config.development.NODE_MAILER_PASS
+        }
+      });
+      
+      var mailOptions = {
+        from:config.development.NODE_MAILER_EMAIL,
         to:email,
-        subject: 'RESET PASSWORD LINK',
-        html:
-        `
-        <h2>Please Reset Your Password</h2>
-        </br>
-        <h3>To Reset your acount password please go to this link!</h3>
-        </br>
-        <h4> ${process.env.CLIENT_URL}/resetPassword/${forgetPasstoken}</h4>
-        </br>
-        <h3>Thank You!</h4>
-        `
-    };
+        subject:'RESET PASSWORD LINK',
+        //text: `'
+        html: '<h2>Please Reset Your Password</h2></br>'.concat(
+              "<h3>To Reset your acount password please go to this link!.</h3> </br>"+
+              '<a href='+process.env.CLIENT_URL+'/resetPassword/'+forgetPasstoken+'>Click Me</a>'+
+              '<h4>Thank You!</h4>')
+      };
+      
     return user.updateOne({resetLink:forgetPasstoken},function(err,success){
         if(err){
             return res.status(422).send(['Reset Password Link Eror !']);
        }else{
-         mg.messages().send(data, function (error, body) {
-            //eror handling not don properly----------!!!!!
-            if(error){
-               /*return res.json({
-                    //eror:err.message
-                    message:'Email Server Failure !'
-                })*/
-                res.status(503).send(['Email Server Eror']);
-            }else{
-            res.status(200).send(['Email has been sent,Kindly follow instructions']);
-           // return res.json({message:'Email has been sent,Kindly activate your account'})
+        transporter.sendMail(mailOptions, function(error, info){
+            if (error) {
+              //console.log(error);
+              res.status(503).send(['Email Server Eror']);
+            } else {
+              //console.log('Email sent: ' + info.response);
+              res.status(200).send(['Email has been sent,Kindly follow instructions']);
             }
-        });
-
+          });
+          
        }
 
     })
@@ -374,7 +401,35 @@ exports.updateUserPassword=(req,res)=>{
             if(err){
               return res.status(422).send(['Eror from backend !']);
             }else{
-              return res.status(200).send(['Your password has been changed !']);
+                const now = new Date();
+                var current= date.format(now, 'YYYY/MM/DD HH:mm:ss');
+              //return res.status(200).send(['Your password has been changed !']);
+              var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                  user:config.development.NODE_MAILER_EMAIL,
+                  pass:config.development.NODE_MAILER_PASS
+                }
+              });
+              
+              var mailOptions = {
+                from:config.development.NODE_MAILER_EMAIL,
+                to:req.body.email,
+                subject:'PASSWORD RESET DONE !',
+                //text: `'
+                html: '<h2>Your password reset at:</h2></br>'.concat(
+                      '<h3>'+current.toString()+'</h3> </br>'+
+                      '<h4>Thank You!</h4>')
+              };
+              transporter.sendMail(mailOptions, function(error, info){
+                if (error) {
+                  //console.log(error);
+                  res.status(503).send(['Email Server Eror']);
+                } else {
+                  //console.log('Email sent: ' + info.response);
+                  res.status(200).send(['Password reset successful']);
+                }
+              });
             }
 
          })

@@ -11,7 +11,10 @@
         "RESET_PASSWORD_KEY":"acc12345",
         "UPLOAD_LOCATION":"./uploads/",
         "TO_DB_TO_UP_LOCATION":"uploads\\",
-        "ARC_PATH":"./archived/"
+        "ARC_PATH":"./archived/",
+        "NODE_MAILER_EMAIL":"documentmanagementsystemv2@gmail.com",
+        "NODE_MAILER_PASS":"lkh1997108"
+
     },
     "production": {
         "PORT": 80,
