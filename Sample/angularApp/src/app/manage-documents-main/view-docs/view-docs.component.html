@@ -2,7 +2,51 @@
     <div *ngIf="this.countDocs == 0">
         <h5 style="text-align: center;">Empty List!</h5>
     </div>
-    <div class="table-responsive" *ngIf="this.countDocs > 0">
+    <div class="centertb">
+      <div style="text-align: center" *ngIf="this.countDocs != 0">
+        <input type="text" [(ngModel)]="sNameM"  (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here"  /><!--(keydown)="onKeydown($event)"-->
+      </div>
+    </div>
+      <br>
+      <div style="text-align: center;">
+      <div ngbDropdown class="d-inline-block" >
+        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle (click)="getDepList()">{{depName}}</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1" style="max-height:150px;overflow-y: auto;" >
+          <button ngbDropdownItem *ngFor="let dep of depService.depList" (click)="getCatList(dep._id)" (click)="passNameDep(dep.name.toUpperCase())" (click)="findDocsForDepartment(dep._id)">{{dep.name.toUpperCase()}}</button>
+        </div>
+      </div>
+      &nbsp;
+      <div ngbDropdown class="d-inline-block" *ngIf="depName != 'Select Department'">
+        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle>{{catName}}</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1"  style="max-height:150px;overflow-y: auto;">
+          <button ngbDropdownItem *ngFor="let cat of catService.catList" (click)="passNameCat(cat.name.toUpperCase())" (click)="findDocsForCategory(cat._id)">{{cat.name.toUpperCase()}}</button>
+        </div>
+      </div>
+      &nbsp;
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle (click)="findDocType()">{{docType}}</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1"  style="max-height:150px;overflow-y: auto;">
+          <button ngbDropdownItem *ngFor="let type of documentService.docTypes" (click)="passTypeName(type.toUpperCase())">{{type.toUpperCase()}}</button>
+        </div>
+      </div>
+      &nbsp;
+      <div ngbDropdown class="d-inline-block">
+        <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle >{{dateType}}</button>
+        <div ngbDropdownMenu aria-labelledby="dropdownBasic1"  style="max-height:150px;overflow-y: auto;">
+          <button ngbDropdownItem (click)="passNameDate('BY CREATE DATE')">BY CREATE DATE</button>
+          <button ngbDropdownItem (click)="passNameDate('BY EXPIRE DATE')">BY EXPIRE DATE</button>
+        </div>
+      </div>
+      &nbsp;
+      <div class="centertb" *ngIf="this.dateType !='Select Date' " > 
+        <div style="text-align: center;margin: auto;width:20%;">
+             <app-data-picker (click)="setDate()"></app-data-picker>
+        </div>
+      </div>
+      <button type="button" class="btn btn-outline-primary" (click)="resetToggels()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
+    </div>
+    <br>
+    <div class="table-responsive" *ngIf="this.countDocs !=0">
         <table class="responsive-table highlight ">
             <thead>
               <tr>
@@ -12,7 +56,7 @@
                 <th>Category</th>
                 <th>Department</th>
                 <th>CreatedBy</th>
-                <th>Tags</th>
+               <!-- <th>Tags</th>-->
                 <th>File</th>
                 <th>CreatedAt</th>
                 <th>Options</th>
@@ -24,16 +68,16 @@
               <td>{{byteToMb(doc.size)}}</td>
               <td>{{doc.category}}</td>
               <td>{{doc.department}}</td>
-              <td>{{doc.createdBy}}</td>
-              <td>{{doc.tags}}</td>
+              <td><app-popup-userprofile (click)="getOtherUserdetailesById(doc.createdBy)"></app-popup-userprofile></td>
+              <!--<td>{{doc.tags}}</td>-->
               <td>
                 <button type="button" class="btn btn-outline-info"  *ngIf="doc.isLock===null"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
               </td>
-              <td>{{doc.createdAt}}</td>
+              <td>{{userService.getDate(doc.createdAt)}}</td>
               <td>
-                <button type="button" class="btn btn-outline-info" (click)="toArc(doc._id)">Archive</button>
-                <button type="button" class="btn btn-outline-danger" (click)="onDel(doc._id)"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                <app-model-unlock (click)="passFileId(doc._id) " *ngIf="doc.isLock===true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-unlock>
+                <button type="button" class="btn btn-outline-info" (click)="toArc(doc._id)" *ngIf="this.role==='admin'" data-toggle="tooltip" data-placement="top" title="Archive"><i class="fa fa-archive" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-outline-danger" (click)="onDel(doc._id)" *ngIf="doc.isLock !=true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin')"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                <app-model-unlock (click)="passFileId(doc._id) " *ngIf="doc.isLock===true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin' ) " ></app-model-unlock>
                 <app-model-set-pass (click)="passFileId(doc._id)" *ngIf="doc.isLock===null && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-set-pass>
               </td>
             </tr>

@@ -47,10 +47,13 @@ export class UserService {
    allArchivedUsers:ARCHIVEDUSERS[];//For get the archived users
    userDetails;
    otherUserProfile:OTHERUSERS[];//for the popup profile
+   arcUserCout=0;//to get arc user count
    //for pass to other user email to backend
    otherUserEmail={
      email:''
    };
+   //for pass to other user id to backend
+   otherUserId='';
    //to update other user department
    otherUserDep={
      _id:'',
@@ -69,6 +72,7 @@ export class UserService {
    userDesig;//to user designation
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
   localTimeService: string;
+  otherUserCount=0;//to get count of users
   constructor(private http: HttpClient) { }
 
   postUser(user: User){
@@ -115,6 +119,10 @@ export class UserService {
   //To get all users 
   getAllUsers() {
     return this.http.get(environment.apiBaseUrl + '/getUsers');
+  }
+  //To get all users count
+  getAllUsersCount() {
+    return this.http.get(environment.apiBaseUrl + '/getUsersCount');
   }
   //To update last active data
   updateUserLastActive(lastData){
@@ -168,6 +176,11 @@ getUserDesigByMail(_id: string) {
 getUserDetailesById(_id: string) {
   return this.http.get(environment.apiBaseUrl + `/getUserDetailesById/${_id}`);
 }
+//To view user profile for other users by id
+findUserProfilebyId(_id: string) {
+  return this.http.get(environment.apiBaseUrl + `/getProfileById/${_id}`);
+}
+
 
 //------------------THIS IS FOR ARCHIVED USERs---------------------------
 
@@ -187,6 +200,14 @@ deleteArchivedUser(data){
 restoreArchivedUser(data){
   return this.http.put(environment.apiBaseUrl+'/restoreArchivedUser',data);
 }
+//to get all archived user count
+getAllArchivedUsersCout() {
+  return this.http.get(environment.apiBaseUrl + '/getArcUsers');
+}
+
+
+
+
 
 
   //Helper Methods

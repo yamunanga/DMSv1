@@ -1,5 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
+import { CATEGORIES } from 'src/app/shared/category.model';
+import { CategoryService } from 'src/app/shared/category.service';
+import { DatePickerService } from 'src/app/shared/date-picker.service';
+import { DEPARTMENTS } from 'src/app/shared/department.model';
+import { DepartmentService } from 'src/app/shared/department.service';
+import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { TempDocService } from 'src/app/shared/temp-doc.service';
 import { UserService } from 'src/app/shared/user.service';
 import { environment } from 'src/environments/environment';
@@ -16,7 +22,13 @@ export class ViewDocsComponent implements OnInit {
   serverErrorMessages='';
   countDocs;//for get count of docs
   role;
-  constructor(public documentService:DocumentService,public userService: UserService,private toastr: ToastrService,public tempDocService:TempDocService) { }
+  sNameM;//Ng model for search name
+  depName='Select Department';
+  catName='Select Category';
+  docType='Select Type';
+  dateType='Select Date';
+  clickTimes=0;
+  constructor(public datePickerService:DatePickerService,public catService:CategoryService,public depService:DepartmentService,public documentService:DocumentService,public userService: UserService,private toastr: ToastrService,public tempDocService:TempDocService) { }
 
   ngOnInit(): void {
     this.refreshDocList();
@@ -28,18 +40,21 @@ export class ViewDocsComponent implements OnInit {
     this.documentService.getDocs().subscribe((res) => {
       this.documentService.allDocs = res as DOCUMENTS[];
     });
-    this.documentService.getCountDocs().subscribe((res) => {
-      this.countDocs= res[0];
-    },err => {
-      if (err.status === 404) {
-        this.countDocs=0;
-      }
-    }
-    
-    
-    );
-    
+    this.refreshDocCount();
   }
+
+refreshDocCount(){
+  this.documentService.getCountDocs().subscribe((res) => {
+    this.countDocs= res[0];
+  },err => {
+    if (err.status === 404) {
+      this.countDocs=0;
+    }
+  }
+  
+  
+  );
+}
 
   //to get the doc
  getLink(url){
@@ -109,6 +124,179 @@ getUserdetailes(){
 //get user role
 getRole(){
   this.role=this.userService.getRole()
+}
+
+//for detect backspace
+onKeydown(event) {
+  if (event.key === "Backspace") {
+     if(this.depName !='Select Department' && this.catName !='Select Category' && this.docType !='Select Type' && this.dateType =='Select Date'){
+         this.findDocsForCategory(this.documentService.findDocForCat);
+     }else if(this.depName =='Select Department' && this.catName =='Select Category' && this.docType !='Select Type' && this.dateType =='Select Date'){
+        this.refreshDocList();
+     }else if(this.depName !='Select Department' && this.catName =='Select Category' && this.docType =='Select Type' && this.dateType =='Select Date'){
+        this.findDocsForDepartment(this.documentService.findDocForDep);
+     }else if(this.depName =='Select Department' && this.catName =='Select Category' && this.docType =='Select Type' && this.dateType =='Select Date'){
+        this.refreshDocList();
+     }else if(this.depName !='Select Department' && this.catName !='Select Category' && this.docType =='Select Type' && this.dateType !='Select Date'){
+       this.findDocsForCategory(this.documentService.findDocForCat);
+     }else if(this.depName =='Select Department' && this.catName =='Select Category' && this.docType =='Select Type' && this.dateType !='Select Date'){
+       this.refreshDocList();
+     }
+  }
+}
+
+//get departments list
+getDepList(){
+  this.depService.getDepList().subscribe(
+    res => {
+       this.depService.depList = res as DEPARTMENTS[];
+    }
+  )
+}
+//get category list
+getCatList(_id){
+  this.catService.getCategoriesForDocSearch(_id).subscribe(
+    res => {
+       this.catService.catList = res as CATEGORIES[];
+    }
+  )
+}
+findDocsForDepartment(_id){
+  this.documentService.findDocForDep=_id;
+  this.documentService.findDocsForDep(_id).subscribe(
+    res => {
+      this.documentService.allDocs = res as DOCUMENTS[];
+    }
+  )
+}
+
+findDocsForCategory(_id){
+  this.documentService.findDocForCat=_id;
+  this.documentService.findDocsForCat(_id).subscribe(
+    res => {
+      this.documentService.allDocs = res as DOCUMENTS[];
+    }
+  )
+}
+
+findDocType(){
+  this.documentService.getDocTypes().subscribe((res) => {
+    this.documentService.docTypes = res;
+  });
+}
+
+setDate(){
+  var date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString()
+  this.sNameM=date;
+  this.search();
+}
+
+passNameDep(name){
+  this.depName=name;
+}
+
+passNameCat(name){
+  this.catName=name;
+}
+
+passNameDate(name){
+  this.dateType=name;
+}
+passTypeName(name){
+  this.clickTimes++;
+  this.docType=name;
+  this.sNameM=name.toLocaleLowerCase();
+  this.search();
+}
+
+//refresh list 
+refreshList(){
+  if(this.depName !='Select Department' && this.catName !='Select Category' && this.docType !='Select Type'){
+    this.findDocsForCategory(this.documentService.findDocForCat);
+}else if(this.depName =='Select Department' && this.catName =='Select Category' && this.docType !='Select Type'){
+   this.refreshDocList();
+}else if(this.depName !='Select Department' && this.catName =='Select Category' && this.docType =='Select Type'){
+   this.findDocsForDepartment(this.documentService.findDocForDep);
+}else if(this.depName =='Select Department' && this.catName =='Select Category' && this.docType =='Select Type'){
+   this.refreshDocList();
+}
+}
+
+
+//custom filter
+filter(){
+  this.documentService.allDocs=  this.documentService.allDocs.filter(res=>{
+    if((res.type != null)&&(res.type.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+       return res.type.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+    }
+  })
+}
+
+
+//used--avoiding null values--
+search(){
+  if(this.sNameM !=""){
+    this.documentService.allDocs=  this.documentService.allDocs.filter(res=>{
+      //var nowCreate= this.getDate(res.createdAt);
+      var createdAt=this.userService.getDate(res.createdAt);
+      var updatedAt=this.userService.getDate(res.updatedAt);
+      if((res.name != null)&&(res.name.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.name.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.category != null)&&(res.category.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.category.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res. department != null)&&(res. department.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.department.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if(( createdAt != null)&&( createdAt.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return  createdAt.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if(( updatedAt != null)&&(  updatedAt.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return    updatedAt.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.type != null)&&(res.type.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.type.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.createdBy != null)&&(res.createdBy.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return res.createdBy.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.expDate!= null)&&(res.expDate.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return  res.expDate.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }else if((res.createDate!= null)&&(res.createDate.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase()))){
+        return  res.createDate.toLocaleLowerCase().match(this.sNameM.toLocaleLowerCase());
+      }
+ })
+ 
+
+}else if(this.sNameM==""){
+  if(this.depName !='Select Department' && this.catName !='Select Category' && this.docType !='Select Type'){
+        this.findDocsForCategory(this.documentService.findDocForCat);
+    }else if(this.depName =='Select Department' && this.catName =='Select Category' && this.docType !='Select Type'){
+        this.refreshDocList();
+    }else if(this.depName !='Select Department' && this.catName =='Select Category' && this.docType =='Select Type'){
+        this.findDocsForDepartment(this.documentService.findDocForDep);
+}
+  }
+}
+
+//this is for refresh
+resetToggels(){
+  this.depName='Select Department';
+  this.catName='Select Category';
+  this.docType='Select Type';
+  this.sNameM='';
+  this.dateType='Select Date';
+  this.clickTimes=0;
+  this.refreshDocList();
+}
+
+//to get profile data from backend by user id
+getOtherUserdetailesById(id){
+  this.userService.findUserProfilebyId(id).subscribe(
+    res => {
+      //this.userService.otherUserProfile= res['user']; 
+      this.userService.otherUserProfile= res as OTHERUSERS[]; 
+    },
+    err => { 
+      //console.log(err);
+      this.toastr.error(err);
+      
+    }
+  )
 }
 
 

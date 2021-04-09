@@ -9,6 +9,7 @@ export class WorkFlowComponent implements OnInit {
 
   tOfviewNewWorkflow=true;//this is for load to new workflow data
   tOfviewOldWorkflow=false;//this is for load to old workflow data
+  tOfviewProcessingNow=false;//this is for track processing workflow data
   constructor() { }
 
   ngOnInit(): void {
@@ -23,10 +24,16 @@ export class WorkFlowComponent implements OnInit {
     this.reset();
     this.tOfviewOldWorkflow=true;
   }
+  //this is for track processing workflow data
+  toOpenProcessing(){
+    this.reset();
+    this.tOfviewProcessingNow=true;
+  }
   
   reset(){
     this.tOfviewNewWorkflow=false;
     this.tOfviewOldWorkflow=false;
+    this.tOfviewProcessingNow=false;
   }
   
 }

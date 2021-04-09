@@ -36,7 +36,7 @@ module.exports.getDepartment=(req,res,next)=>{
         else{
             return res.send(dep);
          }
-    })
+    }).sort({name: 'asc'});
 }
 
 //to delete department--not used--

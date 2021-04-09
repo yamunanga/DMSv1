@@ -372,14 +372,15 @@ module.exports.setApprovement=(req,res,next)=>{
           if (!file){
               return res.status(404).json({ status: false, message: 'Can not find !' });
           }else{
-              //var arr=['a','b','c'];
-              /*var str=req.body.arr.split(',');
-              var len=str.length;
-              var arrN = new Array();
+              var len=file.needApproveBy.length;
+              var count=0;
               for(var i=0;i<len;i++){
-                 arrN.push(str[i])
-              }*/
-              file.updateOne({ $addToSet:{needApproveBy:req.body.name}},function(err,doc){
+                  if(file.needApproveBy[i]==req.body.name){
+                    count=count+1
+                    return res.status(422).send(['Duplicate found ! '+ req.body.name]);
+                  }
+              }
+            file.updateOne({ $addToSet:{needApproveBy:req.body.name}},function(err,doc){
                 if(err){
                   return res.status(422).send(['Cannot update !']);
                 }else{
@@ -682,6 +683,8 @@ module.exports.transferToDocument=(req,res,next)=>{
     if(err || !file){
       return res.status(404).send(['Cannot find !']);
    }else{
+        const now = new Date();
+        var current= date.format(now, 'YYYY-M-D');
        if((file.needApproveBy.length== 0|| file.needApproveBy==null || file.needApproveBy==[]) && (file.workflow.length== 0|| file.workflow==null || file.workflow==[])){
         var document = new Document();
         document.name =file.name;
@@ -695,6 +698,7 @@ module.exports.transferToDocument=(req,res,next)=>{
         document.createdBy=file.createdBy;
         document.tags=file.tags;
         document.expDate=file.expDate;
+        document.createDate=current.toString();
         if(file.isLock==true){
           document.isLock=file.isLock;
           document.ePath=file.ePath;
@@ -703,7 +707,7 @@ module.exports.transferToDocument=(req,res,next)=>{
         }
         document.save(function(err,result){ 
           if (err){ 
-              console.log(err);
+              //console.log(err);
               //return res.status(422).send(['Eror from backend !']);
           } 
           else{ 
@@ -739,6 +743,7 @@ module.exports.transferToDocument=(req,res,next)=>{
           document.createdBy=file.createdBy;
           document.tags=file.tags;
           document.expDate=file.expDate;
+          document.createDate=current.toString();
           if(file.isLock==true){
             document.isLock=file.isLock;
             document.ePath=file.ePath;
@@ -747,7 +752,7 @@ module.exports.transferToDocument=(req,res,next)=>{
           }
           document.save(function(err,result){ 
             if (err){ 
-                console.log(err);
+                //console.log(err);
                 //return res.status(422).send(['Eror from backend !']);
             } 
             else{ 
@@ -788,6 +793,7 @@ module.exports.transferToDocument=(req,res,next)=>{
           document.workFlowList=file.workflow;
           document.tags=file.tags;
           document.expDate=file.expDate;
+          document.createDate=current.toString();
           if(file.isLock==true){
             document.isLock=file.isLock;
             document.ePath=file.ePath;
@@ -796,7 +802,7 @@ module.exports.transferToDocument=(req,res,next)=>{
           }
           document.save(function(err,result){ 
             if (err){ 
-                console.log(err);
+                //console.log(err);
                 //return res.status(422).send(['Eror from backend !']);
             } 
             else{ 
@@ -821,34 +827,6 @@ module.exports.transferToDocument=(req,res,next)=>{
    }
 })
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //to set doc expiration date individually

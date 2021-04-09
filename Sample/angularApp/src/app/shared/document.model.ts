@@ -5,6 +5,10 @@ export class DOCUMENTS {
     size:String;
     isLock:String;
     category: string; 
+    arcStatus:String;
+    workFlowList:String;
+    workFlowUsers:String;
+    workflowEndDate:String;
     department:string;
     createdBy:String;
     tags:String;
@@ -12,4 +16,14 @@ export class DOCUMENTS {
     file:String;
     createdAt:String;
     updatedAt:String;
+    subCategory:String;
+    catPath:String;
+    approvedBy:String;
+    expDate:String;
+    pass:String;
+    ePath:String;
+    eFile:String;
+    isWorkFlowed:String;
+    createDate:String;
+   
 }

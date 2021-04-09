@@ -22,6 +22,7 @@
               <td><input type="radio" id={{dep._id}}  required #department="ngModel" name="department"  [(ngModel)]="viewDepModel._id"  value={{dep._id}} (click)="refreshCatList(dep._id)" (click)="passName(dep.name,dep._id)" >
               </td>
               <td>{{dep.name.toUpperCase()}}</td>
+              <td>{{catService.getDate(dep.createdAt)}}</td>
           </tr>
       </table>
      </div>

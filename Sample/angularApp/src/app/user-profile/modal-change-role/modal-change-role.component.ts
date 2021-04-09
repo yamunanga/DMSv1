@@ -36,10 +36,13 @@ export class ModalChangeRoleComponent implements OnInit {
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
+      this.resetModelData();
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      this.resetModelData();
       return 'by clicking on a backdrop';
     } else {
+      this.resetModelData();
       return `with: ${reason}`;
     }
    }
@@ -85,6 +88,10 @@ export class ModalChangeRoleComponent implements OnInit {
     this.serverErrorMessages = '';
   }
   
-
+  resetModelData(){
+    this.modelRole= {
+      role: '',
+    };
+  }
 }
 

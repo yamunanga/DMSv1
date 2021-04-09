@@ -22,8 +22,8 @@ router.get('/userInfo',jwtHelper.verifyJwtToken,ctrlUser.UserInfo);
 //test
 router.get('/findUser',jwtHelper.verifyJwtToken,ctrlUser.findUser);
 router.get('/getUsers',jwtHelper.verifyJwtToken,ctrlUser.getUsers);
-
-
+//getUsersCount 
+router.get('/getUsersCount',jwtHelper.verifyJwtToken,ctrlUser.getUsersCount);
 //register only works for authenticated users 
 router.post('/reguser',jwtHelper.verifyJwtToken,ctrlUser.register);/*, (req, res) => {
     res.send('Register Works!');
@@ -55,11 +55,28 @@ router.get('/getUserDetailesById/:id',jwtHelper.verifyJwtToken,ctrlUser.getUserD
 router.put('/getUserDepByMail',ctrlUser.getUserDepByMail);
 //to send designation by user email
 router.get('/getUserDesigByMail/:id',jwtHelper.verifyJwtToken,ctrlUser.getUserDesigByMail);
+//To view user profile for other users by id
+router.get('/getProfileById/:id',jwtHelper.verifyJwtToken,ctrlUser.findUserProfilebyId);
+
+
+//Archive user routes -------------------------------------------------------------------
+//To get Archived User
+router.put('/postArchivedUser',jwtHelper.verifyJwtToken,ctrlUser.postArchivedUser);
+//To restore Archived User
+//restoreArchivedUser
+router.put('/restoreArchivedUser',jwtHelper.verifyJwtToken,ctrlUser.restoreArchivedUser);
+//getArchivedUsers
+router.get('/getArchivedUsers',jwtHelper.verifyJwtToken,ctrlUser.getArchivedUsers);
+//for delete archived user 
+router.put('/deleteArchivedUser',jwtHelper.verifyJwtToken,ctrlUser.deleteArchivedUser);
+//to get all archived user count
+router.get('/getArcUsers',jwtHelper.verifyJwtToken,ctrlUser.getArchivedUsersCount);
 
 //Document Routes Start--------------------------------------------------------
 
 router.get('/getDocs',jwtHelper.verifyJwtToken,ctrlDoc.getDocs);
 router.post('/postDocFile',jwtHelper.verifyJwtToken,ctrlDoc.postDocWithFile);
+
 //if document expire it automattically move to archivedoc
 router.get('/chkDocs',ctrlDoc.checkExpiration);
 //to manual  archive doc
@@ -74,6 +91,8 @@ router.get('/getCountDocs',ctrlDoc.getCountDocs);
 router.get('/getArcCountDocs',ctrlDoc.getArcCountDocs );
 //to delete an archived file
 router.delete('/delArcFile/:id',ctrlDoc.delArcDoc);
+
+
 //to rename file via doc list 
 router.put('/renameFile',ctrlDoc.renameFile);
 //to delete document/file from list
@@ -86,6 +105,16 @@ router.get('/test22',ctrlDoc.tM);
 router.put('/unlockDoc/:id',ctrlDoc.unlockDoc);
 //to lock document
 router.put('/lockDoc/:id',ctrlDoc.lockDoc);
+//filter docs acording to department
+router.get('/findDocsForDep/:id',ctrlDoc.findDocsForDep);
+//filter docs acording to category
+router.get('/findDocsForCat/:id',ctrlDoc.findDocsForCat);
+//find docs using created at date
+router.get('/findDocsUsingCreatedDate/:date',ctrlDoc.findDocsUsingCreatedDate);
+//find docs using Exp date
+router.get('/findDocsUsingExpDate/:date',ctrlDoc.findDocsUsingExpDate);
+//findDocsTypes
+router.get('/findDocsTypes',ctrlDoc.findDocsTypes);
 
 
 //Temp documents routes starts----------------------------------------------------------
@@ -137,6 +166,11 @@ router.get('/saveApprovment/:id',jwtHelper.verifyJwtToken,ctrlApprove.saveApprov
 router.put('/rejectApprovment/:id',jwtHelper.verifyJwtToken,ctrlApprove.rejectApprovementData);
 //to send count of need approvment data
 router.get('/getApprovmentDataCount',jwtHelper.verifyJwtToken,ctrlApprove.getApprovmentDataCount);
+//to lock approvemnt doc
+router.put('/lockdocApr/:id',ctrlApprove.lockDoc);
+//to unlock approvemnt doc
+router.put('/unlockdocApr/:id',ctrlApprove.unlockDoc);
+
 
 //Doc Workflow routes start----------------------------------------------------------------
 
@@ -166,17 +200,29 @@ router.get('/getWorkflowDataLen/:id',ctrlWorkflow.getWorkflowDataLen);
 router.put('/lockWorkFile/:id',ctrlWorkflow.lockDoc);
 //to unlock doc via workflow
 router.put('/unlockWorkFile/:id',ctrlWorkflow.unlockDoc);
+//to pass ongoing workflow data for creator of workflow
+router.get('/getWorkflowDataNow',jwtHelper.verifyJwtToken,ctrlWorkflow.getWorkflowDataNow);
+//to pass ongoing workflow data count for creator of workflow
+router.get('/getWorkflowDataNowCount',jwtHelper.verifyJwtToken,ctrlWorkflow.getWorkflowDataNowCount);
+//to delete workflow
+router.delete('/delWorkflow/:id',ctrlWorkflow.delWorkflow);
+//to add user to workflow in workflow table
+router.put('/addWorkflowInWork/:id',ctrlWorkflow.checkWorkflowInWork);
+//to remove user from workflow  in workflow table
+router.put('/delWorkflowUserInWork/:id',ctrlWorkflow.delWorkflowUserInWork);
+//for pass workflow data in workflow table to front end 
+router.get('/getWorkflowDataInWork/:id',ctrlWorkflow.getWorkflowDataInWork);
+//to update workflow table when change workflow data
+router.get('/getWorkflowDataUpdate/:id',ctrlWorkflow.getWorkflowDataUpdate);
+//to del workflow done file acording to user
+router.get('/getWorkflowDoneFileDel/:id',jwtHelper.verifyJwtToken,ctrlWorkflow.getWorkflowDoneFileDel);
+//to send workflow done files acording to user
+router.get('/getWorkflowDoneFiles',jwtHelper.verifyJwtToken,ctrlWorkflow.getWorkflowDoneFiles);
+//to send workflow done files count acording to user
+router.get('/getWorkflowDoneFilesCount',jwtHelper.verifyJwtToken,ctrlWorkflow.getWorkflowDoneFilesCount);
+//to del workflow done file acording to user
+router.get('/getWorkflowDoneFileDel/:id',jwtHelper.verifyJwtToken,ctrlWorkflow.getWorkflowDoneFileDel);
 
-//Archive user routes -------------------------------------------------------------------
-//To get Archived User
-router.put('/postArchivedUser',jwtHelper.verifyJwtToken,ctrlUser.postArchivedUser);
-//To restore Archived User
-//restoreArchivedUser
-router.put('/restoreArchivedUser',jwtHelper.verifyJwtToken,ctrlUser.restoreArchivedUser);
-//getArchivedUsers
-router.get('/getArchivedUsers',jwtHelper.verifyJwtToken,ctrlUser.getArchivedUsers);
-//for delete archived user 
-router.put('/deleteArchivedUser',jwtHelper.verifyJwtToken,ctrlUser.deleteArchivedUser);
 
 
 //Message Routes-----------------------------------------------------------------------------
@@ -204,12 +250,6 @@ router.put('/readReciveMessage',jwtHelper.verifyJwtToken,ctrlMsg.readReciveMessa
 router.get('/countnew',jwtHelper.verifyJwtToken,ctrlMsg.countNewMessages);
 
 
-
-
-
-
-
-
 //Department routes Started----------------------------------------------------------------------------------
 
 //to add department
@@ -226,7 +266,6 @@ router.get('/getCount/:id',jwtHelper.verifyJwtToken,ctrlDep.countDepUsers);
 router.get('/getDepsWithout',jwtHelper.verifyJwtToken,ctrlDep.getDepartmentWithout);
 //to get departments without current department to update other user department
 router.get('/getDepOther/:id',jwtHelper.verifyJwtToken,ctrlDep.getDepartmentWithoutOther);
-
 
 
 //this is for position/designation routes---------------------------
@@ -271,6 +310,8 @@ router.get('/getSSCat/:id',ctrlCat.getSSubCategories);
 router.get('/getSubCategoriesCount/:id',ctrlCat.getSubCategoriesCount);
 //to get count of subcategory inside of another sub category
 router.get('/getSubSubCategoriesCount/:id',ctrlCat.getSubSubCategoriesCount);
+//to get categories by relevent department id ForDocSearch
+router.get('/getCatsForSearch/:id',ctrlCat.getCategoriesForDocSearch);
 module.exports = router;
 
 

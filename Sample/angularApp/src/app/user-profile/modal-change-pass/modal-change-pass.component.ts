@@ -51,10 +51,13 @@ export class ModalChangePassComponent implements OnInit {
 
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
+      this.resetModel();
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
+      this.resetModel();
       return 'by clicking on a backdrop';
     } else {
+      this.resetModel();
       return `with: ${reason}`;
     }
    }
@@ -102,5 +105,15 @@ export class ModalChangePassComponent implements OnInit {
     };
     form.resetForm();
     this.serverErrorMessages = '';
+  }
+
+  resetModel(){
+    this.modelPassword={
+      password:'',
+    }
+    this.tempModel={
+      newPassword:'',
+      confirmPassword:''
+    }
   }
 }

@@ -39,7 +39,7 @@ module.exports.getPosts=(req,res,next)=>{
         else{
             return res.send(posts);
          }
-    })
+    }).sort({name: 'asc'});
 }
 
 //to delete and update user designation

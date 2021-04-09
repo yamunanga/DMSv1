@@ -370,7 +370,7 @@ getCheckListData(_id){
   });
 }
 
-//to set _id for exp date and lock status for doc 
+//to set _id for exp date,lock status and workflow data for doc 
 passFileId(_id){
   this.tempDocService.passFileId=_id;
 }
@@ -395,7 +395,11 @@ toLock(_id){
 
 */
 
-
+//to get the doc
+getLink(url){
+  var ul=environment.apiDownloadUrl+'/'+url
+  return ul
+}
 
 
 

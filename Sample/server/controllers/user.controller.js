@@ -295,9 +295,6 @@ module.exports.forgotPassword = (req, res, next) =>{
 
 }
 //To reset password which come from email token
-
-
-
 exports.resetPassword=(req,res)=>{
     const{resetLink,newPass}=req.body;
     if(resetLink){
@@ -424,6 +421,19 @@ module.exports.getUsers = (req, res, next) =>{
         }
     );
 }
+//To get all users without current user and not archived users count
+module.exports.getUsersCount = (req, res, next) =>{
+    User.countDocuments( {arcStatus: {$ne:'yes'},_id:{$ne:req._id}},
+        (err, users) => {
+            if (!users)
+                return res.status(404).json({ status: false, message: 'Error in retrieving data !' });
+            else
+                return res.send([users]);
+                //return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role']) });//im add role
+        }
+    );
+}
+
 
 //To update user last active data
 
@@ -544,7 +554,7 @@ module.exports.findUser = (req, res, next) =>{
         }
     );
 }
-//To view user profile for other users
+//To view user profile for other users by mail
 module.exports.findUserProfile = (req, res, next) =>{
     const{email}=req.body;
     User.findOne({ email:email},
@@ -558,7 +568,18 @@ module.exports.findUserProfile = (req, res, next) =>{
     );
 }
 
-
+//To view user profile for other users by id
+module.exports.findUserProfilebyId = (req, res, next) =>{
+    User.findOne({_id:req.params.id},
+        (err, user) => {
+            if (!user)
+                return res.status(404).json({ status: false, message: 'User record not found.' });
+            else
+                //return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role','createdAt','lastActive','status', 'department','position']) });
+                return res.status(200).send(user);
+        }
+    );
+}
 
 
 
@@ -654,6 +675,18 @@ module.exports.getArchivedUsers = (req, res, next) =>{
                 return res.status(404).json({ status: false, message: 'Error in retrieving data !' });
             else
                 return res.send(users);
+                //return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role']) });//im add role
+        }
+    );
+}
+//to get all archived user count
+module.exports.getArchivedUsersCount = (req, res, next) =>{
+    ArchivedUser.countDocuments( 
+        function(err,count) {
+            if (!count)
+                return res.status(404).json({ status: false, message: 'Error in retrieving data !' });
+            else
+                return res.send([count]);
                 //return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role']) });//im add role
         }
     );

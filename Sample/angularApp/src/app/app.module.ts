@@ -72,6 +72,10 @@ import { OldWorkflowComponent } from './manage-documents-main/work-flow/old-work
 import { ModelDocUpdateComponent } from './manage-documents-main/work-flow/new-workflow/model-doc-update/model-doc-update.component';
 import { ModelViewListComponent } from './manage-documents-main/work-flow/new-workflow/model-view-list/model-view-list.component';
 import { ModelSentMsgComponent } from './message-box/model-sent-msg/model-sent-msg.component';
+import { ProcessingNowComponent } from './manage-documents-main/work-flow/processing-now/processing-now.component';
+import { ModelViewOldListComponent } from './manage-documents-main/work-flow/old-workflow/model-view-old-list/model-view-old-list.component';
+import { EditPanelProfileComponent } from './user-profile/edit-panel-profile/edit-panel-profile.component';
+import { ViewProfileComponent } from './user-profile/view-profile/view-profile.component';
 
 
 
@@ -134,6 +138,10 @@ import { ModelSentMsgComponent } from './message-box/model-sent-msg/model-sent-m
     ModelDocUpdateComponent,
     ModelViewListComponent,
     ModelSentMsgComponent,
+    ProcessingNowComponent,
+    ModelViewOldListComponent,
+    EditPanelProfileComponent,
+    ViewProfileComponent,
   
    
   ],

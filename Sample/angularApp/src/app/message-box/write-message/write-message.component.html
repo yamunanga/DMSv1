@@ -27,9 +27,10 @@
               </tr>
             </thead>-->
             <tr *ngFor="let user of userService.allUsers">
-              <td>{{user.status}}</td>
+              <td *ngIf="user.status=='online'"><i class="fa fa-circle" aria-hidden="true"></i></td>
+              <td *ngIf="user.status=='offline'"><i class="fa fa-circle-thin" aria-hidden="true"></i></td>
               <td>{{user.fullName}}</td>
-              <td>{{user.email}}</td>
+             <!--<td>{{user.email}}</td>-->
              <!-- <td>{{userService.getDate(user.lastActive)}}</td>-->
               <td><app-popup-userprofile (click)="getOtherUserdetailes(user.email)"></app-popup-userprofile></td>
               <td><button type="button"   (click)="selectMailes(user.email)" class="btn btn-outline-info">Select</button></td>

@@ -19,6 +19,11 @@ var documentSchema = new mongoose.Schema({
         type:Array,
         default:null
      },
+     workFlowUsers:{
+        type:Array,
+        default:null
+     },
+    workflowEndDate:{type:String,default:null},
     subCategory:{type:Array,default:null},
     isLock:{type:Boolean,default:null},
     catPath:{type:String,default:null},
@@ -29,10 +34,12 @@ var documentSchema = new mongoose.Schema({
     createdBy:{type:String,default:''},
     tags:{type:String,default:''},
     expDate:{type:String,default:null},
+    createDate:{type:String,default:null},
     pass:{type:Array,default:null},
     ePath:{type:Array,default:null},
     eFile:{type:Array,default:null},
     isWorkFlowed:{type:Boolean,default:null},
+    workflowId:{type:String,default:null},
 },{timestamps:true});
 
 mongoose.model('Document', documentSchema);

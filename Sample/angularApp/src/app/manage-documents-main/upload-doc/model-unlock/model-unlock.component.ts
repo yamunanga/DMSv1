@@ -7,6 +7,8 @@ import { DocumentService } from 'src/app/shared/document.service';
 import { DOCUMENTS } from 'src/app/shared/document.model';
 import { WorkflowService } from 'src/app/shared/workflow.service';
 import { WORKFLOWDATALiST } from 'src/app/models/workflowList.model';
+import { ManageApprovementServiceService } from 'src/app/shared/manage-approvement-service.service';
+import { NEEDAPPROVEDOCS } from 'src/app/shared/approvementData.model';
 @Component({
   selector: 'app-model-unlock',
   templateUrl: './model-unlock.component.html',
@@ -17,7 +19,7 @@ export class ModelUnlockComponent implements OnInit {
   showSucessMessage: boolean;
   serverErrorMessages: string;
   exPass;//ng model
-  constructor(public workflow:WorkflowService,private modalService: NgbModal,public tempDocService:TempDocService,public documentService:DocumentService) { }
+  constructor(public manageApprovment:ManageApprovementServiceService,public workflow:WorkflowService,private modalService: NgbModal,public tempDocService:TempDocService,public documentService:DocumentService) { }
 
   ngOnInit(): void {
 
@@ -35,12 +37,15 @@ export class ModelUnlockComponent implements OnInit {
   private getDismissReason(reason: any): string {
     if (reason === ModalDismissReasons.ESC) {
       this.resetVariable();
+      this.resetValues();
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
       this.resetVariable();
+      this.resetValues();
       return 'by clicking on a backdrop';
     } else {
       this.resetVariable();
+      this.resetValues();
       return `with: ${reason}`;
     }
 }
@@ -61,9 +66,9 @@ onSubmitn(form: NgForm) {
     },
   );
 }
-//testing
+//using
 onSubmit(form: NgForm){
-  if(this.documentService.toPassDocId==''  && this.workflow.passWorkflowId==''){
+  if(this.documentService.toPassDocId===''  && this.workflow.passWorkflowId==='' && this.manageApprovment.toPassDocIdApr==='' && this.tempDocService.passFileId !=''){
     var dataModel={
       pass:this.exPass
     }
@@ -72,12 +77,14 @@ onSubmit(form: NgForm){
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
         this.refreshTempDocList();
+        this.refreshWorkflowDataProcess();
+        this.refreshOldWorkflowDataProcess();
         this.resetForm(form);
        },err => {
         this.serverErrorMessages =err.error;  
       },
     )
-  }else if(this.tempDocService.passFileId=='' && this.workflow.passWorkflowId==''){
+  }else if(this.tempDocService.passFileId==='' && this.workflow.passWorkflowId==='' && this.manageApprovment.toPassDocIdApr==='' && this.documentService.toPassDocId !=''){
     var dataModel={
       pass:this.exPass
     }
@@ -85,13 +92,15 @@ onSubmit(form: NgForm){
       res => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
+        this.refreshWorkflowDataProcess();
         this.refreshDocumentList();
+        this.refreshOldWorkflowDataProcess();
         this.resetForm(form);
        },err => {
         this.serverErrorMessages =err.error;  
       },
     )
-  }else if(this.documentService.toPassDocId=='' && this.tempDocService.passFileId==''){
+  }else if(this.documentService.toPassDocId==='' && this.tempDocService.passFileId==='' && this.manageApprovment.toPassDocIdApr==='' &&this.workflow.passWorkflowId !=''){
     var dataModel={
       pass:this.exPass
     }
@@ -99,7 +108,24 @@ onSubmit(form: NgForm){
       res => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
+        this.refreshWorkflowDataProcess();
         this.refreshWorkflowData();
+        this.refreshOldWorkflowDataProcess();
+        this.resetForm(form);
+        
+       },err => {
+        this.serverErrorMessages =err.error;  
+      },
+    )
+  }else if(this.documentService.toPassDocId==='' && this.tempDocService.passFileId==='' && this.workflow.passWorkflowId==='' && this.manageApprovment.toPassDocIdApr !=''){
+    var dataModel={
+      pass:this.exPass
+    }
+    this.manageApprovment.unlockApr(this.manageApprovment.toPassDocIdApr,dataModel).subscribe(
+      res => {
+        this.showSucessMessage = true;
+        setTimeout(() => this.showSucessMessage = false, 4000);
+        this.refreshNeedApprovementList();
         this.resetForm(form);
         
        },err => {
@@ -121,6 +147,9 @@ resetValues(){
 
 resetVariable(){
   this.documentService.toPassDocId='';
+  this.tempDocService.passFileId='';
+  this.workflow.passWorkflowId='';
+  this.manageApprovment.toPassDocIdApr='';
 }
 
 //to get temp documents
@@ -146,5 +175,40 @@ refreshWorkflowData() {
     this.workflow.workflowDataCount= res[0];
   });
 }
+
+//to get workflow processing data list acording to user req id
+refreshWorkflowDataProcess() {
+  this.workflow.getWorkflowDataNow().subscribe((res) => {
+    this.workflow.workflowProcessing = res as WORKFLOWDATALiST[];
+  });
+  this.workflow.getWorkflowDataNowCount().subscribe((res) => {
+    this.workflow.workflowProcessingC= res[0];
+  });
+}
+
+//to get workflow processing data list acording to user req id
+refreshOldWorkflowDataProcess() {
+  this.workflow.getWorkflowDoneFiles().subscribe((res) => {
+    this.workflow.workflowOldList = res as DOCUMENTS[];
+  });
+  this.workflow.getWorkflowDoneFilesCount().subscribe((res) => {
+    this.workflow.workflowOldDataCount= res[0];
+  },err => { 
+    this.workflow.workflowOldDataCount=0;
+    
+  }
+  );
+}
+
+//this is for get need approvement data
+refreshNeedApprovementList() {
+  this.manageApprovment.toGetApprovementData().subscribe((res) => {
+    this.manageApprovment.approveData = res as NEEDAPPROVEDOCS[];
+  });
+  this.manageApprovment.toGetApprovementDataCount().subscribe((res) => {
+    this.manageApprovment.approveDataCount = res[0];
+  });
+}
+
 
 }

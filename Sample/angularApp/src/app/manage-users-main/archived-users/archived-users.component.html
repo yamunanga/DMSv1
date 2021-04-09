@@ -1,5 +1,8 @@
 <br>
-<div class="container pt-3">
+<div *ngIf="this.userService.arcUserCout == 0">
+  <h5 style="text-align: center;">Empty List!</h5>
+</div>
+<div class="container pt-3" *ngIf="this.userService.arcUserCout !=0" >
   <div style="text-align: center">
     <input type="text" [(ngModel)]="arcName" (input)="search()" placeholder="Search here" /> <!-- (input)="search()"-->
    </div>

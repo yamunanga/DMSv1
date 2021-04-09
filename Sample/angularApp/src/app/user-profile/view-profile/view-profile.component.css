@@ -1,0 +1,10 @@
+/*text align inside class*/
+div.a {
+    text-align: center;
+  }
+
+.center {
+    border: 5px solid white;
+    display: flex;
+    justify-content: center;
+    }

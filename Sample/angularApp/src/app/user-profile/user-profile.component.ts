@@ -20,43 +20,44 @@ export class UserProfileComponent implements OnInit {
   user={
     role:localStorage.getItem('userRole')
   };
-  delModel={
-    _id:''
-  }
-  department;//ng model for test redio
-  //userDetails;
   constructor(public userService: UserService, private router: Router,private toastr: ToastrService,public messageService: MessageServiceService,public departmentService:DepartmentService) { }
   showSucessMessage: boolean;
   serverErrorMessages: string;
   message=true;
+
+  tOfViewProfile=true;//this is for view user profile
+  tOfViewEditProfile=false;//this is for edit user profile
   ngOnInit() {
    this.getUserdetailes();
-   this.refreshDepList();
   };
 
-  onLogout(){
+
+//to open profile view
+toOpenView(){
+  this.refresh();
+  this.tOfViewProfile=true;
+}
+//to open edit profile
+toEditProfile(){
+  this.refresh();
+  this.tOfViewEditProfile=true;
+}
+
+refresh(){
+  this.tOfViewProfile=false;
+  this.tOfViewEditProfile=false;
+}
+
+
+
+onLogout(){
     this.userService.deleteToken();
     localStorage.removeItem('userRole');
     this.router.navigate(['/login']);
     
   }
-  //to update user profile
-  toUpdate(){
-    
-    this.router.navigate(['/register']);
-  }
-
-
-  toTest(){
-    this.router.navigate(['/activateAccount']);
-    //this.router.navigate(['/updateprofile']);
-  }
-
-  toRoleBase(){
-   
-  }
-  
-  getUserdetailes(){
+ 
+getUserdetailes(){
     this.userService.getUserProfile().subscribe(
       res => {
          this.userService.userDetails = res['user'];
@@ -67,40 +68,9 @@ export class UserProfileComponent implements OnInit {
       }
     )
   }
- //To delete current user account 
- deleteAccount(_id){
-  this.delModel._id=_id
-  if (confirm('Are you sure to Delete ?') == true) {
-    this.userService.deleteUser( this.delModel).subscribe((res) => {
-    //this.refreshArcUsersList();
-    this.toastr.success('Account Deleted !');
-    this.onLogout();
-    }, err => {
-      if (err.status === 404) {
-        this.toastr.error('User Does not exist !');
-      }
-      else if (err.status === 422) {
-        this.toastr.error('Eror from Backend!');
-      }
-      else
-        this.toastr.error('Something went wrong!');
-      
-    },
-      
-    
-    );
-  }
- }
 
-//for testing purposes
 
-//departmentService
-//To get departments
-refreshDepList() {
-  this.departmentService.getDepList().subscribe((res) => {
-    this.departmentService.allDeps= res as DEPARTMENTS[];
-  });
-}
+
   
 }
 

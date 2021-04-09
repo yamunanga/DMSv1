@@ -1,16 +1,35 @@
 <ng-template #content let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">User Profile</h4>
+      <h4 class="modal-title" id="modal-basic-title">Send Message</h4>
       <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
         <span aria-hidden="true">&times;</span>
       </button>
     </div>
-    <div class="modal-body centertb">
-       
+    <div class="modal-body">
+      <div>
+        <h4>Send Message:</h4> <textarea matInput rows="5" cols="50" [(ngModel)]="this.messageService.msgBody"></textarea>
+      </div>
+      <div>
+        <input type="file"   #takeInput name="files" multiple (change)="selectMultipleFiles($event)" /> 
+      </div>
+      <br>
+      <div>
+        <button type="button" (click)="onSend()" class="btn btn-outline-success">Send</button>
+      </div>
+      <br>
+        <!-- Success message -->
+        <div class="success" *ngIf="showSucessMessage">
+          Message Send !
+         </div>
+    
+         <!-- Error message -->
+        <div class="alert" *ngIf="serverErrorMessages">
+          {{serverErrorMessages}}
+        </div>
     </div>
   </ng-template>
   
-  <button class="btn btn-outline-info" (click)="open(content)">View</button>
+  <button class="btn btn-outline-info" (click)="open(content)" data-toggle="tooltip" data-placement="top" title="Send Message"><i class="fa fa-envelope" aria-hidden="true"></i></button>
   
   
 

@@ -1,76 +1,17 @@
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
 <br>
-<html>
-<body>
-<table *ngIf="userService.userDetails" class="table-fill">
-    <thead>
-        <tr>
-            <th colspan="3" class="text-center">User Profile</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>First Name</td>
-            <td>{{this.userService.userDetails.fullName.split(' ')[0]}}</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Last Name</td>
-            <td>{{this.userService.userDetails.fullName.split(' ')[1]}}</td>
-            <td></td>
-        </tr>
-        <tr>
-            <td>Full Name</td>
-            <td>{{this.userService.userDetails.fullName}}</td>
-            <td><app-modal-basic></app-modal-basic></td>
-            
-        </tr>
-        <tr>
-            <td>Email</td>
-            <td>{{this.userService.userDetails.email}} </td> <!--{{userDetails.email}}-->
-            <td></td>
-        </tr>
-        <tr>
-            <td>Department</td>
-            <td>{{this.userService.userDetails.department}} </td> <!--{{userDetails.email}}-->
-            <td><app-model-change-dep></app-model-change-dep></td>
-        </tr>
-        <tr>
-            <td>Designation</td>
-            <td>{{this.userService.userDetails.position}} </td> <!--{{userDetails.email}}-->
-            <td><app-model-change-post></app-model-change-post></td>
-        </tr>
-        <!--<tr>
-            <td>Role</td>
-            <td>{{userDetails.role}}</td>
-        </tr>-->
-        <!--testing purpose for rolematch work-->
-       <tr> 
-            <td>Role</td>
-            <td>{{this.userService.userDetails.role}}</td>
-            <td *ngIf="this.userService.userDetails.role =='admin' "><app-modal-change-role></app-modal-change-role>  </td>
-           <!--<td *ngIf=" userDetails.role =='reader' ">userDetails.role =='admin' ||
-                Admin
-            </td>-->
-        </tr>
-        <tr>
-            <td>Password</td>
-            <td>********</td> 
-            <td><app-modal-change-pass></app-modal-change-pass></td>
-        </tr>
-         <tr>
-            
-            <td colspan="3" class="text-center" *ngIf="this.userService.userDetails.role =='admin' ">
-               <button type="button" class="btn btn-outline-danger btn-lg" (click)="deleteAccount(this.userService.userDetails._id)">DELETE ACCOUNT</button>
-            </td>
-            <!--<td colspan="3" class="text-center">
-               <input type="button" (click)="onLogout()" value="Logout" />
-            </td>-->
-         <tr>
-            <!--<td>
-                <button onclick="window.print()">Print this page</button>
-            </td>-->
-
-    </tbody>
-  </table>
-</body>
-</html>
+<div class="container-fluid border">
+    <br>
+    <div class="btn-group">
+        <button type="button" class="btn btn-primary" (click)="toOpenView()">VIEW</button>
+        <button type="button" class="btn btn-primary" (click)="toEditProfile()">EDIT</button>
+      </div>
+    <br>
+    <div><!--*ngIf="this.tOfWMsg==true"-->
+        <app-view-profile *ngIf="this.tOfViewProfile==true" ></app-view-profile>
+        <app-edit-panel-profile *ngIf="this.tOfViewEditProfile==true" ></app-edit-panel-profile>
+    </div>
+ 
+</div>

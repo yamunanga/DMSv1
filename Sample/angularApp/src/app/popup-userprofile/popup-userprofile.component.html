@@ -10,7 +10,7 @@
             <img class="card-img-top" src="assets/img/single_user.png" alt="Card image cap">
             <div class="card-body">
             <!--  <p class="card-text"></p>-->
-              <div class="a">
+              <div class="a" *ngIf="userService.otherUserProfile">
                       <h4>{{userService.otherUserProfile.fullName}}</h4>
                       <h5>Role: {{userService.otherUserProfile.role}}</h5>
                       <br>
@@ -25,7 +25,7 @@
     </div>
   </ng-template>
   
-  <button class="btn btn-outline-info" (click)="open(content)">View</button>
+  <button class="btn btn-outline-info" (click)="open(content)" data-toggle="tooltip" data-placement="top" title="View Profile"><i class="fa fa-user" aria-hidden="true"></i></button>
   
   
 

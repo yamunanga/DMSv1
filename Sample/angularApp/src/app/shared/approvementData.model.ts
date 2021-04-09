@@ -3,6 +3,8 @@ export class NEEDAPPROVEDOCS {
     _id: string;
     type:String;
     size:String;
+    isLock:String;
+    arcStatus:String;
     category: string; 
     catPath:String;
     subCategory:String;
@@ -15,4 +17,9 @@ export class NEEDAPPROVEDOCS {
     createdAt:String;
     updatedAt:String;
     approvedBy:String;
+    expDate:String;
+    pass:String;
+    ePath:String;
+    eFile:String;
+    createDate:String;
 }

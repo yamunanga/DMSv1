@@ -13,6 +13,10 @@ export class DocumentService {
   arcDocs:ARCDOCUMENTS[];//For get archived docs
   toPassDocId='';//this is for lock/unlock 
   toPassArcId='';//this is for set arc date
+  findDocForCat;//for search
+  findDocForDep;//for search
+ //docTypes=["pdf","doc","docx","odt","pdf","xls","xlsx","ods","ppt","pptx","txt","jpg","jpeg","png"];
+  docTypes;
   constructor(private http: HttpClient) { }
 
 
@@ -41,7 +45,6 @@ setlockDoc(_id: string,data){
 }
 
 
-
 //to get count of archive documents schema
 getCountArcDocs(){
   return this.http.get(environment.apiBaseUrl + '/getArcCountDocs');
@@ -61,7 +64,18 @@ setArcDoc (_id: string){
 restoreArc(_id: string,data){
   return this.http.put(environment.apiBaseUrl+`/fromArc/${_id}`,data);
 }
-
+//filter docs acording to department
+findDocsForDep (_id: string){
+  return this.http.get(environment.apiBaseUrl+`/findDocsForDep/${_id}`);
+}
+//filter docs acording to category
+findDocsForCat(_id: string){
+  return this.http.get(environment.apiBaseUrl+`/findDocsForCat/${_id}`);
+}
+//findDocsTypes
+getDocTypes(){
+  return this.http.get(environment.apiBaseUrl + '/findDocsTypes');
+}
 
 
 

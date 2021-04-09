@@ -6,38 +6,35 @@
       </button>
     </div>
     <div class="modal-body">
-        <div class="form-group">
-          <label for="dateOfBirth"> Select Role </label>
-        </div>
+        <h6 style="text-align: center;">Chage Role :</h6>
         <br>
         <!--for reader-->
-        <form #userRoleForm="ngForm" (ngSubmit)="userRoleForm.valid && onSubmit(userRoleForm)" *ngIf="this.userService.userDetails.role =='reader'">
+      <!-- <form #userRoleForm="ngForm" (ngSubmit)="userRoleForm.valid && onSubmit(userRoleForm)" *ngIf="this.userService.userDetails.role =='reader'">
             <p id="radioText">
             <input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Admin &nbsp;
-           <!--<input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Reader-->
+           <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Reader
             </p>
             <div *ngIf="userRoleForm.submitted && !role.valid"> 
               <label class="validation-message">Role is required.</label>
              </div>
             <input type="submit" value="Change">
-         </form>
+         </form>-->
+
         <!--for Admin-->
+        <div style="text-align: center;">
         <form #userRoleForm="ngForm" (ngSubmit)="userRoleForm.valid && onSubmit(userRoleForm)" *ngIf="this.userService.userDetails.role =='admin'">
-          <p id="radioText">
+         <p id="radioText">
          <!--<input type="radio" value="admin"  name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Admin &nbsp;-->
-         <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Reader
-          </p>
-          <div *ngIf="userRoleForm.submitted && !role.valid"> 
-            <label class="validation-message">Role is required.</label>
-           </div>
-           <p id="radioText">
-           <input type="radio" value="author" name="role" required #role="ngModel" [(ngModel)]="modelRole.role" >Author
-           </p>
-           <div *ngIf="userRoleForm.submitted && !role.valid"> 
-            <label class="validation-message">Role is required.</label>
-           </div>
-          <input type="submit" value="Change">
+         &nbsp;
+         <input type="radio" value="reader" name="role" required #role="ngModel" [(ngModel)]="modelRole.role" > Reader &nbsp;
+          <input type="radio" value="author" name="role" required #role="ngModel" [(ngModel)]="modelRole.role" > Author
+         </p>
+         <div *ngIf="userRoleForm.submitted && !role.valid"> 
+          <label class="validation-message">Role is required.</label>
+        </div>
+         <input type="submit" value="Change" >
        </form>
+      </div>
   
      <!-- Success message -->
      <div class="success" *ngIf="showSucessMessage">

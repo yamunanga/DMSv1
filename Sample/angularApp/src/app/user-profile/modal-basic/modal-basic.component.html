@@ -6,22 +6,22 @@
     </button>
   </div>
   <div class="modal-body">
-      <div class="form-group">
-        <label for="dateOfBirth">Enter Your Full Name</label>
-      </div>
+      <h5 style="text-align:center;">Enter Your Full Name</h5>
+      <div style="text-align: center;">
       <form #fullNameForm="ngForm" (ngSubmit)="fullNameForm.valid && onSubmit(fullNameForm)">
         <input type="text" #fullName="ngModel" [(ngModel)]="model.fullName" name="fullName" placeholder="Full Name"
         required  [ngClass]="{'invalid-textbox' :fullNameForm.submitted && !fullName.valid }">
         <div *ngIf="fullNameForm.submitted && !fullName.valid">
           <label class="validation-message">This field is required.</label>
         </div>
-        <div>
+        <div style="text-align: center;">
        <!-- <div class="modal-footer">-->
-           <input type="submit"  value="update"  >
+        <input type="submit"  value="update"  >
             <!--(click)="modal.close('Save click')"-->
       <!--  </div>-->
        </div>
       </form>
+    </div>
        <!-- Success message -->
        <div class="success" *ngIf="showSucessMessage">
           Full Name Changed !

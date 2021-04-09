@@ -13,6 +13,7 @@ export class WORKFLOWDATALiST{
     workFlowList:String;
     department:string;
     createdBy:String;
+    expDate:String;
     tags:String;
     name:String;
     file:String;

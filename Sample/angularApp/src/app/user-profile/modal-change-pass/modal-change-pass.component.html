@@ -6,9 +6,8 @@
       </button>
     </div>
     <div class="modal-body">
-        <div class="form-group">
-          <label for="dateOfBirth">Enter New Password</label>
-        </div>
+      <h5 style="text-align: center;">Change Password :</h5>
+        <div style="text-align: center;">
         <form #changePasswordForm="ngForm" (ngSubmit)="changePasswordForm.valid && onSubmit(changePasswordForm)">
       
               <input type="password" name="newPassword" #password="ngModel" [(ngModel)]="tempModel.newPassword" placeholder="New Password" required minlength="4"
@@ -16,14 +15,21 @@
               <div *ngIf="changePasswordForm.submitted && password.errors?.minlength">
                 <label class="validation-message">Minimum 4 characters.</label>
               </div>
+              <div *ngIf="changePasswordForm.submitted && !password.valid">
+                <label class="validation-message">This field is required.</label>
+              </div>
               <input type="password" name="confirmPassword" #password="ngModel" [(ngModel)]="tempModel.confirmPassword" placeholder="Confirm Password" required minlength="4"
               [ngClass]="{'invalid-textbox' :changePasswordForm.submitted && !password.valid }">
               <div *ngIf="changePasswordForm.submitted && password.errors?.minlength">
                  <label class="validation-message">Minimum 4 characters.</label>
               </div>
+              <div *ngIf="changePasswordForm.submitted && !password.valid">
+                <label class="validation-message">This field is required.</label>
+              </div>
               <input type="submit" value="Change">
       
             </form>
+        </div>
      <!-- Success message -->
      <div class="success" *ngIf="showSucessMessage">
        Password Changed !

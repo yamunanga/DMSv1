@@ -26,6 +26,12 @@ export class ArchivedUsersComponent implements OnInit {
     this.userService.getAllArchivedUsers().subscribe((res) => {
       this.userService.allArchivedUsers= res as ARCHIVEDUSERS[];
     });
+    this.userService.getAllArchivedUsersCout().subscribe((res) => {
+      this.userService.arcUserCout= res[0];
+    },err => {
+      this.userService.arcUserCout=0;
+    }
+  );
   }
   getDate(date){
     // var date;

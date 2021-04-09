@@ -1,0 +1,54 @@
+<br>
+    <div *ngIf="this.workflow.workflowProcessingC== 0">
+        <h5 style="text-align: center;">Empty List!</h5>
+    </div>
+    <div class="centertb">
+      <div style="text-align: center" *ngIf="this.workflow.workflowProcessingC != 0">
+        <input type="text" [(ngModel)]="sNameM" (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here"  /><!--(keydown)="onKeydown($event)"-->
+      </div>
+      </div>
+    <div class="table-responsive " *ngIf="this.workflow.workflowProcessingC != 0">
+        <table class="responsive-table highlight table-lg ">
+            <thead>
+              <tr>
+                <th style="text-align:center">Name</th>
+                <th style="text-align:center">Type</th>
+                <th style="text-align:center">Size(Mb)</th>
+                <th style="text-align:center">Category</th>
+                <th style="text-align:center">Department</th>
+                <th style="text-align:center">Workflow Now</th>
+                <th style="text-align:center">Workflow List</th>
+                <th style="text-align:center">File</th>
+                <th style="text-align:center">CreatedAt</th>
+                <th style="text-align:center">Last Update</th>
+                <th style="text-align:center">Options</th>
+              </tr>
+            </thead>
+            <tr *ngFor="let doc of this.workflow.workflowProcessing">
+              <td>{{doc.name}}</td>
+              <td>{{doc.type}}</td>
+              <td>{{byteToMb(doc.size)}}</td>
+              <td>{{doc.category}}</td>
+              <td>{{doc.department}}</td>
+              <td>
+                <app-popup-userprofile (click)="getOtherUserdetailesByMail(doc.workflowData)"></app-popup-userprofile>
+                <app-model-sent-msg (click)="toPassToEmail(doc.workflowData)"></app-model-sent-msg>
+              </td>
+              <td>
+                <app-model-view-list (click)="toPassListandNext(doc.workFlowList,doc.workflowNext,doc.workflowData)"></app-model-view-list>
+              </td>
+              <td>
+                <button type="button" class="btn btn-outline-info"  *ngIf="doc.isLock===null"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
+              </td>
+              <td>{{this.workflow.getDate(doc.createdAt)}}</td>
+              <td>{{this.workflow.getDate(doc.updatedAt)}}</td>
+              <td>
+                <app-model-unlock (click)="passFileId(doc._id) " *ngIf="doc.isLock===true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-unlock>
+                <app-model-set-pass (click)="passFileId(doc._id)" *ngIf="doc.isLock===null && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-set-pass>
+                <button type="button" class="btn btn-outline-danger" (click)="delWorkflow(doc._id)" *ngIf="doc.isLock===null"><i class="fa fa-trash" aria-hidden="true"></i></button>
+                <app-model-workflow (click)="passFileIdForWorkflow(doc._id)" (click)="toGetWorkflowArrayInWork(doc._id)"></app-model-workflow>
+               <!-- <app-model-doc-update (click)="passFilePathandId(doc._id,doc.catPath)" *ngIf="doc.isLock===null"></app-model-doc-update>-->
+              </td>
+            </tr>
+          </table>
+    </div>

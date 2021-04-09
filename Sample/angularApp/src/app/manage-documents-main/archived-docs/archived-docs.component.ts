@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ARCDOCUMENTS } from 'src/app/models/archiveDoc.model';
 import { DocumentService } from 'src/app/shared/document.service';
+import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
+import { UserService } from 'src/app/shared/user.service';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -10,7 +12,7 @@ import { environment } from 'src/environments/environment';
 })
 export class ArchivedDocsComponent implements OnInit {
    countArc;
-  constructor(public documentService:DocumentService) { }
+  constructor(public documentService:DocumentService,public userService: UserService) { }
  
   ngOnInit(): void {
     this.refreshArcDocList();
@@ -52,7 +54,15 @@ passFileId(_id){
 
 
 
-
+//to get profile data from backend by user id
+getOtherUserdetailesById(id){
+  this.userService.findUserProfilebyId(id).subscribe(
+    res => {
+      //this.userService.otherUserProfile= res['user']; 
+      this.userService.otherUserProfile= res as OTHERUSERS[]; 
+    }
+  )
+}
 
 
 

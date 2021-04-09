@@ -331,6 +331,17 @@ module.exports.getSubSubCategoriesCount=(req,res,next)=>{
     })
 }
 
+//to get categories by relevent department id ForDocSearch
+module.exports.getCategoriesForDocSearch=(req,res,next)=>{
+    Category.find({depId:req.params.id},
+        (err,cats)=>{
+            if (!cats)
+             return res.status(404).send(['Category not find !']);
+        else{
+            return res.status(200).send(cats);
+         }
+    }).sort({name: 'asc'})
+}
 
 
 

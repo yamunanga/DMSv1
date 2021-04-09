@@ -41,6 +41,12 @@ export class OtherUsersComponent implements OnInit {
     this.userService.getAllUsers().subscribe((res) => {
       this.userService.allUsers = res as OTHERUSERS[];
     });
+    this.userService.getAllUsersCount().subscribe((res) => {
+      this.userService.otherUserCount= res[0];
+    },err => {
+      this.userService.otherUserCount=0;
+    }
+  );
   }
   
   getDate(date){

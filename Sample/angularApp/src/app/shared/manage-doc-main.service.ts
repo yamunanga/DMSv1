@@ -7,8 +7,8 @@ import { UserService } from './user.service';
 export class ManageDocMainService {
   //For document main component
   tOfuploadDocs=false;//for document upload component to load
-  tOfViewDocs=false;//for documents view component to load
-  tOfViewUpload=true;//to document upload panel
+  tOfViewDocs=true;//for documents view component to load
+  tOfViewUpload=false;//to document upload panel
   tOfViewCategoryAndSub=false;//to view manage category 
   tOfViewSubOnly=false;//to view  sub category only
   tOfViewApprovement=false;//to view manage approve

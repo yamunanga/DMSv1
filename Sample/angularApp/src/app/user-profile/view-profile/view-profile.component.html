@@ -1,0 +1,19 @@
+
+<div class="center">
+<div class="card" style="min-width:18rem;max-width:25rem;">
+    <img class="card-img-top" src="assets/img/single_user.png" alt="Card image cap">
+    <div class="card-body">
+    <!--  <p class="card-text"></p>-->
+      <div class="a" *ngIf="userService.userDetails">
+              <h4>{{userService.userDetails.fullName}}</h4>
+              <h5>Role: {{userService.userDetails.role}}</h5>
+              <br>
+              <h5><i class="fa fa-briefcase" aria-hidden="true"> {{userService.userDetails.position}} At {{userService.userDetails.department}} Department </i></h5>
+              <h5><i class="fa fa-envelope" aria-hidden="true"> {{userService.userDetails.email}} </i> </h5>
+              <h5><i class="fa fa-check" aria-hidden="true"> Last Active at {{userService.getDate(userService.userDetails.lastActive)}} </i></h5>
+              <br>
+              <br>
+     </div>
+    </div>
+  </div>
+</div>

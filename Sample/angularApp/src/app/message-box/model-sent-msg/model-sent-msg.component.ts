@@ -46,19 +46,20 @@ selectMultipleFiles(event){
 
 //for post msg with attachments--used---
 onSend(){
-  const formData = new FormData();
-  formData.append('toEmail',this.messageService.replyModel.toEmail);
-  //console.log(formData.get('toEmail'));
-  formData.append('msgBody',this.messageService.replyModel.msgBody);
-  //console.log(formData.get('msgBody'));
-  for(let file of this.multipleFiles){
-    formData.append('files',file);
-  }
-  if(this.messageService.msgForId.toId==''){
+  if(this.messageService.toId=='' && this.messageService.toEmail !=''){
+    const formData = new FormData();
+    formData.append('toEmail',this.messageService.toEmail);
+    //console.log(formData.get('toEmail'));
+    formData.append('msgBody',this.messageService.msgBody);
+    //console.log(formData.get('msgBody'));
+    for(let file of this.multipleFiles){
+      formData.append('files',file);
+    }
     this.messageService.postMsgForEmail(formData).subscribe(
       res => {
           this.showSucessMessage = true;
           setTimeout(() => this.showSucessMessage = false, 4000);
+          this.resetMsg();
           
       },
       err => {
@@ -66,11 +67,20 @@ onSend(){
         
       },
     );
-  }else{
+  }else if((this.messageService.toEmail=='' && this.messageService.toId !='')){
+    const formData = new FormData();
+    formData.append('toId',this.messageService.toId);
+    //console.log(formData.get('toEmail'));
+    formData.append('msgBody',this.messageService.msgBody);
+    //console.log(formData.get('msgBody'));
+    for(let file of this.multipleFiles){
+      formData.append('files',file);
+    }
     this.messageService.postMsgForId(formData).subscribe(
       res => {
           this.showSucessMessage = true;
           setTimeout(() => this.showSucessMessage = false, 4000);
+          this.resetMsg();
           
       },
       err => {
@@ -81,5 +91,11 @@ onSend(){
   }
   
 }
+
+
+resetMsg(){
+  this.messageService.msgBody='';
+}
+
 
 }

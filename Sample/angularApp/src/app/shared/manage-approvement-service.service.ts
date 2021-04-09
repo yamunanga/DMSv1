@@ -10,7 +10,8 @@ import { NEEDAPPROVEDOCS } from './approvementData.model';
 export class ManageApprovementServiceService {
   approveData:NEEDAPPROVEDOCS[];//to get need approvement data for relevent user
   approveDataCount;//to get need approve data count
-  rejectDocId:'' //to pass reject doc/file id
+  rejectDocId:'' ;//to pass reject doc/file id
+  toPassDocIdApr:'';//this is for doc lock/unlock
   constructor(private http: HttpClient) { }
 
 
@@ -30,8 +31,14 @@ toReject(_id: string,data) {
 toGetApprovementDataCount() {
   return this.http.get(environment.apiBaseUrl + `/getApprovmentDataCount`);
 }
-
-
+//to lock doc
+setlockApr(_id: string,data){
+  return this.http.put(environment.apiBaseUrl+`/lockdocApr/${_id}`,data);
+}
+//to unlock doc
+unlockApr(_id: string,data){
+  return this.http.put(environment.apiBaseUrl+`/unlockdocApr/${_id}`,data);
+}
 
 
 

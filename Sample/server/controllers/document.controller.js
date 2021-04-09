@@ -30,6 +30,8 @@ var upload = multer({ storage: storage1}).array('files');
 
 const Document = mongoose.model('Document');
 const arcDocument=mongoose.model('arcDocument');
+const Dep=mongoose.model('Department');
+const Category= mongoose.model('Category');
 const jwtHelper = require('../config/jwtHelper');
 
 //to post document
@@ -230,7 +232,7 @@ module.exports.extendExp=(req,res,next)=>{
 module.exports.checkExpiration=(req,res,next)=>{
   const now = new Date();
   var current= date.format(now, 'YYYY-M-D');
-  console.log(current.toString());
+ // console.log(current.toString());
   var errArr=[];
   var resArr=[];
   Document.find({expDate:current.toString()}, 
@@ -641,13 +643,89 @@ module.exports.lockDoc = (req, res, next) =>{
 );
 }
 
+//filter docs acording to department
+module.exports.findDocsForDep=(req,res,next)=>{
+  Dep.findOne({_id:req.params.id},
+      (err,dep)=>{
+          if (!dep)
+           return res.status(404).send(['Department not find !']);
+      else{
+        Document.find({department:dep.name,arcStatus:null},
+          (err,docs)=>{
+              if (!docs)
+               return res.status(404).send(['Not find !']);
+          else{
+                return res.status(200).send(docs);
+           }
+      }).sort({createdAt: 'desc'});
+       }
+  })
+}
 
+//filter docs acording to category
+module.exports.findDocsForCat=(req,res,next)=>{
+  Category.findOne({_id:req.params.id},
+      (err,cat)=>{
+          if (!cat)
+           return res.status(404).send(['Category not find !']);
+      else{
+        Dep.findOne({_id:cat.depId},
+          (err,dep)=>{
+              if (!dep)
+               return res.status(404).send(['Not find !']);
+          else{
+            Document.find({department:dep.name,category:cat.name,arcStatus:null},
+              (err,docs)=>{
+                  if (!docs)
+                   return res.status(404).send(['Not find !']);
+              else{
+                   return res.status(200).send(docs);
+               }
+          }).sort({createdAt: 'desc'});
+           }
+      })
+       }
+  })
+}
 
+//find docs using created at date
+module.exports.findDocsUsingCreatedDate=(req,res,next)=>{
+  var date=req.params.date;
+ // console.log(date);
+  Document.find({createDate:{ $regex: '.*' +date+ '.*' },arcStatus:null},
+      (err,docs)=>{
+          if (!docs)
+           return res.status(404).send(['Not find !']);
+      else{
+          return res.status(200).send(docs);
+       }
+  }).sort({createdAt: 'desc'});
+}
 
-
-
-
-
+//find docs using Exp date
+module.exports.findDocsUsingExpDate=(req,res,next)=>{
+  var date=req.params.date;
+ // console.log(date);
+  Document.find({expDate:{ $regex: '.*' +date+ '.*' },arcStatus:null},
+      (err,docs)=>{
+          if (!docs)
+           return res.status(404).send(['Not find !']);
+      else{
+          return res.status(200).send(docs);
+       }
+  }).sort({createdAt: 'desc'});
+}
+//to get documets types available ,
+module.exports.findDocsTypes=(req,res,next)=>{
+  Document.distinct("type",
+      (err,types)=>{
+          if (!types)
+           return res.status(404).send(['Not find !']);
+      else{
+          return res.status(200).send(types);
+       }
+  }).sort({type: 'asc'});
+}
 //to convert to archive path
 function arPath(arr){
   aPath=''
@@ -656,10 +734,6 @@ function arPath(arr){
   }
   return aPath
 }
-
-
-
-
 
 //to convert db path
 function dbPath(arr){

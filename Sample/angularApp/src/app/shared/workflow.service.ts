@@ -1,8 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import * as moment from 'moment';
 import { environment } from 'src/environments/environment';
 import { WORKFLOWDATA } from '../models/workFlow.model';
 import { WORKFLOWDATALiST } from '../models/workflowList.model';
+import { DOCUMENTS } from './document.model';
 import { OTHERUSERS } from './otherUsers.model';
 
 @Injectable({
@@ -20,7 +22,12 @@ export class WorkflowService {
   workflowUserList;//this is for work flow list model
   workflowNext:string;//this is for work flow list model
   workflowNow:string;//this is for work flow list model
-
+  workflowProcessing:WORKFLOWDATALiST[];//this is for workflow processing
+  workflowProcessingC=0;//this is for get workflow processing count
+  passWorkProcessId='';//for use workflow data in workflow table 
+  workflowOldList:DOCUMENTS[];//to get workflow done files acording to user
+  workflowOldDataCount=0;//to get workflow done files count acording to user
+  workflowOldUsers;//to get workflow done users
   constructor(private http: HttpClient) { }
   
 //for pass admin users for select workflow
@@ -79,5 +86,52 @@ validateFile(_id:string){
   return this.http.get(environment.apiBaseUrl+`/toWorkflow/${_id}`);
 }
 
+//to pass ongoing workflow data for creator of workflow
+getWorkflowDataNow(){
+  return this.http.get(environment.apiBaseUrl+`/getWorkflowDataNow`);
+}
+//to pass ongoing workflow data count for creator of workflow
+getWorkflowDataNowCount(){
+  return this.http.get(environment.apiBaseUrl+`/getWorkflowDataNowCount`);
+}
 
+//to delete workflow  
+delWorkflow(_id:string){
+  return this.http.delete(environment.apiBaseUrl+`/delWorkflow/${_id}`);
+}
+//to add user to workflow in workflow table
+addUserWorkInWork(_id: string,data){
+  return this.http.put(environment.apiBaseUrl+`/addWorkflowInWork/${_id}`,data);
+}
+//to remove user from workflow  in workflow table
+delUserWorkInWork(_id: string,data){
+  return this.http.put(environment.apiBaseUrl+`/delWorkflowUserInWork/${_id}`,data);
+}
+
+//for get workflow array data in workflow
+getWorkflowDataInWork(_id: string){
+  return this.http.get(environment.apiBaseUrl+`/getWorkflowDataInWork/${_id}`);
+}
+//to update workflow table when change workflow data
+getWorkflowDataUpdate(_id: string){
+  return this.http.get(environment.apiBaseUrl+`/getWorkflowDataUpdate/${_id}`);
+}
+//to get workflow done files acording to user
+getWorkflowDoneFiles(){
+  return this.http.get(environment.apiBaseUrl+`/getWorkflowDoneFiles`);
+}
+//to  get workflow done files count acording to user
+getWorkflowDoneFilesCount(){
+  return this.http.get(environment.apiBaseUrl+`/getWorkflowDoneFilesCount`);
+}
+//to del workflow done file acording to user
+getWorkflowDoneFileDel(_id: string){
+  return this.http.get(environment.apiBaseUrl+`/getWorkflowDoneFileDel/${_id}`);
+}
+
+getDate(date){
+  var stillUtc = moment.utc(date).toDate();
+  var currentTime= moment(stillUtc).local().format('MMMM Do YYYY, h:mm:ss a');
+  return currentTime;
+}
 }

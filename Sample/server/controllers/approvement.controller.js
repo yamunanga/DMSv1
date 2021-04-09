@@ -8,7 +8,7 @@ const router = e.Router();
 const URIpath = require('uri-path');
 const url = require('url');
 const date = require('date-and-time')
-
+const { encrypt, decrypt } = require('../config/crypto');
 //mongoose model
 const User = mongoose.model('User');
 const Document = mongoose.model('Document');
@@ -86,13 +86,36 @@ module.exports.getApprovmentDataCount=(req,res,next)=>{
                                 return res.status(422).send(['Eror from backend !']);
                             } 
                             else{ 
-                                approvement.findOneAndRemove({_id:req.params.id},(err,file)=>{
-                                    if (!file)
-                                        return res.status(404).send(['Doc can not find !']);
-                                    else{
-                                        return res.status(200).send(['File Saved Successfully !']);
-                                    }
-                                   }) 
+                                User.findOne({_id:file.createdBy}, 
+                                    (err,muser)=>{
+                                        if (!muser){
+                                             return res.status(404).send( 'Can not find !' );
+                                        }   
+                                            const now = new Date();
+                                            var current= date.format(now, 'YYYY-M-D');
+                                            var msg = new Message;
+                                            msg.fromId=req._id;
+                                            msg.toId=file.createdBy;
+                                            msg.from=user.email;
+                                            msg.to=muser.email;
+                                            msg.body=file.name+' File Approved At'+' '+current.toString();
+                                            msg.save((err,doc)=>{
+                                                if(err){
+                                                    return res.status(422).send(['Sent failed !']);
+                                                }else{
+                                                    //return res.status(200).send(['Message sent !']);
+                                                    approvement.findOneAndRemove({_id:req.params.id},(err,dfile)=>{
+                                                        if (!dfile)
+                                                            return res.status(404).send(['Doc can not find !']);
+                                                        else{
+                                                            return res.status(200).send(['File Approved !']);
+                                                           
+                                                        }
+                                                       }) 
+                                                }
+                                            })
+                                       
+                                    })
                             } 
                         }) 
                         }
@@ -137,7 +160,7 @@ module.exports.rejectApprovementData=(req,res,next)=>{
                                             msg.toId=file.createdBy;
                                             msg.from=user.email;
                                             msg.to=muser.email;
-                                            msg.body=file.name+'File Rejected Because '+req.body.msg;
+                                            msg.body=file.name+'File Rejected Because'+' '+req.body.msg;
                                             msg.save((err,doc)=>{
                                                 if(err){
                                                     return res.status(422).send(['Sent failed !']);
@@ -164,3 +187,57 @@ module.exports.rejectApprovementData=(req,res,next)=>{
 }
 
 
+//to lock document in approvement
+module.exports.lockDoc = (req, res, next) =>{
+    approvement.findOne({_id:req.params.id,isLock: {$ne:true}},
+      function (err,file) {
+          if (!file)
+              return res.status(404).send(['not found']);
+          else{
+            const hashF = encrypt(file.file);
+            const hashP = encrypt(file.catPath);
+            const hashPa= encrypt(req.body.pass);
+           approvement.findOneAndUpdate({_id:req.params.id},{isLock:true,eFile:hashF,ePath:hashP,file:null,catPath:null,pass:hashPa},
+              function (err,rfile) {
+                  if (!rfile)
+                      return res.status(404).send(['not found']);
+                  else{
+                     return res.status(200).send(['File Locked!']);
+                    
+                   }
+              }
+          );
+        }
+      }
+  );
+  }
+
+//to unlock document in approvment
+module.exports.unlockDoc = (req, res, next) =>{
+    approvement.findOne({_id:req.params.id,isLock: {$ne:null}},
+      function (err,file) {
+          if (!file)
+              return res.status(404).send(['not found']);
+          else{
+              const dPath = decrypt(file.ePath[0]);
+              const dFile = decrypt(file.eFile[0]);
+              const dPass = decrypt(file.pass[0]);
+              if(dPass==req.body.pass){
+                approvement.findOneAndUpdate({_id:req.params.id},{isLock:null,eFile:null,ePath:null,file:dFile,catPath:dPath,pass:null},
+                  function (err,rfile) {
+                      if (!rfile)
+                          return res.status(404).send(['not found']);
+                      else{
+                         return res.status(200).send(['File unLocked!']);
+                        
+                       }
+                  }
+              );
+    
+              }else{
+                return res.status(422).send(['Wrong Password']);
+              }
+           }
+      }
+  );
+  }

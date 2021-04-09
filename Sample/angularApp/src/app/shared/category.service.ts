@@ -14,6 +14,7 @@ export class CategoryService {
   allScatsById:SUBCATEGORIES[];//for get the subcategories by main cat id
   allSScatsById:SUBCATEGORIES[];//for get the subcategories inside another sub category
   currentPath:String;//Pass current path for upload location
+  catList:CATEGORIES[];//this is for document search drop list
   uploadPath='';//Pass current path to upload path
 
   constructor(private http: HttpClient,public userService: UserService) { }
@@ -65,7 +66,10 @@ getSubCount(_id: string){
 getSubSubCount(_id: string){
   return this.http.get(environment.apiBaseUrl + `/getSubSubCategoriesCount/${_id}`);
 }
-
+//to get categories by relevent department id ForDocSearch
+getCategoriesForDocSearch(_id: string){
+  return this.http.get(environment.apiBaseUrl + `/getCatsForSearch/${_id}`);
+}
 
 //use for convert utc to now 
 getDate(date){

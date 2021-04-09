@@ -12,9 +12,9 @@
                 <th>Category</th>
                 <th>Department</th>
                 <th>CreatedBy</th>
-                <th>Tags</th>
                 <th>File</th>
                 <th>CreatedAt</th>
+                <th>Options</th>
               </tr>
             </thead>
             <tr *ngFor="let doc of documentService.arcDocs">
@@ -23,12 +23,11 @@
               <td>{{byteToMb(doc.size)}}</td>
               <td>{{doc.category}}</td>
               <td>{{doc.department}}</td>
-              <td>{{doc.createdBy}}</td>
-              <td>{{doc.tags}}</td>
+              <td><app-popup-userprofile (click)="getOtherUserdetailesById(doc.createdBy)"></app-popup-userprofile></td>
               <td>
                 <button type="button" class="btn btn-outline-info"><a href="{{getLink(doc.arcPath)}}"  target="_blank">View</a></button>
               </td>
-              <td>{{doc.createdAt}}</td>
+              <td>{{userService.getDate(doc.createdAt)}}</td>
               <td>
                 <app-model-restore-arc-doc (click)='passFileId(doc._id)'></app-model-restore-arc-doc>
               </td>

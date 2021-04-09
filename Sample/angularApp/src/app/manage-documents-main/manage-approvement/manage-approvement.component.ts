@@ -14,9 +14,12 @@ import { environment } from 'src/environments/environment';
 export class ManageApprovementComponent implements OnInit {
   showSucessMessage: boolean;
   serverErrorMessages: string;
+  role;
   constructor(public manageApprovment:ManageApprovementServiceService,public userService: UserService,private toastr: ToastrService) { }
   ngOnInit(): void {
     this.refreshNeedApprovementList();
+    this.getUserdetailes();
+    this.getRole();
   }
 
   //this is for get need approvement data
@@ -26,7 +29,7 @@ export class ManageApprovementComponent implements OnInit {
     });
     this.manageApprovment.toGetApprovementDataCount().subscribe((res) => {
       this.manageApprovment.approveDataCount = res[0];
-      console.log(this.manageApprovment.approveDataCount);
+      //console.log(this.manageApprovment.approveDataCount);
     });
   }
 
@@ -82,6 +85,30 @@ toAccept(_id) {
 passReject(_id){
   this.manageApprovment.rejectDocId=_id;
 }
+
+//get user role
+getRole(){
+  this.role=this.userService.getRole()
+}
+
+//get user detailes
+getUserdetailes(){
+  this.userService.getUserProfile().subscribe(
+    res => {
+       this.userService.userDetails = res['user'];
+    },
+    err => { 
+      //console.log(err);
+      
+    }
+  )
+}
+
+//to set _id for exp date and lock status for doc 
+passFileId(_id){
+  this.manageApprovment.toPassDocIdApr=_id;
+}
+
 
 
 }

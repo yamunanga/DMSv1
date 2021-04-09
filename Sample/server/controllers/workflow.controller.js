@@ -17,6 +17,7 @@ const tempDocument = mongoose.model('tempDocument');
 const approvement=mongoose.model('approvment');
 const Message=mongoose.model('Message');
 const workflow=mongoose.model('workFlow');
+const workFlowDone=mongoose.model('workFlowDone');
 //Multer configuration
 const multer = require('multer');
 var storage1 = multer.diskStorage({
@@ -185,7 +186,7 @@ module.exports.renameWorkflowFile=(req,res,next)=>{
   }
 
 //workflow process
-module.exports.getWorkflowProcess=(req,res,next)=>{
+module.exports.getWorkflowProcessN=(req,res,next)=>{
     User.findOne({_id:req._id}, 
         (err,user)=>{
             if (!user){
@@ -203,6 +204,8 @@ module.exports.getWorkflowProcess=(req,res,next)=>{
                                   //return res.status(200).send(['Update Successfull !']);
                                   //console.log(file1.workflow.length);
                                   if(file1.workflow.length==1){
+                                    const now = new Date();
+                                    var current= date.format(now, 'YYYY-M-D');
                                     var document = new Document();
                                     document.name =file1.name;
                                     document.file =file1.file;
@@ -217,6 +220,8 @@ module.exports.getWorkflowProcess=(req,res,next)=>{
                                     document.expDate=file1.expDate;
                                     document.isWorkFlowed=true;
                                     document.workFlowList=file1.workFlowList;
+                                    document.workFlowUsers=file1.workFlowList;
+                                    document.workflowEndDate=current.toString();
                                     if(file1.isLock==true){
                                       document.isLock=file1.isLock;
                                       document.ePath=file1.ePath;
@@ -254,6 +259,121 @@ module.exports.getWorkflowProcess=(req,res,next)=>{
             }
         })
 }
+
+//workflow process new and use !
+module.exports.getWorkflowProcess=(req,res,next)=>{
+  User.findOne({_id:req._id}, 
+      (err,user)=>{
+          if (!user){
+               return res.status(404).send( 'Can not find !' );
+          }else{
+              workflow.findOne({_id:req.params.id}, 
+                  (err,file1)=>{
+                      if (!file1){
+                           return res.status(404).send( 'Can not find !' );
+                      }else{
+                          file1.updateOne({$pull:{workflow:user.email},workflowData:file1.workflow[1],workflowNext:file1.workflow[2]},function(err,doc){
+                              if(err){
+                                return res.status(422).send(['Cannot update !']);
+                              }else{
+                                //return res.status(200).send(['Update Successfull !']);
+                                //console.log(file1.workflow.length);
+                                if(file1.workflow.length==1){
+                                  const now = new Date();
+                                  var current= date.format(now, 'YYYY-M-D');
+                                  var document = new Document();
+                                  document.name =file1.name;
+                                  document.file =file1.file;
+                                  document.type =file1.type;
+                                  document.size =file1.size;
+                                  document.category=file1.category;
+                                  document.catPath=file1.catPath;
+                                  document.subCategory=file1.subCategory;
+                                  document.department=file1.department;
+                                  document.createdBy=file1.createdBy;
+                                  document.tags=file1.tags;
+                                  document.expDate=file1.expDate;
+                                  document.isWorkFlowed=true;
+                                  document.workFlowList=file1.workFlowList;
+                                  document.workFlowUsers=file1.workFlowList;
+                                  document.workflowEndDate=current.toString();
+                                  document.workflowId=file1._id;
+                                  if(file1.isLock==true){
+                                    document.isLock=file1.isLock;
+                                    document.ePath=file1.ePath;
+                                    document.eFile=file1.eFile;
+                                    document.pass=file1.pass;
+                                  }
+                                  document.save(function(err,result){ 
+                                    if (err){ 
+                                       return res.status(422).send(['Eror from backend !']);
+                                    } 
+                                    else{ 
+                                        //console.log(result) 
+                                        workflow.findOneAndRemove({_id:req.params.id},(err,file)=>{
+                                          if (!file){
+                                            return res.status(404).send(['File Not found !']); 
+                                          }
+                                           
+                                          else{
+                                            //return res.status(200).send(['Workflow Over!']); 
+                                            User.findOne({_id:file1.createdBy},(err,userCreate)=>{
+                                              if (!userCreate){
+                                                return res.status(404).send(['File Not found !']); 
+                                              }
+                                           else{
+                                                //return res.status(200).send(['Workflow Over!']); 
+                                                var msg = new Message;
+                                                msg.fromId=req._id;
+                                                msg.toId=file1.createdBy;
+                                                msg.from=user.email;
+                                                msg.to=userCreate.email;
+                                                msg.body='Dear'+user.email+'your workflow id '+file1._id+' over now.'+'It start at ' +file1.createdAt+'and end at '+current.toString()+'.Users are '+file1.workFlowList +'.You can view it on Documents.Thank you !';
+                                                msg.save((err,doc)=>{
+                                                    if(err){
+                                                        return res.status(422).send(['Sent failed !']);
+                                                    }else{
+                                                        return res.status(200).send(['Workflow Over!']);
+                                                    }
+                                                })
+                                              }
+                                            }) 
+                                          }
+                                        }) 
+                                       
+                                    } 
+                                }) 
+
+                                }else{
+                                  return res.status(200).send(['Update Successfull !']); 
+
+                                }
+                              }
+                  
+                           })
+                      }
+                  })
+          }
+      })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //for pass workflow data to front end--work--
 module.exports.getWorkflowDataList=(req,res,next)=>{
     User.findOne({_id:req._id}, 
@@ -417,6 +537,72 @@ module.exports.checkWorkflow=(req,res,next)=>{
   );
   }
 
+//to add user to workflow in workflow table
+module.exports.checkWorkflowInWork=(req,res,next)=>{
+  workflow.findOne({_id:req.params.id},
+    function (err,file) {
+        if (!file)
+            return res.status(404).send(['Not Found !']);
+        else{
+           var len=file.workflow.length;
+           var count=0;
+           for(var i=0;i<len;i++){
+               if(file.workflow[i]==req.body.name){
+                   count=count+1
+                  return res.status(422).send(['Duplicate found ! '+ req.body.name]);
+               }
+          }
+          file.updateOne({ $addToSet:{workflow:req.body.name}},function(err,doc){
+              if(err){
+                return res.status(422).send(['Cannot update !']);
+              }else{
+                return res.status(200).send(['Update Successfull !']);
+              }
+  
+           })
+      }
+    }
+);
+}
+ //to remove user from workflow  in workflow table
+ module.exports.delWorkflowUserInWork=(req,res,next)=>{
+  workflow.findOne({_id:req.params.id},
+    function (err,file) {
+        if (!file)
+            return res.status(404).send(['Not Found !']);
+        else{
+          file.updateOne({$pull:{workflow:req.body.name}},function(err,doc){
+            if(err){
+              return res.status(422).send(['Cannot update !']);
+            }else{
+              return res.status(200).send(['Update Successfull !']);
+            }
+
+         })
+      }
+    }
+);
+}
+
+ //for pass workflow data in workflow table to front end 
+ module.exports.getWorkflowDataInWork=(req,res,next)=>{
+  workflow.findOne({_id:req.params.id}, 
+      (err,file)=>{
+          if (!file){
+               return res.status(404).send( 'Can not find !' );
+          }else{
+              return res.status(200).send(file.workflow);
+          }
+      })
+}
+
+
+
+
+
+
+
+
  //for pass workflow data array length to frontend
  module.exports.getWorkflowDataLen=(req,res,next)=>{
     tempDocument.findOne({_id:req.params.id}, 
@@ -486,7 +672,149 @@ module.exports.unlockDoc = (req, res, next) =>{
 );
 }
 
+//to pass ongoing workflow data for creator of workflow
+module.exports.getWorkflowDataNow=(req,res,next)=>{
+  workflow.find({createdBy:req._id}, 
+      (err,files)=>{
+          if (!files){
+               return res.status(404).send( 'Can not find !' );
+          }else{
+              return res.status(200).send(files);
+          }
+      }).sort({createdAt: 'desc'})
+}
+//to pass ongoing workflow data count for creator of workflow
+module.exports.getWorkflowDataNowCount=(req,res,next)=>{
+  workflow.countDocuments({createdBy:req._id}, 
+      (err,count)=>{
+          if (!count){
+               return res.status(404).send( 'Can not find !' );
+          }else{
+              return res.status(200).send([count]);
+          }
+      })
+}
 
+//to delete workflow
+module.exports.delWorkflow=(req,res,next)=>{
+  workflow.findOne({_id:req.params.id}, 
+      (err,file)=>{
+          if (!file){
+               return res.status(404).send( 'Can not find !' );
+          }else{
+            var myJSON = JSON.stringify(file.file);
+            var str=myJSON.split('\\');
+            //console.log(str);
+            var nStr=str[str.length-1].split('"');
+            //console.log(nStr[0]);
+            var multerDate=nStr[0].split('-');
+            var myPath=file.catPath+'/'+multerDate[0]+'-'+file.name;
+            //console.log(myPath);
+            fs.unlink(myPath, (err) => {
+              if (err) {
+                return res.status(404).send(['File can not delete Or Unlock Before Delete !']);
+              }
+               //file removed
+            workflow.findOneAndRemove({_id:req.params.id},(err,file)=>{
+              if (!file)
+                   return res.status(404).send(['Doc can not find !']);
+              else{
+                  return res.status(200).send(['Workflow Delete Successful !']);
+              }
+             }) 
+           
+              
+            })
+          }
+      })
+}
+//to update workflow table when change workflow data
+module.exports.getWorkflowDataUpdate=(req,res,next)=>{
+  workflow.findOne({_id:req.params.id}, 
+      (err,file)=>{
+          if (!file){
+               return res.status(404).send( 'Can not find !' );
+          }else{
+            workflow.findOneAndUpdate({_id:req.params.id},{workFlowList:file.workflow,workflowData:file.workflow[0],workflowNext:file.workflow[1]},
+              function (err,rfile) {
+                  if (!rfile)
+                      return res.status(404).send(['not found']);
+                  else{
+                     return res.status(200).send(['File Updated!']);
+                    
+                   }
+              }
+          );
+          }
+      })
+}
+
+//to send workflow done files acording to user
+module.exports.getWorkflowDoneFiles=(req,res,next)=>{
+  User.findOne({_id:req._id}, 
+      (err,user)=>{
+          if (!user){
+               return res.status(404).send( 'Can not find !' );
+          }else{
+           //{$or:[{workFlowUsers:user.email},{createdBy:req._id}]}
+            Document.find({workFlowUsers:user.email,isWorkFlowed:true} , 
+              (err,files)=>{
+                  if (!files){
+                    return res.status(404).send( 'Can not find !' );
+                  }else{
+                    return res.status(200).send(files);
+                  }
+              }).sort({createdAt: 'desc'})
+          }
+      })
+}
+
+//to send workflow done files count acording to user
+module.exports.getWorkflowDoneFilesCount=(req,res,next)=>{
+  User.findOne({_id:req._id}, 
+      (err,user)=>{
+          if (!user){
+               return res.status(404).send( 'Can not find !' );
+          }else{
+            Document.countDocuments({workFlowUsers:user.email,isWorkFlowed:true}, 
+              (err,cd)=>{
+                  if (!cd){
+                    return res.status(404).send( 'Can not find !' );
+                  }else{
+                    return res.status(200).send([cd]);
+                  }
+              })
+          }
+      })
+}
+
+
+
+//to del workflow done file acording to user
+module.exports.getWorkflowDoneFileDel=(req,res,next)=>{
+  User.findOne({_id:req._id}, 
+      (err,user)=>{
+          if (!user){
+               return res.status(404).send( ['Can not find !' ]);
+          }else{
+            Document.findOne({_id:req.params.id}, 
+              (err,file)=>{
+                  if (!file){
+                    return res.status(404).send( ['Can not find !'] );
+                  }else{
+                    file.updateOne({$pull:{workFlowUsers:user.email}}, 
+                      (err,file)=>{
+                          if (!file){
+                            return res.status(404).send( ['Can not find !']);
+                          }else{
+                            return res.status(200).send( ['List Updated'] );
+                          }
+                      })
+                  }
+              })
+          }
+      })
+}
 
 
 

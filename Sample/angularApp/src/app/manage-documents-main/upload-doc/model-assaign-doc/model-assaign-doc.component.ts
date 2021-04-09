@@ -117,6 +117,7 @@ onSend(){
          this.tempDocService.getCountApprovement(this.tempDocService.tempDocId);
          this.getCheckListData(this.tempDocService.tempDocId);
          this.toEmpty(this.selectedItems);
+         this.serverErrorMessages2='';
         // this.resetDel();
         
        },

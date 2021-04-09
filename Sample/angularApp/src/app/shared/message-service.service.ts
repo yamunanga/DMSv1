@@ -20,16 +20,13 @@ export class MessageServiceService {
     toEmail:'',
     msgBody:''
   }
+
+msgBody='';
 //post multiple attachments with message for popup use(toEmail)
-  msgForEmail={
-    toEmail:'',
-    msgBody:''
-  }
+toEmail='';
 //post multiple attachments with message for popup use(toId)
-msgForId={
-  toId:'',
-  msgBody:''
-}
+toId='';
+
 
   constructor(private http: HttpClient) { }
 

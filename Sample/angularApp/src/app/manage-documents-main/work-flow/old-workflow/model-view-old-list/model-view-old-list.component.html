@@ -1,0 +1,27 @@
+<ng-template #content let-modal>
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">User List</h4>
+      <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body centertb">
+        <table class="responsive-table highlight table-sm ">
+            <thead>
+              <tr>
+                <th style="text-align:center">#</th>
+                <th style="text-align:center">User</th>
+              </tr>
+            </thead>
+            <tr *ngFor="let user of this.workflow.workflowOldUsers;index as i">
+              <td>{{i+1}}</td>
+              <td>{{user}}</td>
+            </tr>
+          </table>
+    </div>
+  </ng-template>
+  
+  <button class="btn btn-outline-info" (click)="open(content)" data-toggle="tooltip" data-placement="top" title="Workflow List"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
+  
+  
+

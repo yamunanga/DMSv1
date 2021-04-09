@@ -16,6 +16,7 @@ export class DepartmentService {
   allDepsForOther:DEPARTMENTS[];//to show dep list for update other user department
   allDepWithout:DEPARTMENTS[];//to show dep list without user current department
   allDepUsers:OTHERUSERS[];//For get count of users in each department
+  depList:DEPARTMENTS[];//this is for get departments to search dropdown
   //for get dep list without current user department
   otherUserId={
     _id:''

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/models/user.model';
 import { WORKFLOWDATA } from 'src/app/models/workFlow.model';
+import { WORKFLOWDATALiST } from 'src/app/models/workflowList.model';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { TempDocService } from 'src/app/shared/temp-doc.service';
 import { TEMPDOCUMENTS } from 'src/app/shared/tempDoc.model';
@@ -121,7 +122,7 @@ onKeydown(event) {
 }
 
 //to send workflow data to back end
-onSend(){
+onSendO(){
   var len=this.selectedItems.length;
   for(var x=0;x<len;x++){
     this.sendData={
@@ -146,6 +147,76 @@ onSend(){
   }
 }
 
+//used
+onSend(){
+  if(this.tempDocService.passFileId !='' && this.workflow.passWorkProcessId ==''){
+    var len=this.selectedItems.length;
+    for(var x=0;x<len;x++){
+      this.sendData={
+        name:this.selectedItems[x].toString()
+      }
+       this.workflow.addUserWork(this.tempDocService.passFileId,this.sendData).subscribe(
+         res => {
+           this.showSucessMessage2 = true;
+           setTimeout(() => this.showSucessMessage2= false, 2000);
+           this.toEmpty(this.selectedItems);
+           this.toGetWorkflowArray(this.tempDocService.passFileId);
+           this.serverErrorMessages2='';
+           this.refreshTempDocList();
+          // this.resetDel();
+          
+         },
+         err => {
+          this.serverErrorMessages2= err.error;
+           
+         },
+       );
+    }
+  }else if(this.tempDocService.passFileId =='' && this.workflow.passWorkProcessId !=''){
+    var len=this.selectedItems.length;
+    for(var x=0;x<len;x++){
+      this.sendData={
+        name:this.selectedItems[x].toString()
+      }
+       this.workflow.addUserWorkInWork(this.workflow.passWorkProcessId,this.sendData).subscribe(
+         res => {
+           this.showSucessMessage2 = true;
+           setTimeout(() => this.showSucessMessage2= false, 2000);
+           this.toEmpty(this.selectedItems);
+           this.toGetWorkflowArrayInWork(this.workflow.passWorkProcessId);
+           this.serverErrorMessages2='';
+           this.refreshWorkflowDataProcess();
+           this.toSave();
+          
+         },
+         err => {
+          this.serverErrorMessages2= err.error;
+           
+         },
+       );
+    }
+  }
+}
+
+//to update workflow table when change workflow data
+toSave(){
+  this.workflow.getWorkflowDataUpdate(this.workflow.passWorkProcessId).subscribe(
+    res => {
+      this.showSucessMessage2 = true;
+      setTimeout(() => this.showSucessMessage2= false, 2000);
+      this.refreshWorkflowDataProcess();
+      this.serverErrorMessages2='';
+     
+    },
+    err => {
+     this.serverErrorMessages2= err.error;
+      
+    },
+  );
+}
+
+
+
 //to empty selected items array
 toEmpty(arr){
   var len=arr.length;
@@ -158,6 +229,8 @@ toEmpty(arr){
 //reset
 reset(){
   this.serverErrorMessages2='';
+  this.tempDocService.passFileId ='';
+  this.workflow.passWorkProcessId ='';
 }
 
 //to get workflow array data
@@ -170,6 +243,21 @@ toGetWorkflowArray(_id){
   });
 }
 
+//to get workflow array data in workflow
+toGetWorkflowArrayInWork(_id){
+  this.workflow.getWorkflowDataInWork(_id).subscribe((res) => {
+    this.workflow.workflowArr= res as WORKFLOWDATA[];
+  });
+}
+//to get workflow processing data list acording to user req id
+refreshWorkflowDataProcess() {
+  this.workflow.getWorkflowDataNow().subscribe((res) => {
+    this.workflow.workflowProcessing = res as WORKFLOWDATALiST[];
+  });
+  this.workflow.getWorkflowDataNowCount().subscribe((res) => {
+    this.workflow.workflowProcessingC= res[0];
+  });
+}
 
 //not used
 displayInfo1(name,desig,dep) {
@@ -187,7 +275,7 @@ toUpper(str){
 }
 
 
-onDel(mail){
+onDelO(mail){
   this.delData={
     name:mail
   }
@@ -205,6 +293,50 @@ onDel(mail){
     },
   );
 }
+//use
+onDel(mail){
+  if(this.tempDocService.passFileId !='' && this.workflow.passWorkProcessId ==''){
+    this.delData={
+      name:mail
+    }
+    this.workflow.delUserWork(this.tempDocService.passFileId,this.delData).subscribe(
+      res => {
+        this.showSucessMessage1 = true;
+        setTimeout(() => this.showSucessMessage1= false, 2000);
+        this.toGetWorkflowArray(this.tempDocService.passFileId);
+        this.refreshTempDocList();
+        this.resetDel()
+  
+      },
+      err => {
+        this.serverErrorMessages1 = err.error;
+      },
+    );
+
+  }else if(this.tempDocService.passFileId =='' && this.workflow.passWorkProcessId !=''){
+    this.delData={
+      name:mail
+    }
+    this.workflow.delUserWorkInWork(this.workflow.passWorkProcessId,this.delData).subscribe(
+      res => {
+        this.showSucessMessage1 = true;
+        setTimeout(() => this.showSucessMessage1= false, 2000);
+        this.toGetWorkflowArrayInWork(this.workflow.passWorkProcessId);
+        this.refreshWorkflowDataProcess();
+        this.resetDel();
+        this.toSave();
+  
+      },
+      err => {
+        this.serverErrorMessages1 = err.error;
+      },
+    );
+  }
+}
+
+
+
+
 
 //to reset delete data model
 resetDel(){
