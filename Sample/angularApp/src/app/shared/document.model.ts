@@ -25,5 +25,6 @@ export class DOCUMENTS {
     eFile:String;
     isWorkFlowed:String;
     createDate:String;
+    addedAt:String;
    
 }

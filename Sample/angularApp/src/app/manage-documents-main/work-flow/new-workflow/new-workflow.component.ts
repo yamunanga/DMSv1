@@ -19,6 +19,8 @@ export class NewWorkflowComponent implements OnInit {
   sNameM;//Ng model for search name
   showSucessMessage: boolean;
   serverErrorMessages: string;
+  public page=1
+  public pageSize=10;
   constructor(private messageService: MessageServiceService,private toastr: ToastrService,public documentService:DocumentService,public userService: UserService,public workflow:WorkflowService,private tempDocService:TempDocService) { }
 
   ngOnInit(): void {

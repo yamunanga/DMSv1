@@ -15,6 +15,8 @@ export class ArchivedUsersComponent implements OnInit {
     email:''
   }
   arcName;//this is ng model for search
+  public page=1
+  public pageSize=10;
   constructor(public userService: UserService,private toastr: ToastrService) { }
 
   ngOnInit(): void {

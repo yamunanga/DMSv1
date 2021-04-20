@@ -18,6 +18,8 @@ export class ProcessingNowComponent implements OnInit {
   role;//this is for get role
   serverErrorMessages: string;
   sNameM;//Ng model for search name
+  public page=1
+  public pageSize=10;
   constructor(private tempDocService:TempDocService,private messageService: MessageServiceService,public userService: UserService,public workflow:WorkflowService,private toastr: ToastrService) { }
 
   ngOnInit(): void {

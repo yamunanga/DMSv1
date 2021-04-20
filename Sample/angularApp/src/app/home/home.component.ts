@@ -24,6 +24,7 @@ export class HomeComponent implements OnInit {
   tofviewOrganisation=false;//for the organization component to load
   tofviewManageUsersMain=false;//for the manage users main to load 
   tofviewMangaDocMain=false;//for the manage documents main to load 
+  tofviewAudit=false;//for view audit
   constructor(public userService: UserService, private router: Router,private catService:CategoryService,public messageService: MessageServiceService) { }
   lastData={
     lastActive:'',
@@ -31,14 +32,39 @@ export class HomeComponent implements OnInit {
   showSucessMessage: boolean;
   serverErrorMessages: string;
   role:string;//data come from local storage
-
+  time = new Date();
+  timer;
   ngOnInit(): void {
     //this.getUserdetailes();
     //this.userService.getUserdetailes();
     this.getRole();
     this.messageService.getNewMsgCount();
+    this.timerFor();
     
   }
+
+  ngOnDestroy(){
+    clearInterval(this.timer);
+  }
+
+//timer
+timerFor(){
+  this.timer = setInterval(() => {
+    this.time = new Date();
+    this.messageService.getNewMsgCount();
+  }, 1000);
+}
+
+
+//to set user status 
+whenStart(){
+  this.userService.userStatus.status="online";
+  this.toPutuserStatus();
+
+}
+
+
+
   openNav() {
     document.getElementById("mySidenav").style.width = "250px";
     document.getElementById("main").style.marginLeft = "250px";
@@ -92,6 +118,7 @@ export class HomeComponent implements OnInit {
     this.tofviewOrganisation=false;
     this.tofviewManageUsersMain=false;
     this.tofviewMangaDocMain=false;
+    this.tofviewAudit=false;
   }
   //to load userList
   userList(){
@@ -134,6 +161,12 @@ export class HomeComponent implements OnInit {
     this.refresh();
     this.tofviewMangaDocMain=true;
   }
+  //for view audit
+  viewAudit(){
+    this.refresh();
+    this.tofviewAudit=true;
+  }
+
   toGetLastActiveData() {
     this.userService.updateUserLastActive(this.lastData).subscribe(
       res => {
@@ -171,7 +204,7 @@ export class HomeComponent implements OnInit {
     this.lastData.lastActive = date;
    }
 
-  //To update user Status
+//To update user Status
 toPutuserStatus() {
   this.userService.updateUserStatus(this.userService.userStatus).subscribe(
     res => {

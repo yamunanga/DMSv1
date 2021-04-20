@@ -30,6 +30,7 @@ var documentSchema = new mongoose.Schema({
     size:{type:String,default:''},
     category:{type:String,default:''},
     approvedBy:{type:String,default:null},
+    addedAt:{type:String,default:null},
     department:{type:String,default:''},
     createdBy:{type:String,default:''},
     tags:{type:String,default:''},

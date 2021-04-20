@@ -1,0 +1,38 @@
+<br>
+<div *ngIf="this.cTodayArcUsers == 0">
+  <h5 style="text-align: center;">Empty List!</h5>
+</div>
+<br>
+<div style="text-align: center" class="centertb" *ngIf="this.cTodayArcUsers != 0">
+  <input type="text" [(ngModel)]="arcName" (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here" />
+</div>
+<br>
+<div class="table-responsive" *ngIf="this.cTodayArcUsers != 0">
+    <table class="responsive-table highlight ">
+        <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Department</th>
+              <th>Designation</th>
+              <th>Created Date</th>
+              <th>Archived By</th>
+              <th>Archived Date</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let aUser of audit.allArcUsersToday | slice: (page-1) * pageSize : page * pageSize ;index as i">
+            <td>{{aUser.fullName}}</td>
+            <td>{{aUser.email}}</td>
+            <td>{{aUser.role}}</td>
+            <td>{{aUser.department}}</td>
+            <td>{{aUser.position}}</td>
+            <td>{{userService.getDate(aUser.uCreatedAt)}}</td>
+            <td><app-popup-userprofile (click)="getOtherUserdetailesById(aUser.arcBy)"></app-popup-userprofile></td>
+            <td>{{userService.getDate(aUser.createdAt)}}</td>
+          </tr>
+      </table>
+      <div class="center">
+      <ngb-pagination [(page)]="page"  [pageSize]="pageSize"  [collectionSize]="audit.allArcUsersToday.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+     </div>
+</div>

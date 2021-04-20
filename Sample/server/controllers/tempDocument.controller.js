@@ -174,7 +174,7 @@ module.exports.viewTempFiles=(req,res,next)=>{
           }else{
               return res.send(files);
           }
-      }).sort({createdAt: 'desc'})
+      }).sort({createdAt: 'desc'});
 
 }
 
@@ -679,12 +679,12 @@ module.exports.transferToDocumentT=(req,res,next)=>{
 
 //to post data from temp to documents ---new--work
 module.exports.transferToDocument=(req,res,next)=>{
+  const now = new Date();
+  var current= date.format(now, 'YYYY-M-D');
   tempDocument.findOne({ _id:req.params.id },(err,file)=>{
     if(err || !file){
       return res.status(404).send(['Cannot find !']);
    }else{
-        const now = new Date();
-        var current= date.format(now, 'YYYY-M-D');
        if((file.needApproveBy.length== 0|| file.needApproveBy==null || file.needApproveBy==[]) && (file.workflow.length== 0|| file.workflow==null || file.workflow==[])){
         var document = new Document();
         document.name =file.name;

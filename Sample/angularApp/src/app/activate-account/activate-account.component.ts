@@ -28,14 +28,15 @@ export class ActivateAccountComponent implements OnInit {
         //this.resetForm(form);
       },
       err => {
-        if (err.status === 400) {
+       /* if (err.status === 400) {
           this.serverErrorMessages = err.error.join('<br/>');
         }
         else if (err.status === 422) {
           this.serverErrorMessages = err.error.join('<br/>');
         }
         else
-          this.serverErrorMessages = 'Something went wrong.Please contact admin.';
+          this.serverErrorMessages = 'Something went wrong.Please contact admin.';*/
+          this.serverErrorMessages = err.error;
         
       },
     );

@@ -46,7 +46,7 @@
       <button type="button" class="btn btn-outline-primary" (click)="resetToggels()"><i class="fa fa-refresh" aria-hidden="true"></i></button>
     </div>
     <br>
-    <div class="table-responsive" *ngIf="this.countDocs !=0">
+    <div class="table-responsive" *ngIf="this.countDocs !=0 && documentService.allDocs">
         <table class="responsive-table highlight ">
             <thead>
               <tr>
@@ -62,7 +62,7 @@
                 <th>Options</th>
               </tr>
             </thead>
-            <tr *ngFor="let doc of documentService.allDocs">
+            <tr *ngFor="let doc of documentService.allDocs | slice: (page-1) * pageSize : page * pageSize;index as i">
               <td>{{doc.name}}</td>
               <td>{{doc.type}}</td>
               <td>{{byteToMb(doc.size)}}</td>
@@ -82,4 +82,8 @@
               </td>
             </tr>
           </table>
+          <br>
+       <div class="center">
+        <ngb-pagination [(page)]="page"  [collectionSize]="documentService.allDocs.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+      </div>
     </div>

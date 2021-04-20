@@ -14,6 +14,8 @@ sName;//Ng model for search name
  msg={
    _id:''
  }
+  public page=1
+  public pageSize=10;
   constructor(public messageService: MessageServiceService,public userService: UserService,private toastr: ToastrService) { }
 
   ngOnInit(): void {

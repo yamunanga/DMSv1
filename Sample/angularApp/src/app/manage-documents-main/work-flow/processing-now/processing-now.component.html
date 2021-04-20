@@ -7,7 +7,7 @@
         <input type="text" [(ngModel)]="sNameM" (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here"  /><!--(keydown)="onKeydown($event)"-->
       </div>
       </div>
-    <div class="table-responsive " *ngIf="this.workflow.workflowProcessingC != 0">
+    <div class="table-responsive " *ngIf="this.workflow.workflowProcessingC != 0 && this.workflow.workflowProcessing">
         <table class="responsive-table highlight table-lg ">
             <thead>
               <tr>
@@ -24,7 +24,7 @@
                 <th style="text-align:center">Options</th>
               </tr>
             </thead>
-            <tr *ngFor="let doc of this.workflow.workflowProcessing">
+            <tr *ngFor="let doc of this.workflow.workflowProcessing | slice: (page-1) * pageSize : page * pageSize;index as i">
               <td>{{doc.name}}</td>
               <td>{{doc.type}}</td>
               <td>{{byteToMb(doc.size)}}</td>
@@ -51,4 +51,8 @@
               </td>
             </tr>
           </table>
+          <br>
+       <div class="center">
+        <ngb-pagination [(page)]="page"  [collectionSize]="workflow.workflowProcessing.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+      </div>
     </div>

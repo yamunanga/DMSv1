@@ -70,7 +70,8 @@ setExpDateT() {
 //to set doc expiration date individually working
 setExpDate(){
   this.selectToday();
-  if(this.datePickerService.pickerModel.year >=this.model.year && this.datePickerService.pickerModel.month >=this.model.month && this.datePickerService.pickerModel.day >=this.model.day){
+  //console.log(this.model);
+  if(this.datePickerService.pickerModel.year >this.model.year ){
     this.date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString();
     var setDateData={
       id:this.tempDocService.passFileId,
@@ -87,7 +88,42 @@ setExpDate(){
      },
    );
 
-  }else{
+  }else if(this.datePickerService.pickerModel.year === this.model.year && this.datePickerService.pickerModel.month > this.model.month){
+    this.date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString();
+    var setDateData={
+      id:this.tempDocService.passFileId,
+      expDate:this.date
+    }
+    this.tempDocService.setSingleExpDate(setDateData).subscribe(
+     res => {
+        this.showSucessMessage = true;
+        setTimeout(() => this.showSucessMessage = false, 3000);
+        this.serverErrorMessages='';
+     },
+     err => {
+        this.serverErrorMessages =err.error;
+     },
+   );
+
+  }else if(this.datePickerService.pickerModel.year === this.model.year && this.datePickerService.pickerModel.month >= this.model.month && this.datePickerService.pickerModel.day >= this.model.day){
+    this.date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString();
+    var setDateData={
+      id:this.tempDocService.passFileId,
+      expDate:this.date
+    }
+    this.tempDocService.setSingleExpDate(setDateData).subscribe(
+     res => {
+        this.showSucessMessage = true;
+        setTimeout(() => this.showSucessMessage = false, 3000);
+        this.serverErrorMessages='';
+     },
+     err => {
+        this.serverErrorMessages =err.error;
+     },
+   );
+
+  }
+  else{
     this.serverErrorMessages ='Incorect Date !';
   }
 }
@@ -96,21 +132,9 @@ setExpDate(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 resetData(){
   this.serverErrorMessages='';
+
 }
 
 

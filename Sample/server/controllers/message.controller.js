@@ -252,15 +252,16 @@ module.exports.postMessageWithFiles=(req,res,next)=>{
       })
 }*/
 
-//to get count of new messages for current user
+//to get count of new messages for current user 
+//i remove status code because i need continously request this data from backend
 module.exports.countNewMessages=(req,res,next)=>{
     Message.countDocuments({toId:req._id,isRead:'NEW'},
         (err,count)=>{
             if (!count){
                 var zero=0;
-                return res.status(404).send(zero.toString());
+                return res.send([zero]);
             }else{
-                return res.send(count.toString());
+                return res.send([count]);
             }
         })
 

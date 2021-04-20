@@ -43,6 +43,19 @@ const  archivedUserSchema =new mongoose.Schema({
         type:Date,
         default:''
     },
+    arcBy:{
+        type:String,
+        default:null
+    },
+    department:{
+        type:String,
+        required: 'Department can\'t be empty'
+    },
+    position:{
+        type:String,
+        required: 'Position can\'t be empty'
+    },
+    createDate:{type:String,default:null},
     saltSecret: String
 },{timestamps:true});
 

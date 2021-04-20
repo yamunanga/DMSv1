@@ -1,0 +1,48 @@
+<br>
+<div *ngIf="cTodayEndWorkflowDocs== 0">
+    <h5 style="text-align: center;">Empty List!</h5>
+</div>
+<div class="centertb">
+<div style="text-align: center" *ngIf="cTodayEndWorkflowDocs != 0">
+  <input type="text" [(ngModel)]="sNameM" (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here"  /><!--(keydown)="onKeydown($event)"-->
+</div>
+</div>
+<br>
+<div class="table-responsive " *ngIf="cTodayEndWorkflowDocs != 0 && audit.allTodayEndWorkflow">
+    <table class="responsive-table highlight table-lg ">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Size(Mb)</th>
+            <th>Category</th>
+            <th>Department</th>
+            <th>CreatedBy</th>
+            <th>Workflow List</th>
+            <th>File</th>
+            <th>CreatedAt</th>
+            <th>EndAt</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let doc of this.audit.allTodayEndWorkflow | slice: (page-1) * pageSize : page * pageSize;index as i">
+          <td>{{doc.name}}</td>
+          <td>{{doc.type}}</td>
+          <td>{{byteToMb(doc.size)}}</td>
+          <td>{{doc.category}}</td>
+          <td>{{doc.department}}</td>
+          <td><app-popup-userprofile (click)="getOtherUserdetailesById(doc.createdBy)"></app-popup-userprofile></td>
+          <td>
+           <app-model-view-old-list (click)="toPassListandNext(doc.workFlowList)"></app-model-view-old-list>
+          </td>
+          <td>
+            <button type="button" class="btn btn-outline-info"  *ngIf="doc.isLock===null"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
+          </td>
+          <td>{{this.workflow.getDate(doc.createdAt)}}</td>
+          <td>{{doc.workflowEndDate}}</td>
+        </tr>
+      </table>
+      <br>
+      <div class="center">
+        <ngb-pagination [(page)]="page"  [collectionSize]="audit.allTodayEndWorkflow.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+    </div>
+</div>

@@ -18,20 +18,27 @@ export class RegisterComponent implements OnInit {
   emailRegex = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   showSucessMessage: boolean;
   serverErrorMessages: string;
-  
+  depName='Select Department';
+  desigName='Select Designation';
   
   constructor(public userService: UserService,public departmentService:DepartmentService,public positionService:PositionService) { }
 
   ngOnInit(): void {
+    this.resetModel();
     this.refreshDepList();
     this.refreshPositionList();
   }
+
   onSubmit(form: NgForm) {
-    this.userService.postUser(form.value).subscribe(
+   if(this.userService.selectedUser.fullName !='' && this.userService.selectedUser.email !='' && this.userService.selectedUser.password !=''  && this.userService.selectedUser.role !=''  && this.userService.selectedUser.department !='' && this.userService.selectedUser.position !=''){
+    this.userService.postUser(this.userService.selectedUser).subscribe(
       res => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
         this.resetForm(form);
+        this.resetModel();
+        this.depName='Select Department';
+        this.desigName='Select Designation';
       },
       err => {
         if (err.status === 422) {
@@ -45,21 +52,27 @@ export class RegisterComponent implements OnInit {
         
       },
     );
+   }
   }
 
-  resetForm(form: NgForm) {
-    this.userService.selectedUser = {
-     // userName:'',
-      fullName: '',
-      email: '',
-      password: '',
-      role:'',
-      department:'',
-      position:''
-    };
+ resetForm(form: NgForm) {
     form.resetForm();
     this.serverErrorMessages = '';
   }
+
+  resetModel(){
+    this.userService.selectedUser = {
+      // userName:'',
+       fullName: '',
+       email: '',
+       password: '',
+       role:'',
+       department:'',
+       position:''
+     };
+  }
+
+
 
 
 //To get departments
@@ -77,9 +90,20 @@ refreshPositionList(){
   });
 }
 
+passNameDep(name){
+  this.depName=name;
+}
+passNamePost(name){
+  this.desigName=name;
+}
 
 
-
+setUserDepartment(name){
+  this.userService.selectedUser.department=name;
+}
+setUserDesignation(name){
+  this.userService.selectedUser.position=name;
+}
 
 
 

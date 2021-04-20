@@ -247,6 +247,8 @@ module.exports.checkExpiration=(req,res,next)=>{
                   if (!file){
                       return res.status(404).send('not found');
                   }else{
+                      const now = new Date();
+                      var current= date.format(now, 'YYYY-M-D');
                       //console.log(doc);
                       var document = new arcDocument();
                       document.docId=file._id;
@@ -261,6 +263,7 @@ module.exports.checkExpiration=(req,res,next)=>{
                       document.createdBy=file.createdBy;
                       document.tags=file.tags;
                       document.expDate=file.expDate;
+                      document.createDate=current.toString();
                       document.save(function(err,result){ 
                         if (err){ 
                             return res.status(422).send(['Error from backend !']);
@@ -335,6 +338,8 @@ module.exports.checkExpiration1=(req,res,next)=>{
                       if (err){
                         return res.status(422).send('fs eror !');
                       }else{
+                              const now = new Date();
+                              var current= date.format(now, 'YYYY-M-D');
                               //console.log(doc);
                               var document = new arcDocument();
                               document.docId=file._id;
@@ -350,6 +355,7 @@ module.exports.checkExpiration1=(req,res,next)=>{
                               document.tags=file.tags;
                               document.expDate=file.expDate;
                               document.arcPath=desPath;
+                              document.createDate=current.toString();
                               document.save(function(err,result){ 
                                 if (err){ 
                                     return res.status(422).send(['Error from backend !']);
@@ -456,6 +462,8 @@ module.exports.toArchived=(req,res,next)=>{
               if (err){
                 return res.status(422).send('fs eror !');
               }else{
+                const now = new Date();
+                var current= date.format(now, 'YYYY-M-D');
                 var document = new arcDocument();
                 document.docId=file._id;
                 document.name =file.name;
@@ -471,6 +479,7 @@ module.exports.toArchived=(req,res,next)=>{
                 document.tags=file.tags;
                 document.expDate=file.expDate;
                 document.arcPath=desPath;
+                document.createDate=current.toString();
                 document.save(function(err,result){ 
                   if (err){ 
                       return res.status(422).send(['Error from backend !']);
@@ -525,7 +534,7 @@ module.exports.getDocs = (req, res, next) =>{
             else
                 return res.send(docs);
         }
-    ).sort({createdAt: 'desc'});
+    ).sort({name: 'asc'});
 }
 
 //to pass archived docs/files

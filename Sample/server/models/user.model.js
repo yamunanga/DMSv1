@@ -10,7 +10,7 @@ var userSchema = new mongoose.Schema({
     email: {
         type: String,
         required: 'Email can\'t be empty',
-       // unique: true
+        //unique:true
     },
     password: {
         type: String,
@@ -28,8 +28,9 @@ var userSchema = new mongoose.Schema({
     },
     lastActive:{
         type:String,
-        default:''
+        default:'offline'
     },
+    createDate:{type:String,default:null},
     status:{
         data:String,
         default:''
@@ -45,6 +46,10 @@ var userSchema = new mongoose.Schema({
     position:{
         type:String,
         required: 'Position can\'t be empty'
+    },
+    createdBy:{
+        type:String,
+        default:null
     },
     saltSecret: String
 },{timestamps:true});

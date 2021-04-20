@@ -43,7 +43,8 @@ var workflowSchema = new mongoose.Schema({
     pass:{type:Array,default:null},
     expDate:{type:String,default:null},
     ePath:{type:Array,default:null},
-    eFile:{type:Array,default:null}
+    eFile:{type:Array,default:null},
+    createDate:{type:String,default:null},
 },{timestamps:true});
 
 mongoose.model('workFlow',workflowSchema);

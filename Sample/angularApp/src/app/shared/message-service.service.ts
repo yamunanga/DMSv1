@@ -81,7 +81,7 @@ getDate(date){
 //to get new message count
 getNewMsgCount(){
   this.getNewCount().subscribe((res) => {
-    this.countNewMsg= res;
+    this.countNewMsg= res[0];
   },err=>{
     this.countNewMsg=0;
   });

@@ -15,6 +15,8 @@ export class ViewSentsComponent implements OnInit {
     _id:''
   }
   sName;//Ng model for search name
+  public page=1
+  public pageSize=10;
   constructor(public messageService: MessageServiceService,public userService: UserService,private toastr: ToastrService) { }
 
   ngOnInit(): void {

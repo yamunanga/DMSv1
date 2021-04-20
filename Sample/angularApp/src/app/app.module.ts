@@ -76,6 +76,18 @@ import { ProcessingNowComponent } from './manage-documents-main/work-flow/proces
 import { ModelViewOldListComponent } from './manage-documents-main/work-flow/old-workflow/model-view-old-list/model-view-old-list.component';
 import { EditPanelProfileComponent } from './user-profile/edit-panel-profile/edit-panel-profile.component';
 import { ViewProfileComponent } from './user-profile/view-profile/view-profile.component';
+import { AuditComponent } from './audit/audit.component';
+import { ViewAdedUsersComponent } from './audit/view-aded-users/view-aded-users.component';
+import { ViewTodayArchivedUsersComponent } from './audit/view-today-archived-users/view-today-archived-users.component';
+import { ViewTodayAddedDocsComponent } from './audit/view-today-added-docs/view-today-added-docs.component';
+import { ViewTodayArchivedDocsComponent } from './audit/view-today-archived-docs/view-today-archived-docs.component';
+import { ViewTodayAssaignedComponent } from './audit/view-today-assaigned/view-today-assaigned.component';
+import { ViewTodayApprovedComponent } from './audit/view-today-approved/view-today-approved.component';
+import { ViewTodayNewWorkflowsComponent } from './audit/view-today-new-workflows/view-today-new-workflows.component';
+import { ViewTodayEndWorkflowsComponent } from './audit/view-today-end-workflows/view-today-end-workflows.component';
+import { ViewTodayAutoArchivedDocsComponent } from './audit/view-today-auto-archived-docs/view-today-auto-archived-docs.component';
+
+
 
 
 
@@ -142,6 +154,17 @@ import { ViewProfileComponent } from './user-profile/view-profile/view-profile.c
     ModelViewOldListComponent,
     EditPanelProfileComponent,
     ViewProfileComponent,
+    AuditComponent,
+    ViewAdedUsersComponent,
+    ViewTodayArchivedUsersComponent,
+    ViewTodayAddedDocsComponent,
+    ViewTodayArchivedDocsComponent,
+    ViewTodayAssaignedComponent,
+    ViewTodayApprovedComponent,
+    ViewTodayNewWorkflowsComponent,
+    ViewTodayEndWorkflowsComponent,
+    ViewTodayAutoArchivedDocsComponent,
+  
   
    
   ],

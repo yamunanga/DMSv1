@@ -8,7 +8,7 @@
     <button type="button" class="btn btn-outline-danger" (click)="delAll()"><i class="fa fa-trash" aria-hidden="true"></i> Delete All</button>
   </div>
 </div>
-<div class="col s7" style="height:400px;overflow:auto;">
+<div class="col s7" style="height:400px;overflow:auto;" *ngIf="messageService.allSents">
   <table class="responsive-table highlight centertb">
       <!--<thead>
         <tr>
@@ -18,7 +18,7 @@
           <th>Options</th>
         </tr>
       </thead>-->
-      <tr *ngFor="let msg of messageService.allSents">
+      <tr *ngFor="let msg of messageService.allSents | slice: (page-1) * pageSize : page * pageSize;index as i">
         <td>To:</td>
         <td>{{msg.to}}</td>
         <td>{{messageService.getDate(msg.createdAt)}}</td>
@@ -30,4 +30,8 @@
         </td>
       </tr>
     </table>
+    <br>
+    <div class="center">
+      <ngb-pagination [(page)]="page"  [collectionSize]="messageService.allSents.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+  </div>
 </div>

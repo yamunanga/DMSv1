@@ -15,6 +15,8 @@ export class ManageApprovementComponent implements OnInit {
   showSucessMessage: boolean;
   serverErrorMessages: string;
   role;
+  public page=1
+  public pageSize=10;
   constructor(public manageApprovment:ManageApprovementServiceService,public userService: UserService,private toastr: ToastrService) { }
   ngOnInit(): void {
     this.refreshNeedApprovementList();

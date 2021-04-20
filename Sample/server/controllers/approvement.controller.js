@@ -70,6 +70,8 @@ module.exports.getApprovmentDataCount=(req,res,next)=>{
                         if (!file){
                              return res.status(404).send( 'Can not find !' );
                         }else{
+                          const now = new Date();
+                          var current= date.format(now, 'YYYY-M-D');
                           var document = new Document();
                           document.name =file.name;
                           document.file=file.file;
@@ -81,6 +83,8 @@ module.exports.getApprovmentDataCount=(req,res,next)=>{
                           document.createdBy=file.createdBy;
                           document.tags=file.tags;
                           document.approvedBy=user.email;
+                          document.addedAt=file.createDate;
+                          document.createDate=current.toString();
                           document.save(function(err,result){ 
                             if (err){ 
                                 return res.status(422).send(['Eror from backend !']);

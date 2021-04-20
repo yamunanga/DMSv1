@@ -2,7 +2,7 @@
     <div *ngIf="this.countArc ==0">
       <h5 style="text-align: center;">Empty List!</h5>
     </div>
-    <div class="table-responsive" *ngIf="this.countArc > 0">
+    <div class="table-responsive" *ngIf="this.countArc != 0 && documentService.arcDocs">
         <table class="responsive-table highlight ">
             <thead>
               <tr>
@@ -17,7 +17,7 @@
                 <th>Options</th>
               </tr>
             </thead>
-            <tr *ngFor="let doc of documentService.arcDocs">
+            <tr *ngFor="let doc of documentService.arcDocs | slice: (page-1) * pageSize : page * pageSize;index as i">
               <td>{{doc.name}}</td>
               <td>{{doc.type}}</td>
               <td>{{byteToMb(doc.size)}}</td>
@@ -33,4 +33,8 @@
               </td>
             </tr>
           </table>
+          <br>
+         <div class="center">
+          <ngb-pagination [(page)]="page"  [collectionSize]="documentService.arcDocs.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+        </div>
     </div>

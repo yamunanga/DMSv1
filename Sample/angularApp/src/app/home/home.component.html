@@ -19,6 +19,7 @@
   <a (click)="viewOrganization()">Manage Organization</a>
   <a (click)="viewManageMain()">Manage Users</a>
   <a (click)="viewDocMain()">Manage Documents</a>
+  <a (click)="viewAudit()">Audit</a>
   <a href="#">Contact</a>
 </div>
 <!--This is for reader role-->
@@ -43,7 +44,7 @@
 <div id="main">
   <div id="sub" class="sub">
   <span style="font-size:30px;cursor:pointer;" (click)="openNav()">&#9776;
-   &nbsp;Welcome!
+   &nbsp;Welcome! <!--&nbsp;{{ time | date: 'hh:mm:ss a' }}-->
   </span>
   <div class="subButton">
     <a (click)="viewMessageBox()" class="notification"  *ngIf="this.messageService.countNewMsg !=0">
@@ -65,6 +66,7 @@
     <app-organization *ngIf="tofviewOrganisation==true"></app-organization>
     <app-manage-users-main *ngIf="tofviewManageUsersMain==true"></app-manage-users-main>
     <app-manage-documents-main *ngIf="tofviewMangaDocMain==true"></app-manage-documents-main>
+    <app-audit *ngIf="tofviewAudit==true"></app-audit>
  </div>
    
 </body>

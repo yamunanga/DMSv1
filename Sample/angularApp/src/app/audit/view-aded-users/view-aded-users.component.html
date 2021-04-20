@@ -1,0 +1,40 @@
+<br>
+<div *ngIf="this.cTodayAddedUsers == 0">
+  <h5 style="text-align: center;">Empty List!</h5>
+</div>
+<br>
+<div style="text-align: center" class="centertb" *ngIf="this.cTodayAddedUsers != 0">
+  <input type="text" [(ngModel)]="sName" (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here" />
+</div>
+<br>
+<div class="table-responsive" *ngIf="this.cTodayAddedUsers != 0">
+    <table class="responsive-table highlight">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Department</th>
+            <th>Designation</th>
+            <th>Created Date</th>
+            <th>Created By</th>
+            <th>Last Active</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let user of audit.allUsersToday  | slice: (page-1) * pageSize : page * pageSize;index as i">
+          <td>{{user.fullName}}</td>
+          <td>{{user.email}}</td>
+          <td>{{user.role}}</td>
+          <td>{{user.department}}</td>
+          <td>{{user.position}}</td>
+          <td>{{userService.getDate(user.createdAt)}}</td>
+          <td><app-popup-userprofile (click)="getOtherUserdetailesById(user.createdBy)"></app-popup-userprofile></td>
+          <td>{{userService.getDate(user.lastActive)}}</td>
+          <td>{{user.status}}</td>
+        </tr>
+      </table>
+      <div class="center">
+      <ngb-pagination [(page)]="page"  [collectionSize]="audit.allUsersToday.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+     </div>
+</div>

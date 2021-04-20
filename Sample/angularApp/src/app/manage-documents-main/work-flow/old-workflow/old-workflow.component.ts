@@ -16,6 +16,8 @@ export class OldWorkflowComponent implements OnInit {
   role;
   sNameM;//Ng model for search name
   serverErrorMessages: string;
+  public page=1
+  public pageSize=10;
   constructor(private documentService:DocumentService,public userService: UserService,public workflow:WorkflowService,private toastr: ToastrService) { }
 
   ngOnInit(): void {

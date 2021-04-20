@@ -1,0 +1,45 @@
+<br>
+<h5 style="text-align: center;"  *ngIf="cTodayApprovedDocs ==0">Empty List!</h5>
+<div class="centertb" *ngIf="cTodayApprovedDocs !=0">
+    <div style="text-align: center" >
+      <input type="text" [(ngModel)]="sNameM"  (input)="search()" (keydown)="onKeydown($event)" placeholder="Search here"  /><!--(keydown)="onKeydown($event)"-->
+    </div>
+</div>
+<div class="table-responsive" *ngIf="cTodayApprovedDocs !=0 && this.audit.allApprovedDocsToday">
+    <table class="responsive-table highlight ">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Size(Mb)</th>
+            <th>Category</th>
+            <th>Department</th>
+            <th>CreatedBy</th>
+            <th>File</th>
+            <th>ApprovedAt</th>
+            <th>ApprovedBy</th>
+            <th>AddedAt</th>
+          </tr>
+        </thead>
+        <tr *ngFor="let doc of this.audit.allApprovedDocsToday  | slice: (page-1) * pageSize : page * pageSize;index as i">
+          <td>{{doc.name}}</td>
+          <td>{{doc.type}}</td>
+          <td>{{byteToMb(doc.size)}}</td>
+          <td>{{doc.category}}</td>
+          <td>{{doc.department}}</td>
+          <td>
+            <app-popup-userprofile (click)="getUserEmail(doc.createdBy)"></app-popup-userprofile>
+          </td>
+          <td>
+            <button type="button" class="btn btn-outline-info" *ngIf="doc.isLock===null" ><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
+          </td>
+          <td>{{userService.getDate(doc.createdAt)}}</td>
+          <td><app-popup-userprofile (click)="getUserEmail(doc.approvedBy)"></app-popup-userprofile></td>
+          <td>{{doc.addedAt}}</td>
+        </tr>
+      </table>
+      <br>
+      <div class="center">
+        <ngb-pagination [(page)]="page"  [collectionSize]="audit.allApprovedDocsToday.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+    </div>
+</div>

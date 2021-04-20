@@ -32,7 +32,8 @@ module.exports.register = (req, res, next) => {
         if(user){
              return res.status(422).send(['Duplicate email adrress found.']);
         }else{
-            const Emailtoken=jwt.sign({fullName,email,password,role,department,position},process.env.JWT_ACC_ACTIVATE,{expiresIn:'10m'});
+            var _id=req._id;
+            const Emailtoken=jwt.sign({fullName,email,password,role,department,position,_id},process.env.JWT_ACC_ACTIVATE,{expiresIn:'10m'});
             var transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -80,77 +81,71 @@ module.exports.activateAccount = (req, res, next) =>{
                 return res.status(400).send(['Incorrect or Expired link Contact an Admin!']);
                 //return res.status(400).json({eror:'Incorrect or Expired link.'})
             }
-            const{fullName,email,password,role,department,position}=decodedToken;
+            const now = new Date();
+            var current= date.format(now, 'YYYY-M-D');
+            const{fullName,email,password,role,department,position,_id}=decodedToken;
             //start here
-            var user = new User();
-            user.fullName =fullName ;
-            user.email =email ;
-            user.password =password ;
-            user.role=role; //for get role
-            user.department=department;
-            user.position=position;
-            user.save((err, doc) => {
-            if (!err){
-               // res.send(doc);
-                var transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                      user:config.development.NODE_MAILER_EMAIL,
-                      pass:config.development.NODE_MAILER_PASS
+            User.findOne({email:email}, 
+                (err,user)=>{
+                    if (user){
+                         return res.status(422).send(['User already exsist !']);
+                    }else{
+                        var user = new User();
+                        user.fullName =fullName ;
+                        user.email =email ;
+                        user.password =password ;
+                        user.role=role; //for get role
+                        user.department=department;
+                        user.position=position;
+                        user.createDate=current.toString();
+                        user.createdBy=_id;
+                        user.save((err, doc) => {
+                        if (!err){
+                           // res.send(doc);
+                            var transporter = nodemailer.createTransport({
+                                service: 'gmail',
+                                auth: {
+                                  user:config.development.NODE_MAILER_EMAIL,
+                                  pass:config.development.NODE_MAILER_PASS
+                                }
+                              });
+                              
+                              var mailOptions = {
+                                from:config.development.NODE_MAILER_EMAIL,
+                                to:email,
+                                subject: 'ACCOUNT ACTIVATION DONE',
+                                //text: `'
+                                html: '<h2>Your Account Is Activated !</h2></br>'.concat(
+                                      "<h3>Login to your account and reset password if you don't know current password ask an Admin.</h3> </br>"+
+                                      '<h4>Thank You!</h4>')
+                              };
+                              
+                              transporter.sendMail(mailOptions, function(error, info){
+                                if (error) {
+                                  //console.log(error);
+                                  res.status(503).send(['Email Server Eror']);
+                                } else {
+                                  //console.log('Email sent: ' + info.response);
+                                  res.status(200).send(['Account Activation Successful !']);
+                                }
+                              });
+                        } 
+                   else{
+                       if (err.code == 11000)
+                            res.status(422).send(['Email adrress Already Registerd !']);
+                        else
+                             return next(err);
+                        }
+            
+                        });
                     }
-                  });
-                  
-                  var mailOptions = {
-                    from:config.development.NODE_MAILER_EMAIL,
-                    to:email,
-                    subject: 'ACCOUNT ACTIVATION DONE',
-                    //text: `'
-                    html: '<h2>Your Account Is Activated !</h2></br>'.concat(
-                          "<h3>Login to your account and reset password if you don't know current password ask an Admin.</h3> </br>"+
-                          '<h4>Thank You!</h4>')
-                  };
-                  
-                  transporter.sendMail(mailOptions, function(error, info){
-                    if (error) {
-                      //console.log(error);
-                      res.status(503).send(['Email Server Eror']);
-                    } else {
-                      //console.log('Email sent: ' + info.response);
-                      res.status(200).send(['Account Activation Successful !']);
-                    }
-                  });
-            } 
-       else{
-           if (err.code == 11000)
-                res.status(422).send(['Email adrress Already Registerd !']);
-            else
-                 return next(err);
-            }
-
-            });
-
+                })
         })
     }else{
         return res.send(['Something went wrong !']);
         //return res.json({eror:"Something went wrong !"})
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 //ORIGINAL REGISTER USER///////////////////////////////////////////////////////////////////
 /*
@@ -474,7 +469,7 @@ module.exports.getUsers = (req, res, next) =>{
                 return res.send(users);
                 //return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role']) });//im add role
         }
-    );
+    ).sort({createdAt: 'desc'});
 }
 //To get all users without current user and not archived users count
 module.exports.getUsersCount = (req, res, next) =>{
@@ -648,6 +643,8 @@ module.exports.postArchivedUser=(req,res,next)=>{
             if (!user)
                 return res.status(404).json({ status: false, message: 'User record not found.' });
             else{
+               const now = new Date();
+               var current= date.format(now, 'YYYY-M-D');
                var aUser = new ArchivedUser();
                aUser.userId=user._id
                aUser.fullName=user.fullName;
@@ -656,6 +653,10 @@ module.exports.postArchivedUser=(req,res,next)=>{
                aUser.role=user.role;
                aUser.uCreatedAt=user.createdAt;
                aUser.uUpdatedAt=user.updatedAt;
+               aUser.arcBy=req._id;
+               aUser.createDate=current.toString();
+               aUser.department=user.department;
+               aUser.position=user.position;
                //aUser.resetLink=user.resetLink;
               // aUser.lastActive=user.lastActive;
                //aUser.status=user.status;
@@ -732,7 +733,7 @@ module.exports.getArchivedUsers = (req, res, next) =>{
                 return res.send(users);
                 //return res.status(200).json({ status: true, user : _.pick(user,['fullName','email','role']) });//im add role
         }
-    );
+    ).sort({createdAt: 'desc'});
 }
 //to get all archived user count
 module.exports.getArchivedUsersCount = (req, res, next) =>{

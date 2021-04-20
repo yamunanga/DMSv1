@@ -32,7 +32,8 @@ var arcDocumentSchema = new mongoose.Schema({
     createdBy:{type:String,default:''},
     tags:{type:String,default:''},
     expDate:{type:String,default:null},
-    arcPath:{type:String,default:null}
+    arcPath:{type:String,default:null},
+    createDate:{type:String,default:null},
 },{timestamps:true});
 
 mongoose.model('arcDocument',arcDocumentSchema);

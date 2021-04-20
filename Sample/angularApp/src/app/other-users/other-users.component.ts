@@ -27,7 +27,8 @@ export class OtherUsersComponent implements OnInit {
    dellId={
     _id:''
   }
-
+  public page=1
+  public pageSize=10;
   constructor(public userService: UserService,private toastr: ToastrService,public departmentService:DepartmentService,public positionService:PositionService) { }
 
   ngOnInit(): void {

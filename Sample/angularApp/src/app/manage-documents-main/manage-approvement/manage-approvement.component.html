@@ -1,6 +1,6 @@
 <br>
 <h5 style="text-align: center;"  *ngIf="this.manageApprovment.approveDataCount==0">You Don't Have Any Request</h5>
-<div class="table-responsive" *ngIf="this.manageApprovment.approveDataCount !=0">
+<div class="table-responsive" *ngIf="this.manageApprovment.approveDataCount !=0 && manageApprovment.approveData">
     <table class="responsive-table highlight ">
         <thead>
           <tr>
@@ -14,7 +14,7 @@
             <th>CreatedAt</th>
           </tr>
         </thead>
-        <tr *ngFor="let doc of manageApprovment.approveData">
+        <tr *ngFor="let doc of manageApprovment.approveData | slice: (page-1) * pageSize : page * pageSize;index as i">
           <td>{{doc.name}}</td>
           <td>{{doc.type}}</td>
           <td>{{byteToMb(doc.size)}}</td>
@@ -26,7 +26,7 @@
           <td>
             <button type="button" class="btn btn-outline-info"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
           </td>
-          <td>{{doc.createdAt}}</td>
+          <td>{{userService.getDate(doc.createdAt)}}</td>
           <td>
             <app-reject-popup-model (click)="passReject(doc._id)"></app-reject-popup-model>
             <button type="button" class="btn btn-outline-success" (click)="toAccept(doc._id)">Approve</button>
@@ -35,4 +35,8 @@
           </td>
         </tr>
       </table>
+      <br>
+      <div class="center">
+        <ngb-pagination [(page)]="page"  [collectionSize]="manageApprovment.approveData.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+    </div>
 </div>

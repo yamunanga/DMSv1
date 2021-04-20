@@ -297,6 +297,7 @@ module.exports.getWorkflowProcess=(req,res,next)=>{
                                   document.workFlowList=file1.workFlowList;
                                   document.workFlowUsers=file1.workFlowList;
                                   document.workflowEndDate=current.toString();
+                                  document.createDate=current.toString();
                                   document.workflowId=file1._id;
                                   if(file1.isLock==true){
                                     document.isLock=file1.isLock;

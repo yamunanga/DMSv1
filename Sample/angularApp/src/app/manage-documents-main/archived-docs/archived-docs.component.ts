@@ -12,6 +12,8 @@ import { environment } from 'src/environments/environment';
 })
 export class ArchivedDocsComponent implements OnInit {
    countArc;
+   public page=1
+   public pageSize=10;
   constructor(public documentService:DocumentService,public userService: UserService) { }
  
   ngOnInit(): void {

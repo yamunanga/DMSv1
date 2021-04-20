@@ -2,12 +2,12 @@
 <div *ngIf="this.userService.arcUserCout == 0">
   <h5 style="text-align: center;">Empty List!</h5>
 </div>
-<div class="container pt-3" *ngIf="this.userService.arcUserCout !=0" >
-  <div style="text-align: center">
+<div  *ngIf="this.userService.arcUserCout !=0" >
+  <div style="text-align: center" class="centertb">
     <input type="text" [(ngModel)]="arcName" (input)="search()" placeholder="Search here" /> <!-- (input)="search()"-->
    </div>
 <br>
-<div class="col s7">
+<div class="table-responsive" *ngIf="userService.allArchivedUsers">
     <table class="responsive-table highlight">
         <thead>
           <tr>
@@ -20,7 +20,7 @@
             <th>Options</th>
           </tr>
         </thead>
-        <tr *ngFor="let aUser of userService.allArchivedUsers">
+        <tr *ngFor="let aUser of userService.allArchivedUsers | slice: (page-1) * pageSize : page * pageSize;index as i">
           <td>{{aUser.fullName}}</td>
           <td>{{aUser.email}}</td>
           <td>{{aUser.role}}</td>
@@ -29,10 +29,14 @@
           <td>{{getDate(aUser.createdAt)}}</td>
           <td>
            
-            <button type="button" class="btn btn-outline-warning" (click)="restoreArcUser(aUser.email)">Restore</button>
-            <button type="button" class="btn btn-outline-danger" (click)="deleteArchivedUser(aUser.email)">Delete</button>
+            <button class="btn btn-outline-info" (click)="restoreArcUser(aUser.email)" data-toggle="tooltip" data-placement="top" title="Restore"><i class="fa fa-recycle" aria-hidden="true"></i></button>&nbsp;
+            <button type="button" class="btn btn-outline-danger" (click)="deleteArchivedUser(aUser.email)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button>
           </td>
         </tr>
       </table>
+      <br>
+      <div class="center">
+        <ngb-pagination [(page)]="page"  [collectionSize]="userService.allArchivedUsers.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+    </div>
 </div>
 </div>

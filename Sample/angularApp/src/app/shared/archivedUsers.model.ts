@@ -4,9 +4,12 @@ export class ARCHIVEDUSERS {
     fullName: string;
     email: string; 
     role:string;
+    arcBy:string;
     createdAt:String;
     updatedAt:String;
     uCreatedAt:String; //user created date
     uUpdatedAt:String; //user last updated date
+    department:string;
+    position:string;
 
 }

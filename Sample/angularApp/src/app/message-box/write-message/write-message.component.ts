@@ -4,6 +4,7 @@ import { ToastrService } from 'ngx-toastr';
 import { getMaxListeners } from 'process';
 import { throwIfEmpty } from 'rxjs/operators';
 import { MessageServiceService } from 'src/app/shared/message-service.service';
+import { MESSAGE } from 'src/app/shared/message.model';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { UserService } from 'src/app/shared/user.service';
 import { environment } from 'src/environments/environment';
@@ -221,6 +222,7 @@ onSend(){
       (res) => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 4000);
+        //this.messageService.getNewMsgCount();
       },
       (err) =>{
         this.serverErrorMessages = err.error.join('<br/>');
@@ -316,7 +318,12 @@ clearFormData( fd )
   }
 }
 
-
+//To get recived messages 
+refreshRecivedList() {
+  this. messageService.getRecived().subscribe((res) => {
+    this.messageService.allRecived = res as MESSAGE[];
+  });
+}
 
 
 

@@ -3,11 +3,12 @@ export class OTHERUSERS {
     fullName: string;
     email: string; 
     role:string;
-    createdAt:String;
-    updatedAt:String;
-    lastActive:String;
-    status:String;
-    department:String;
-    position:String;
+    createdAt:string;
+    updatedAt:string;
+    lastActive:string;
+    status:string;
+    department:string;
+    position:string;
+    createdBy:string;
 
 }

@@ -28,6 +28,8 @@ export class ViewDocsComponent implements OnInit {
   docType='Select Type';
   dateType='Select Date';
   clickTimes=0;
+  public page=1
+  public pageSize=10;
   constructor(public datePickerService:DatePickerService,public catService:CategoryService,public depService:DepartmentService,public documentService:DocumentService,public userService: UserService,private toastr: ToastrService,public tempDocService:TempDocService) { }
 
   ngOnInit(): void {
