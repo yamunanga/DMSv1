@@ -52,6 +52,8 @@ export class RegisterComponent implements OnInit {
         
       },
     );
+   }else{
+    this.serverErrorMessages = 'Validation problem happen !';
    }
   }
 

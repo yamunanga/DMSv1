@@ -15,14 +15,35 @@ export class ViewTodayApprovedComponent implements OnInit {
   public page=1
   public pageSize=10;
   sNameM;//Ng model for search name
-  cTodayApprovedDocs
+  cTodayApprovedDocs;
+  //for print
+  notPrint=true;
+  resetBackVici=false;
+  printReadyOk=false;
   constructor(public audit:AuditService,public userService: UserService) { }
 
   ngOnInit(): void {
     this.refreshTodayApprovedDocsList();
     this.ApprovedDocsTodayCount();
+    //for print
+    this.notPrint=true;
+    this.resetBackVici=false;
+    this.printReadyOk=false;
   }
- 
+ //this is for print ready
+printReady(){
+  this.notPrint=false;
+  this.printReadyOk=true;
+  this.resetBackVici=true;
+}
+
+//this is for reset back to original
+resetBack(){
+  this.notPrint=true;
+  this.printReadyOk=false;
+  this.resetBackVici=false;
+}
+
 //to pass today approved documents 
 refreshTodayApprovedDocsList() {
   this.audit.getApprovedDocsToday().subscribe((res) => {

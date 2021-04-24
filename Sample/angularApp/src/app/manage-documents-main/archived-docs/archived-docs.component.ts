@@ -14,12 +14,32 @@ export class ArchivedDocsComponent implements OnInit {
    countArc;
    public page=1
    public pageSize=10;
+   //for print
+   notPrint=true;
+   resetBackVici=false;
+   printReadyOk=false;
   constructor(public documentService:DocumentService,public userService: UserService) { }
  
   ngOnInit(): void {
     this.refreshArcDocList();
+     //for print
+     this.notPrint=true;
+     this.resetBackVici=false;
+     this.printReadyOk=false;
   }
+//this is for print ready
+printReady(){
+  this.notPrint=false;
+  this.printReadyOk=true;
+  this.resetBackVici=true;
+}
 
+//this is for reset back to original
+resetBack(){
+  this.notPrint=true;
+  this.printReadyOk=false;
+  this.resetBackVici=false;
+}
   //to get arc doc list from database
   refreshArcDocList() {
     this.documentService.getArcDocs().subscribe((res) => {

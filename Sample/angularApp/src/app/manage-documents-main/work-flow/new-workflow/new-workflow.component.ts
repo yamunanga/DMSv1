@@ -21,15 +21,35 @@ export class NewWorkflowComponent implements OnInit {
   serverErrorMessages: string;
   public page=1
   public pageSize=10;
+   //for print
+   notPrint=true;
+   resetBackVici=false;
+   printReadyOk=false;
   constructor(private messageService: MessageServiceService,private toastr: ToastrService,public documentService:DocumentService,public userService: UserService,public workflow:WorkflowService,private tempDocService:TempDocService) { }
 
   ngOnInit(): void {
     this.refreshWorkflowData();
     this.getUserdetailes();
     this.getRole();
+    //for print
+    this.notPrint=true;
+    this.resetBackVici=false;
+    this.printReadyOk=false;
   }
 
+//this is for print ready
+printReady(){
+  this.notPrint=false;
+  this.printReadyOk=true;
+  this.resetBackVici=true;
+}
 
+//this is for reset back to original
+resetBack(){
+  this.notPrint=true;
+  this.printReadyOk=false;
+  this.resetBackVici=false;
+}
 
 
 

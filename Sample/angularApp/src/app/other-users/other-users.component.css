@@ -4,6 +4,11 @@
     justify-content: center;
     }
 
-    th,td{
+th,td{
         text-align: center;
       }
+.toright{
+    float: right;
+    padding: 5px;
+}
+      

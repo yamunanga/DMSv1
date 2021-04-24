@@ -8,6 +8,13 @@
 </div>
 <br>
 <div class="table-responsive" *ngIf="this.cTodayAddedUsers != 0">
+  <div style="text-align: right;">
+    <button type="button" class="btn btn-outline-primary"  (click)="printReady()" data-toggle="tooltip" data-placement="top" title="Ready For Print"><i class="fa fa-list" aria-hidden="true"></i></button>&nbsp;
+    <button type="button" *ngIf="this.printReadyOk==true;" class="btn btn-outline-primary"  printSectionId="listId" printTitle="TODAY ADDED USER LIST" styleSheetFile="assets/tablePrint.css" ngxPrint data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print" aria-hidden="true"></i></button>&nbsp;
+    <button type="button" *ngIf="this.resetBackVici==true;" class="btn btn-outline-primary"  (click)="resetBack()"><i class="fa fa-repeat" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reset"></i></button>&nbsp;
+  </div>
+  <br>
+  <div id="listId">
     <table class="responsive-table highlight">
         <thead>
           <tr>
@@ -29,11 +36,14 @@
           <td>{{user.department}}</td>
           <td>{{user.position}}</td>
           <td>{{userService.getDate(user.createdAt)}}</td>
-          <td><app-popup-userprofile (click)="getOtherUserdetailesById(user.createdBy)"></app-popup-userprofile></td>
+          <td *ngIf="this.printReadyOk==true">{{user.createdBy}}</td>
+          <td *ngIf="notPrint == true"><app-popup-userprofile (click)="getOtherUserdetailesById(user.createdBy)"></app-popup-userprofile></td>
           <td>{{userService.getDate(user.lastActive)}}</td>
           <td>{{user.status}}</td>
         </tr>
       </table>
+    </div>
+    <br>
       <div class="center">
       <ngb-pagination [(page)]="page"  [collectionSize]="audit.allUsersToday.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
      </div>

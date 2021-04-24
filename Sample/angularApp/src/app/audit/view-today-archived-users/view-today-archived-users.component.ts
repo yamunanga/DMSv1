@@ -15,13 +15,33 @@ export class ViewTodayArchivedUsersComponent implements OnInit {
   public pageSize=10;
   cTodayArcUsers;//for get the count
   arcName;//this is ng model for search
+   //for print
+   notPrint=true;
+   resetBackVici=false;
+   printReadyOk=false;
   constructor(public audit:AuditService,public userService: UserService) { }
 
   ngOnInit(): void {
     this.refreshTodayArcUsersList();
     this.getTodayArcUsersCount();
+     //for print
+     this.notPrint=true;
+     this.resetBackVici=false;
+     this.printReadyOk=false;
   }
+//this is for print ready
+printReady(){
+  this.notPrint=false;
+  this.printReadyOk=true;
+  this.resetBackVici=true;
+}
 
+//this is for reset back to original
+resetBack(){
+  this.notPrint=true;
+  this.printReadyOk=false;
+  this.resetBackVici=false;
+}
   //to pass today aded users
 refreshTodayArcUsersList() {
   this.audit.getTodayArcUsers().subscribe((res) => {

@@ -47,6 +47,13 @@
     </div>
     <br>
     <div class="table-responsive" *ngIf="this.countDocs !=0 && documentService.allDocs">
+      <div style="text-align: right;">
+        <button type="button" class="btn btn-outline-primary"  (click)="printReady()" data-toggle="tooltip" data-placement="top" title="Ready For Print"><i class="fa fa-list" aria-hidden="true"></i></button>&nbsp;
+        <button type="button" *ngIf="this.printReadyOk==true;" class="btn btn-outline-primary"  printSectionId="listId" printTitle="DOCUMENT LIST" styleSheetFile="assets/tablePrint.css" ngxPrint data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print" aria-hidden="true"></i></button>&nbsp;
+        <button type="button" *ngIf="this.resetBackVici==true;" class="btn btn-outline-primary"  (click)="resetBack()"><i class="fa fa-repeat" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reset"></i></button>&nbsp;
+      </div>
+      <br>
+      <div id="listId">
         <table class="responsive-table highlight ">
             <thead>
               <tr>
@@ -57,9 +64,9 @@
                 <th>Department</th>
                 <th>CreatedBy</th>
                <!-- <th>Tags</th>-->
-                <th>File</th>
+                <th *ngIf="notPrint == true">File</th>
                 <th>CreatedAt</th>
-                <th>Options</th>
+                <th *ngIf="notPrint == true">Options</th>
               </tr>
             </thead>
             <tr *ngFor="let doc of documentService.allDocs | slice: (page-1) * pageSize : page * pageSize;index as i">
@@ -68,13 +75,14 @@
               <td>{{byteToMb(doc.size)}}</td>
               <td>{{doc.category}}</td>
               <td>{{doc.department}}</td>
-              <td><app-popup-userprofile (click)="getOtherUserdetailesById(doc.createdBy)"></app-popup-userprofile></td>
+              <td *ngIf="this.printReadyOk==true">{{doc.createdBy}}</td>
+              <td *ngIf="notPrint == true"><app-popup-userprofile (click)="getOtherUserdetailesById(doc.createdBy)"></app-popup-userprofile></td>
               <!--<td>{{doc.tags}}</td>-->
-              <td>
+              <td *ngIf="notPrint == true">
                 <button type="button" class="btn btn-outline-info"  *ngIf="doc.isLock===null"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
               </td>
               <td>{{userService.getDate(doc.createdAt)}}</td>
-              <td>
+              <td *ngIf="notPrint == true">
                 <button type="button" class="btn btn-outline-info" (click)="toArc(doc._id)" *ngIf="this.role==='admin'" data-toggle="tooltip" data-placement="top" title="Archive"><i class="fa fa-archive" aria-hidden="true"></i></button>
                 <button type="button" class="btn btn-outline-danger" (click)="onDel(doc._id)" *ngIf="doc.isLock !=true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin')"><i class="fa fa-trash" aria-hidden="true"></i></button>
                 <app-model-unlock (click)="passFileId(doc._id) " *ngIf="doc.isLock===true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin' ) " ></app-model-unlock>
@@ -82,6 +90,7 @@
               </td>
             </tr>
           </table>
+      </div>
           <br>
        <div class="center">
         <ngb-pagination [(page)]="page"  [collectionSize]="documentService.allDocs.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>

@@ -17,12 +17,33 @@ export class ViewTodayArchivedDocsComponent implements OnInit {
   public pageSize=10;
   sNameM;//Ng model for search name
   cTodayManualArcDocs;
+   //for print
+   notPrint=true;
+   resetBackVici=false;
+   printReadyOk=false;
   constructor(public audit:AuditService,public userService: UserService) { }
 
   ngOnInit(): void {
     this.refreshTodayArcDocsList();
     this.getTodayArcDocsCountManual();
+    //for print
+    this.notPrint=true;
+    this.resetBackVici=false;
+    this.printReadyOk=false;
   }
+//this is for print ready
+printReady(){
+  this.notPrint=false;
+  this.printReadyOk=true;
+  this.resetBackVici=true;
+}
+
+//this is for reset back to original
+resetBack(){
+  this.notPrint=true;
+  this.printReadyOk=false;
+  this.resetBackVici=false;
+}
 
 //to pass today manual archived docs
 refreshTodayArcDocsList() {

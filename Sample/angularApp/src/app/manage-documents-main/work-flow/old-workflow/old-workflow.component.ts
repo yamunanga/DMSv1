@@ -18,15 +18,35 @@ export class OldWorkflowComponent implements OnInit {
   serverErrorMessages: string;
   public page=1
   public pageSize=10;
+   //for print
+   notPrint=true;
+   resetBackVici=false;
+   printReadyOk=false;
   constructor(private documentService:DocumentService,public userService: UserService,public workflow:WorkflowService,private toastr: ToastrService) { }
 
   ngOnInit(): void {
     this.refreshOldWorkflowDataProcess();
     this.getUserdetailes();
     this.getRole();
+    //for print
+    this.notPrint=true;
+    this.resetBackVici=false;
+    this.printReadyOk=false;
   }
 
+//this is for print ready
+printReady(){
+  this.notPrint=false;
+  this.printReadyOk=true;
+  this.resetBackVici=true;
+}
 
+//this is for reset back to original
+resetBack(){
+  this.notPrint=true;
+  this.printReadyOk=false;
+  this.resetBackVici=false;
+}
 
 //to delete workflow done
 delWorkflowDone(_id){

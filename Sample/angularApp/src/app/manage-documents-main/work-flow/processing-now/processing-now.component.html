@@ -8,6 +8,13 @@
       </div>
       </div>
     <div class="table-responsive " *ngIf="this.workflow.workflowProcessingC != 0 && this.workflow.workflowProcessing">
+      <div style="text-align: right;">
+        <button type="button" class="btn btn-outline-primary"  (click)="printReady()" data-toggle="tooltip" data-placement="top" title="Ready For Print"><i class="fa fa-list" aria-hidden="true"></i></button>&nbsp;
+        <button type="button" *ngIf="this.printReadyOk==true;" class="btn btn-outline-primary"  printSectionId="listId" printTitle="PROCESSING WORKFLOW LIST" styleSheetFile="assets/tablePrint.css" ngxPrint data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print" aria-hidden="true"></i></button>&nbsp;
+        <button type="button" *ngIf="this.resetBackVici==true;" class="btn btn-outline-primary"  (click)="resetBack()"><i class="fa fa-repeat" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reset"></i></button>&nbsp;
+      </div>
+      <br>
+      <div id="listId">
         <table class="responsive-table highlight table-lg ">
             <thead>
               <tr>
@@ -18,10 +25,10 @@
                 <th style="text-align:center">Department</th>
                 <th style="text-align:center">Workflow Now</th>
                 <th style="text-align:center">Workflow List</th>
-                <th style="text-align:center">File</th>
+                <th style="text-align:center" *ngIf="notPrint == true">File</th>
                 <th style="text-align:center">CreatedAt</th>
                 <th style="text-align:center">Last Update</th>
-                <th style="text-align:center">Options</th>
+                <th style="text-align:center" *ngIf="notPrint == true">Options</th>
               </tr>
             </thead>
             <tr *ngFor="let doc of this.workflow.workflowProcessing | slice: (page-1) * pageSize : page * pageSize;index as i">
@@ -30,19 +37,21 @@
               <td>{{byteToMb(doc.size)}}</td>
               <td>{{doc.category}}</td>
               <td>{{doc.department}}</td>
-              <td>
+              <td *ngIf="this.printReadyOk==true">{{doc.workflowData}}</td>
+              <td *ngIf="notPrint == true">
                 <app-popup-userprofile (click)="getOtherUserdetailesByMail(doc.workflowData)"></app-popup-userprofile>
                 <app-model-sent-msg (click)="toPassToEmail(doc.workflowData)"></app-model-sent-msg>
               </td>
-              <td>
+              <td *ngIf="this.printReadyOk==true">{{doc.workFlowList}}</td>
+              <td *ngIf="notPrint == true">
                 <app-model-view-list (click)="toPassListandNext(doc.workFlowList,doc.workflowNext,doc.workflowData)"></app-model-view-list>
               </td>
-              <td>
+              <td *ngIf="notPrint == true">
                 <button type="button" class="btn btn-outline-info"  *ngIf="doc.isLock===null"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
               </td>
               <td>{{this.workflow.getDate(doc.createdAt)}}</td>
               <td>{{this.workflow.getDate(doc.updatedAt)}}</td>
-              <td>
+              <td *ngIf="notPrint == true">
                 <app-model-unlock (click)="passFileId(doc._id) " *ngIf="doc.isLock===true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-unlock>
                 <app-model-set-pass (click)="passFileId(doc._id)" *ngIf="doc.isLock===null && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-set-pass>
                 <button type="button" class="btn btn-outline-danger" (click)="delWorkflow(doc._id)" *ngIf="doc.isLock===null"><i class="fa fa-trash" aria-hidden="true"></i></button>
@@ -51,6 +60,7 @@
               </td>
             </tr>
           </table>
+        </div>
           <br>
        <div class="center">
         <ngb-pagination [(page)]="page"  [collectionSize]="workflow.workflowProcessing.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>

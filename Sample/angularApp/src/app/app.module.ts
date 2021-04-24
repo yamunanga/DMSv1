@@ -5,6 +5,7 @@ import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { ToastrModule } from 'ngx-toastr';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import {NgxPrintModule} from 'ngx-print';
 //import { HttpClientModule } from '@angular/common/http';
 import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
 //components
@@ -176,6 +177,7 @@ import { ViewTodayAutoArchivedDocsComponent } from './audit/view-today-auto-arch
     ToastrModule.forRoot(),
     HttpClientModule,
     NgbModule,
+    NgxPrintModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

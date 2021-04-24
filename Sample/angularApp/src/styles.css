@@ -315,7 +315,7 @@ label.validation-message{
  
 th {
   color:#D5DDE5;;
-  background:#1b1e24;
+  background:#3A3B3C; /*242526 #1b1e24*/
   border-bottom:4px solid #9ea7af;
   border-right: 1px solid #343a45;
   font-size:23px;

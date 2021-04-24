@@ -17,13 +17,33 @@ export class ManageApprovementComponent implements OnInit {
   role;
   public page=1
   public pageSize=10;
+   //for print
+   notPrint=true;
+   resetBackVici=false;
+   printReadyOk=false;
   constructor(public manageApprovment:ManageApprovementServiceService,public userService: UserService,private toastr: ToastrService) { }
   ngOnInit(): void {
     this.refreshNeedApprovementList();
     this.getUserdetailes();
     this.getRole();
+    //for print
+    this.notPrint=true;
+    this.resetBackVici=false;
+    this.printReadyOk=false;
   }
+//this is for print ready
+printReady(){
+  this.notPrint=false;
+  this.printReadyOk=true;
+  this.resetBackVici=true;
+}
 
+//this is for reset back to original
+resetBack(){
+  this.notPrint=true;
+  this.printReadyOk=false;
+  this.resetBackVici=false;
+}
   //this is for get need approvement data
   refreshNeedApprovementList() {
     this.manageApprovment.toGetApprovementData().subscribe((res) => {

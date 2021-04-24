@@ -26,3 +26,21 @@ div.l{
 div.r{
   text-align:right;
 }
+
+.centera {
+  border: 5px solid white;
+  display: flex;
+  justify-content: center;
+  }
+
+  .center1 {
+    border: 5px solid white;
+    display: flex;
+    justify-content: center;
+    }
+
+    .centerb {
+     
+      display: flex;
+      justify-content: center;
+      }
