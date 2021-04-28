@@ -3,7 +3,7 @@ import { ARCDOCUMENTS } from 'src/app/models/archiveDoc.model';
 import { DocumentService } from 'src/app/shared/document.service';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { UserService } from 'src/app/shared/user.service';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 
 @Component({
   selector: 'app-archived-docs',

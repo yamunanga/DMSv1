@@ -1,3 +1,5 @@
 export const environment = {
-  production: true
+  production: true,
+  apiBaseUrl: '/api',
+  apiDownloadUrl:'https://dashboard.heroku.com/apps/dmsnonidentified'
 };

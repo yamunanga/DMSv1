@@ -8,7 +8,7 @@ import { DepartmentService } from 'src/app/shared/department.service';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { TempDocService } from 'src/app/shared/temp-doc.service';
 import { UserService } from 'src/app/shared/user.service';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.prod';
 
 import{DOCUMENTS} from '../../shared/document.model';
 import { DocumentService } from '../../shared/document.service';
