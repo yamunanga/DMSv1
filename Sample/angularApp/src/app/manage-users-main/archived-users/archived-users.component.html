@@ -1,54 +1,62 @@
 <br>
-<div *ngIf="this.userService.arcUserCout == 0">
-  <h5 style="text-align: center;">Empty List!</h5>
-</div>
-<div  *ngIf="this.userService.arcUserCout !=0" >
-  <div style="text-align: center" class="centertb">
-    <input type="text" [(ngModel)]="arcName" (input)="search()" placeholder="Search here" /> <!-- (input)="search()"-->
-   </div>
-<br>
-<div class="table-responsive" *ngIf="userService.allArchivedUsers">
-
-  <div style="text-align: right;">
-    <button type="button" class="btn btn-outline-primary"  (click)="printReady()" data-toggle="tooltip" data-placement="top" title="Ready For Print"><i class="fa fa-list" aria-hidden="true"></i></button>&nbsp;
-    <button type="button" *ngIf="this.printReadyOk==true;" class="btn btn-outline-primary"  printSectionId="listId" printTitle="ARCHIVED USER LIST" styleSheetFile="assets/tablePrint.css" ngxPrint data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print" aria-hidden="true"></i></button>&nbsp;
-    <button type="button" *ngIf="this.resetBackVici==true;" class="btn btn-outline-primary"  (click)="resetBack()"><i class="fa fa-repeat" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reset"></i></button>&nbsp;
-  </div>
+<div class="container-fluid border">
   <br>
-  <div id="listId">
-    <table class="responsive-table highlight">
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Email</th>
-            <th>Role</th>
-            <th>Created Date</th>
-            <th>Last Active</th>
-            <th>Archived Date</th>
-            <th>ArcBy</th>
-            <th *ngIf="notPrint == true">Options</th>
+  <div *ngIf="this.userService.arcUserCout == 0">
+    <h5 style="text-align: center;">Empty List!</h5>
+  </div>
+  <div  *ngIf="this.userService.arcUserCout !=0" >
+    <div style="text-align: center" class="centertb">
+      <input type="text" [(ngModel)]="arcName" (input)="search()" placeholder="Search here" /> <!-- (input)="search()"-->
+     </div>
+  <br>
+  <div class="table-responsive" *ngIf="userService.allArchivedUsers">
+  
+    <div style="text-align: right;">
+      <button type="button" class="btn btn-outline-primary"  (click)="printReady()" data-toggle="tooltip" data-placement="top" title="Ready For Print"><i class="fa fa-list" aria-hidden="true"></i></button>&nbsp;
+      <button type="button" *ngIf="this.printReadyOk==true;" class="btn btn-outline-primary"  printSectionId="listId" printTitle="ARCHIVED USER LIST" styleSheetFile="assets/tablePrint.css" ngxPrint data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print" aria-hidden="true"></i></button>&nbsp;
+      <button type="button" *ngIf="this.resetBackVici==true;" class="btn btn-outline-primary"  (click)="resetBack()"><i class="fa fa-repeat" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reset"></i></button>&nbsp;
+    </div>
+    <br>
+    <div id="listId">
+      <table class="responsive-table highlight">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Email</th>
+              <th>Role</th>
+              <th>Created Date</th>
+              <th>Last Active</th>
+              <th>Archived Date</th>
+              <th>ArcBy</th>
+              <th *ngIf="notPrint == true">Options</th>
+            </tr>
+          </thead>
+          <tr *ngFor="let aUser of userService.allArchivedUsers | slice: (page-1) * pageSize : page * pageSize;index as i">
+            <td>{{aUser.fullName}}</td>
+            <td>{{aUser.email}}</td>
+            <td>{{aUser.role}}</td>
+            <td>{{getDate(aUser.uCreatedAt)}}</td>
+            <td>{{getDate(aUser.uUpdatedAt)}}</td>
+            <td>{{getDate(aUser.createdAt)}}</td>
+            <td *ngIf="this.printReadyOk==true">{{aUser.arcBy}}</td>
+            <td *ngIf="notPrint == true"><app-popup-userprofile (click)="getOtherUserdetailesById(aUser.arcBy)"></app-popup-userprofile></td>
+            <td *ngIf="notPrint == true">
+             
+              <button class="btn btn-outline-info" (click)="restoreArcUser(aUser.email)" data-toggle="tooltip" data-placement="top" title="Restore"><i class="fa fa-recycle" aria-hidden="true"></i></button>&nbsp;
+              <button type="button" class="btn btn-outline-danger" (click)="deleteArchivedUser(aUser.email)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button>
+            </td>
           </tr>
-        </thead>
-        <tr *ngFor="let aUser of userService.allArchivedUsers | slice: (page-1) * pageSize : page * pageSize;index as i">
-          <td>{{aUser.fullName}}</td>
-          <td>{{aUser.email}}</td>
-          <td>{{aUser.role}}</td>
-          <td>{{getDate(aUser.uCreatedAt)}}</td>
-          <td>{{getDate(aUser.uUpdatedAt)}}</td>
-          <td>{{getDate(aUser.createdAt)}}</td>
-          <td *ngIf="this.printReadyOk==true">{{aUser.arcBy}}</td>
-          <td *ngIf="notPrint == true"><app-popup-userprofile (click)="getOtherUserdetailesById(aUser.arcBy)"></app-popup-userprofile></td>
-          <td *ngIf="notPrint == true">
-           
-            <button class="btn btn-outline-info" (click)="restoreArcUser(aUser.email)" data-toggle="tooltip" data-placement="top" title="Restore"><i class="fa fa-recycle" aria-hidden="true"></i></button>&nbsp;
-            <button type="button" class="btn btn-outline-danger" (click)="deleteArchivedUser(aUser.email)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button>
-          </td>
-        </tr>
-      </table>
-    </div>
-      <br>
-      <div class="center">
-        <ngb-pagination [(page)]="page"  [collectionSize]="userService.allArchivedUsers.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
-    </div>
+        </table>
+      </div>
+        <br>
+        <div class="center">
+          <ngb-pagination [(page)]="page"  [collectionSize]="userService.allArchivedUsers.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+      </div>
+  </div>
+  </div>
+  
+
+
+<br>
 </div>
-</div>
+<br>

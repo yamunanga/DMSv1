@@ -1,4 +1,6 @@
 <br>
+<div class="container-fluid border">
+<br>
 <div *ngIf="this.userService.otherUserCount == 0">
   <h5 style="text-align: center;">Empty List!</h5>
 </div>
@@ -8,16 +10,12 @@
 </div>
 <br>
 <div class="table-responsive" *ngIf="userService.allUsers" >
- 
-  <div class="toright">
-    <button type="button" class="btn btn-outline-primary"  (click)="printReady()" data-toggle="tooltip" data-placement="top" title="Ready For Print"><i class="fa fa-list" aria-hidden="true"></i></button>
+  <div style="text-align: right;">
+    <button type="button" class="btn btn-outline-primary"  (click)="printReady()" data-toggle="tooltip" data-placement="top" title="Ready For Print"><i class="fa fa-list" aria-hidden="true"></i></button>&nbsp;
+    <button type="button" *ngIf="this.printReadyOk==true;" class="btn btn-outline-primary"  printSectionId="listId" printTitle="ARCHIVED USER LIST" styleSheetFile="assets/tablePrint.css" ngxPrint data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print" aria-hidden="true"></i></button>&nbsp;
+    <button type="button" *ngIf="this.resetBackVici==true;" class="btn btn-outline-primary"  (click)="resetBack()"><i class="fa fa-repeat" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reset"></i></button>&nbsp;
   </div>
-  <div class="toright" *ngIf="this.printReadyOk==true;">
-    <button type="button" class="btn btn-outline-primary"  printSectionId="listId" printTitle="USER LIST" styleSheetFile="assets/tablePrint.css" ngxPrint data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print" aria-hidden="true"></i></button>
-  </div>
-  <div class="toright"  *ngIf="this.resetBackVici==true;">
-    <button type="button" class="btn btn-outline-primary"  (click)="resetBack()"><i class="fa fa-repeat" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reset"></i></button>
-  </div>
+  <br>
   <div id="listId">
     <table class="responsive-table highlight">
         <thead>
@@ -60,3 +58,7 @@
     </div>
 </div>
 </div>
+
+<br>
+</div>
+<br>

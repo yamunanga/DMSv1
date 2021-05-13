@@ -2,32 +2,32 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <br>
-<div class="container-fluid border">
+<div class="container-fluid">
     <br>
     <div class="btn-group mr-3">
         <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
           <button class="btn btn-primary" ngbDropdownToggle >{{dropDownDocs}}</button>
           <div class="dropdown-menu" ngbDropdownMenu>
-            <button ngbDropdownItem (click)="viewDocs()" (click)="convertDocDropdownName('ADED')">ADED</button>
-            <button ngbDropdownItem (click)="viewArcDocs()" (click)="convertDocDropdownName('MANUAL ARCHIVED')">MANUAL ARCHIVED</button>
-            <button ngbDropdownItem (click)="viewAutoArcDocs()" (click)="convertDocDropdownName('AUTO ARCHIVED')">AUTO ARCHIVED</button>
-            <button ngbDropdownItem (click)="viewAssaignedDocs()" (click)="convertDocDropdownName('ASSAIGNED')">ASSAIGNED</button>
-            <button ngbDropdownItem (click)="viewApprovedDocs()" (click)="convertDocDropdownName('APPROVED')">APPROVED</button>
-            <button ngbDropdownItem (click)="viewTodayWorkflows()" (click)="convertDocDropdownName('CREATED WORKFLOWS')">CREATED WORKFLOWS</button>
-            <button ngbDropdownItem (click)="viewTodayEndWorkflows()" (click)="convertDocDropdownName('ENDED WORKFLOWS')">ENDED WORKFLOWS</button>
+            <button ngbDropdownItem routerLink="/home/audit/todaydocs"  routerLinkActive="false" (click)="viewDocs()" (click)="convertDocDropdownName('ADED')">ADED</button>
+            <button ngbDropdownItem routerLink="/home/audit/todayarcdocs"  routerLinkActive="false" (click)="viewArcDocs()" (click)="convertDocDropdownName('MANUAL ARCHIVED')">MANUAL ARCHIVED</button>
+            <button ngbDropdownItem routerLink="/home/audit/todayautoarcdocs"  routerLinkActive="false" (click)="viewAutoArcDocs()" (click)="convertDocDropdownName('AUTO ARCHIVED')">AUTO ARCHIVED</button>
+            <button ngbDropdownItem routerLink="/home/audit/todayassaigneddocs"  routerLinkActive="false" (click)="viewAssaignedDocs()" (click)="convertDocDropdownName('ASSAIGNED')">ASSAIGNED</button>
+            <button ngbDropdownItem routerLink="/home/audit/todayapproveddocs"  routerLinkActive="false" (click)="viewApprovedDocs()" (click)="convertDocDropdownName('APPROVED')">APPROVED</button>
+            <button ngbDropdownItem routerLink="/home/audit/todaynewworkflows"  routerLinkActive="false" (click)="viewTodayWorkflows()" (click)="convertDocDropdownName('CREATED WORKFLOWS')">CREATED WORKFLOWS</button>
+            <button ngbDropdownItem routerLink="/home/audit/todayendworkflows"  routerLinkActive="false" (click)="viewTodayEndWorkflows()" (click)="convertDocDropdownName('ENDED WORKFLOWS')">ENDED WORKFLOWS</button>
           </div>
         </div>
         <div class="btn-group" ngbDropdown role="group" aria-label="Button group with nested dropdown">
           <button class="btn btn-primary" ngbDropdownToggle >{{dropDownUser}}</button>
           <div class="dropdown-menu" ngbDropdownMenu>
-            <button ngbDropdownItem  (click)="viewUsers()" (click)="convertName('ADDED')">ADDED</button>
-            <button ngbDropdownItem (click)=" viewArcUsers()" (click)="convertName('ARCHIVED')">ARCHIVED</button>
+            <button ngbDropdownItem  routerLink="/home/audit/todayusers"  routerLinkActive="active" (click)="viewUsers()" (click)="convertName('ADDED')">ADDED</button>
+            <button ngbDropdownItem  routerLink="/home/audit/todayarcusers"  routerLinkActive="false" (click)=" viewArcUsers()" (click)="convertName('ARCHIVED')">ARCHIVED</button>
           </div>
         </div>
     </div>
     <br>
     <div>
-        <app-view-aded-users *ngIf="this.tofViewUsers==true"></app-view-aded-users>
+       <!-- <app-view-aded-users *ngIf="this.tofViewUsers==true"></app-view-aded-users>
         <app-view-today-archived-users *ngIf="this.tofViewArcUsers==true"></app-view-today-archived-users>
         <app-view-today-added-docs *ngIf="this.tofViewTodayDocs==true"></app-view-today-added-docs>
         <app-view-today-archived-docs *ngIf="this.tofViewTodayArcDocs==true"></app-view-today-archived-docs>
@@ -35,7 +35,8 @@
         <app-view-today-approved *ngIf="this.tofViewTodayApproved==true"></app-view-today-approved>
         <app-view-today-auto-archived-docs *ngIf="this.tofViewTodayAutoArcDocs==true"></app-view-today-auto-archived-docs>
         <app-view-today-new-workflows *ngIf="this.tofViewTodayNewWorkflows==true"></app-view-today-new-workflows>
-        <app-view-today-end-workflows *ngIf="this.tofViewTodayEndWorkflows==true"></app-view-today-end-workflows>
+        <app-view-today-end-workflows *ngIf="this.tofViewTodayEndWorkflows==true"></app-view-today-end-workflows>-->
+        <router-outlet></router-outlet>
     </div>
  
 </div>

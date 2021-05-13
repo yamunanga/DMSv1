@@ -5,9 +5,11 @@ import { CategoryService } from 'src/app/shared/category.service';
 import { DatePickerService } from 'src/app/shared/date-picker.service';
 import { DEPARTMENTS } from 'src/app/shared/department.model';
 import { DepartmentService } from 'src/app/shared/department.service';
+import { ManageApprovementServiceService } from 'src/app/shared/manage-approvement-service.service';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
 import { TempDocService } from 'src/app/shared/temp-doc.service';
 import { UserService } from 'src/app/shared/user.service';
+import { WorkflowService } from 'src/app/shared/workflow.service';
 import { environment } from 'src/environments/environment.prod';
 
 import{DOCUMENTS} from '../../shared/document.model';
@@ -34,7 +36,7 @@ export class ViewDocsComponent implements OnInit {
    notPrint=true;
    resetBackVici=false;
    printReadyOk=false;
-  constructor(public datePickerService:DatePickerService,public catService:CategoryService,public depService:DepartmentService,public documentService:DocumentService,public userService: UserService,private toastr: ToastrService,public tempDocService:TempDocService) { }
+  constructor(public manageApprovment:ManageApprovementServiceService,public workflow:WorkflowService,public datePickerService:DatePickerService,public catService:CategoryService,public depService:DepartmentService,public documentService:DocumentService,public userService: UserService,private toastr: ToastrService,public tempDocService:TempDocService) { }
 
   ngOnInit(): void {
     this.refreshDocList();
@@ -45,6 +47,13 @@ export class ViewDocsComponent implements OnInit {
     this.resetBackVici=false;
     this.printReadyOk=false;
   }
+resetVariable(){
+    //this.documentService.toPassDocId='empty';
+    this.tempDocService.passFileId='empty';
+    this.workflow.passWorkflowId='empty';
+    this.manageApprovment.toPassDocIdApr='empty';
+  }
+  
 //this is for print ready
 printReady(){
   this.notPrint=false;
@@ -319,6 +328,12 @@ getOtherUserdetailesById(id){
       
     }
   )
+}
+
+//pass id to rename
+toRename(id,path){
+  this.documentService.docId=id;
+  this.documentService.updatePath=path;
 }
 
 

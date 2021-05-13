@@ -3,9 +3,10 @@ var config = require('../config/config.json');
 const _ = require('lodash');
 const jwt = require('jsonwebtoken');
 const e = require('express');
-const fs = require('fs-extra')
+const fs = require('fs-extra');
 const router = e.Router();
 const URIpath = require('uri-path');
+const upath = require('upath');
 const url = require('url');
 const date = require('date-and-time');
 const { encrypt, decrypt } = require('../config/crypto');
@@ -29,7 +30,7 @@ var storage1 = multer.diskStorage({
    
     filename: function (req, file, cb) {
       
-        cb(null, Date.now()+'-' +file.originalname) //this can store file as original
+        cb(null,file.originalname) //this can store file as original
        }
   
 
@@ -78,16 +79,8 @@ module.exports.postWorkflowFile=(req,res,next)=>{
                 if (err)
                  return res.status(404).send(['Doc not find !']);
             else{
-                //return res.status(200).send([cd]);
-                var myJSON = JSON.stringify(file.file);
-                var str=myJSON.split('\\');
-                //console.log(str);
-                var nStr=str[str.length-1].split('"');
-                //console.log(nStr[0]);
-                var multerDate=nStr[0].split('-');
-                var myPath=file.catPath+'/'+multerDate[0]+'-'+file.name;
-                //console.log(myPath);
-                fs.unlink(myPath, (err) => {
+               var myPath=file.catPath+file.name;
+                fs.remove(myPath, (err) => {
                   if (err) {
                     return res.status(404).send(['File can not delete Or Unlock Before Delete !']);
                   }
@@ -110,6 +103,48 @@ module.exports.postWorkflowFile=(req,res,next)=>{
       })
 
 }
+//update file via document list
+module.exports.updateFile=(req,res,next)=>{
+  var datetime = new Date();
+  upload(req, res, function (err) {
+      if (err instanceof multer.MulterError) {
+        // A Multer error occurred when uploading.
+        return res.status(422).send(['multer error!']);
+      } else if (err) {
+        // An unknown error occurred when uploading.
+        return res.status(422).send(['Sent failed !']);
+      }
+      // Everything went fine.
+      //return res.status(200).send(datetime);
+      Document.findOne({_id:req.body.id},
+          (err,file)=>{
+              if (err)
+               return res.status(404).send(['Doc not find !']);
+          else{
+             var myPath=file.catPath+file.name;
+              fs.remove(myPath, (err) => {
+                if (err) {
+                  return res.status(404).send(['File can not delete Or Unlock Before Delete !']);
+                }
+                let extArray = req.file.originalname.split(".")
+                let extension = extArray[extArray.length - 1];
+                Document.findOneAndUpdate({_id:req.body.id},{name:req.file.originalname,file:req.file.path,size:req.file.size,type:extension},(err,file)=>{
+                if (!file)
+                     return res.status(404).send(['Doc can not find !']);
+                else{
+                    
+                    return res.status(200).send(['Doc Updated !']);
+                }
+               }) 
+             
+                
+              })
+           }
+      })
+
+    })
+
+}
 
 //to rename workflow file 
 module.exports.renameWorkflowFile=(req,res,next)=>{
@@ -126,49 +161,35 @@ module.exports.renameWorkflowFile=(req,res,next)=>{
                 if(conFileName[0]==name){
                   return res.status(422).send(['File name already use !']);
                 }else{
-                  var myJSON = JSON.stringify(file.file);
-                  //console.log(myJSON);
-                  var str=myJSON.split('\\');
-                  //console.log(str);
-                  var nStr=str[str.length-1].split('"');
-                  var multerDate=nStr[0].split('-');
-                  //cat path config
-                  var str=file.catPath.split('/');
-                    var mC=str[3];
-                    var dep=str[2];
-                    var arr = new Array
-                    for(var x=2;x<str.length;x++){
-                      if(str[x] !=''){
-                        arr.push(str[x]);
+                  var toUnix= upath.toUnix(file.file)
+                  var unixStr=toUnix.split('/');
+                  var arr = new Array
+                    for(var x=0;x<unixStr.length-1;x++){
+                      if(unixStr[x] !=''){
+                        arr.push(unixStr[x]);
                       }
                     }
                   //Over
                   //console.log(nStr);
                     //new filename+type
                     var newName=name+'.'+file.type;
-                    var oldpath=file.catPath+multerDate[0]+'-'+file.name;
-                    var newpath=file.catPath+multerDate[0]+'-'+name+'.'+file.type;
+                    var oldpath=file.catPath+file.name;
+                    var newpath=file.catPath+name+'.'+file.type;
                     //var toDbPath=config.development.TO_DB_TO_UP_LOCATION+file.department+'\\'+file.category+'\\'+multerDate[0]+'-'+name+'.'+file.type;
-                    
-                    var toDbPath=config.development.TO_DB_TO_UP_LOCATION+dbPath(arr)+multerDate[0]+'-'+name+'.'+file.type;
+                    var toDbPath=dbPath(arr)+name+'.'+file.type;
                    // console.log(newpath.toString());
                    // console.log(oldpath);
                    // console.log(toDbPath);
-                    
-                    fs.rename(oldpath.toString(),newpath.toString(), function (err) {
-                      if (err){
-                        return res.status(422).send(['Cannot rename !']);
-                      }
-                      //console.log('File Renamed.');
-                      workflow.findOneAndUpdate({_id:_id},{name:newName,file:toDbPath},function(err,doc){
-                        if(err){
-                          return res.status(422).send(['Eror from DB!']);
-                        }else{
-                          return res.status(200).send(['File name has been changed !']);
-                        }
-              
-                     })
-                    });
+                   workflow.findOneAndUpdate({_id:_id},{name:newName,file:toDbPath},function(err,doc){
+                    if(err){
+                      return res.status(422).send(['Eror from DB!']);
+                    }else{
+                      fs.renameSync(oldpath,newpath);
+                      return res.status(200).send(['File name has been changed !']);
+                    }
+          
+                 })
+                   
                 }
            
       
@@ -184,7 +205,15 @@ module.exports.renameWorkflowFile=(req,res,next)=>{
     }
   );
   }
-
+/*
+ fs.rename(oldpath.toString(),newpath.toString(), function (err) {
+                      if (err){
+                        return res.status(422).send(['Cannot rename !']);
+                      }
+                      //console.log('File Renamed.');
+                      
+                    });
+*/
 //workflow process
 module.exports.getWorkflowProcessN=(req,res,next)=>{
     User.findOne({_id:req._id}, 
@@ -329,7 +358,7 @@ module.exports.getWorkflowProcess=(req,res,next)=>{
                                                 msg.toId=file1.createdBy;
                                                 msg.from=user.email;
                                                 msg.to=userCreate.email;
-                                                msg.body='Dear'+user.email+'your workflow id '+file1._id+' over now.'+'It start at ' +file1.createdAt+'and end at '+current.toString()+'.Users are '+file1.workFlowList +'.You can view it on Documents.Thank you !';
+                                                msg.body='Dear'+' '+user.email+' '+'your workflow id '+' '+file1._id+' over now.'+'It start at '+' '+file1.createdAt+' '+'and end at'+' '+current.toString()+'.Users are'+' '+file1.workFlowList +' '+'.You can view it on Documents.Thank you !';
                                                 msg.save((err,doc)=>{
                                                     if(err){
                                                         return res.status(422).send(['Sent failed !']);
@@ -703,15 +732,8 @@ module.exports.delWorkflow=(req,res,next)=>{
           if (!file){
                return res.status(404).send( 'Can not find !' );
           }else{
-            var myJSON = JSON.stringify(file.file);
-            var str=myJSON.split('\\');
-            //console.log(str);
-            var nStr=str[str.length-1].split('"');
-            //console.log(nStr[0]);
-            var multerDate=nStr[0].split('-');
-            var myPath=file.catPath+'/'+multerDate[0]+'-'+file.name;
-            //console.log(myPath);
-            fs.unlink(myPath, (err) => {
+            var myPath=file.catPath+file.name;
+            fs.remove(myPath, (err) => {
               if (err) {
                 return res.status(404).send(['File can not delete Or Unlock Before Delete !']);
               }

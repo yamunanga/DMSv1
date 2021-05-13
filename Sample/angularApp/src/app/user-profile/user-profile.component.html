@@ -2,16 +2,17 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <br>
-<div class="container-fluid border">
+<div class="container-fluid ">
     <br>
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" (click)="toOpenView()">VIEW</button>
-        <button type="button" class="btn btn-primary" (click)="toEditProfile()">EDIT</button>
+        <button type="button" class="btn btn-primary" routerLink="/home/userprofile/view"  routerLinkActive="active" (click)="toOpenView()">VIEW</button>
+        <button type="button" class="btn btn-primary" routerLink="/home/userprofile/edit"  routerLinkActive="false" (click)="toEditProfile()">EDIT</button>
       </div>
     <br>
     <div><!--*ngIf="this.tOfWMsg==true"-->
-        <app-view-profile *ngIf="this.tOfViewProfile==true" ></app-view-profile>
-        <app-edit-panel-profile *ngIf="this.tOfViewEditProfile==true" ></app-edit-panel-profile>
+        <!--<app-view-profile *ngIf="this.tOfViewProfile==true" ></app-view-profile>
+        <app-edit-panel-profile *ngIf="this.tOfViewEditProfile==true" ></app-edit-panel-profile>-->
+        <router-outlet></router-outlet>
     </div>
  
 </div>

@@ -10,6 +10,7 @@ import { ToastrService } from 'ngx-toastr';
 import { MessageServiceService } from '../shared/message-service.service';
 import { DepartmentService } from '../shared/department.service';
 import { DEPARTMENTS } from '../shared/department.model';
+import { NavigationService } from '../shared/navigation.service';
 
 @Component({
   selector: 'app-user-profile',
@@ -20,7 +21,7 @@ export class UserProfileComponent implements OnInit {
   user={
     role:localStorage.getItem('userRole')
   };
-  constructor(public userService: UserService, private router: Router,private toastr: ToastrService,public messageService: MessageServiceService,public departmentService:DepartmentService) { }
+  constructor(private navigationService:NavigationService,public userService: UserService, private router: Router,private toastr: ToastrService,public messageService: MessageServiceService,public departmentService:DepartmentService) { }
   showSucessMessage: boolean;
   serverErrorMessages: string;
   message=true;
@@ -29,8 +30,9 @@ export class UserProfileComponent implements OnInit {
   tOfViewEditProfile=false;//this is for edit user profile
   ngOnInit() {
    this.getUserdetailes();
+   //this.setNavDisable();
   };
-
+  
 
 //to open profile view
 toOpenView(){

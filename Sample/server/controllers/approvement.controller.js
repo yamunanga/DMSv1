@@ -6,6 +6,7 @@ const e = require('express');
 const fs = require('fs-extra')
 const router = e.Router();
 const URIpath = require('uri-path');
+const upath = require('upath');
 const url = require('url');
 const date = require('date-and-time')
 const { encrypt, decrypt } = require('../config/crypto');
@@ -85,6 +86,12 @@ module.exports.getApprovmentDataCount=(req,res,next)=>{
                           document.approvedBy=user.email;
                           document.addedAt=file.createDate;
                           document.createDate=current.toString();
+                          if(file.isLock==true){
+                            document.isLock=file.isLock;
+                            document.ePath=file.ePath;
+                            document.eFile=file.eFile;
+                            document.pass=file.pass;
+                          }
                           document.save(function(err,result){ 
                             if (err){ 
                                 return res.status(422).send(['Eror from backend !']);
@@ -140,16 +147,10 @@ module.exports.rejectApprovementData=(req,res,next)=>{
                         if (!file){
                              return res.status(404).send( 'Can not find !' );
                         }else{
-                            var myJSON = JSON.stringify(file.file);
-                            var str=myJSON.split('\\');
-                            console.log(str);
-                            var nStr=str[str.length-1].split('"');
-                            console.log(nStr[0]);
-                            var multerDate=nStr[0].split('-');
-                            var myPath=file.catPath+'/'+multerDate[0]+'-'+file.name;
-                            console.log(myPath);
-                            console.log(req.body.msg);
-                            fs.unlink(myPath, (err) => {
+                            var myPath=file.catPath+file.name;
+                             // console.log(myPath);
+                            //console.log(req.body.msg);
+                            fs.remove(myPath, (err) => {
                                 if (err) {
                                   return res.status(404).send(['File can not delete !']);
                                 }else{

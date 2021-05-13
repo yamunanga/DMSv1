@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
+import { NavigationService } from 'src/app/shared/navigation.service';
 import { UserService } from 'src/app/shared/user.service';
 
 @Component({
@@ -10,7 +11,7 @@ import { UserService } from 'src/app/shared/user.service';
 })
 export class ForgetPasswordComponent implements OnInit {
 
-  constructor(private userService: UserService) { }
+  constructor(public  navigationService: NavigationService,private userService: UserService) { }
   model={
     email:'',
   }
@@ -18,6 +19,7 @@ export class ForgetPasswordComponent implements OnInit {
   serverErrorMessages: string;
   showSucessMessage: boolean;
   ngOnInit(): void {
+    this.navigationService.disableNav();
   }
   
   onSubmit(form: NgForm) {

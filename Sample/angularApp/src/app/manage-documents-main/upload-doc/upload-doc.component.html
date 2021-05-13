@@ -1,11 +1,13 @@
 <br>
+<div class="container-fluid border">
+<br>
     <div class="a">
       <div class="centera">
         <img class="card-img-top" src="assets/img/upload.jpg" style="width: 150px;height:150px;" alt="Card image cap">
       </div>
       <h5>Select File Upload Path </h5>
       <h6>{{catService.uploadPath}}</h6> 
-      <button type="button" class="btn btn-secondary"  (click)="choosePath()">
+      <button type="button" class="btn btn-secondary" routerLink="/home/managedocs/subcategory" >
         Choose 
      </button>
       <br>
@@ -66,7 +68,7 @@
                 <button type="button" class="btn btn-outline-danger" (click)="onDel(file._id)" data-toggle="tooltip" data-placement="top" title="Delete"><i class="fa fa-trash" aria-hidden="true"></i></button>&nbsp;&nbsp;
                 <button type="button" class="btn btn-outline-info"(click)="getRenameId(file._id)" data-toggle="tooltip" data-placement="top" title="Rename"><i class="fa fa-pencil-square-o" aria-hidden="true"></i></button>&nbsp;
                 <app-model-assaign-doc (click)="tempDocService.getCountApprovement(file._id)" *ngIf="file.workflow.length == 0" (click)="getCheckListData(file._id)" (click)="toGetNeedApproveArray(file._id)"></app-model-assaign-doc>&nbsp;
-                <app-model-set-pass (click)="passFileId(file._id)" *ngIf="file.isLock===null "></app-model-set-pass>&nbsp;
+                <app-model-set-pass (click)="passFileId(file._id)" *ngIf="file.isLock===null " ></app-model-set-pass>&nbsp;
                 <app-model-unlock (click)="passFileId(file._id)" *ngIf="file.isLock===true"></app-model-unlock>&nbsp;
                 <app-picker-popup (click)="passFileId(file._id)" data-toggle="tooltip" data-placement="top" title="Set Expiration Date"></app-picker-popup>&nbsp;
                 <app-model-workflow (click)="passFileId(file._id)" *ngIf="file.needApproveBy.length == 0"(click)="toGetWorkflowArray(file._id)"></app-model-workflow>&nbsp;
@@ -83,3 +85,7 @@
         {{serverErrorMessages}}
       </div>-->
   </div>
+
+<br>
+</div>
+<br>

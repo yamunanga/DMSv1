@@ -1,50 +1,58 @@
 <br>
-    <div *ngIf="this.countArc ==0">
-      <h5 style="text-align: center;">Empty List!</h5>
-    </div>
-    <div class="table-responsive" *ngIf="this.countArc != 0 && documentService.arcDocs">
-      <div class="table-responsive" *ngIf="this.countDocs !=0 && documentService.allDocs">
-        <div style="text-align: right;">
-          <button type="button" class="btn btn-outline-primary"  (click)="printReady()" data-toggle="tooltip" data-placement="top" title="Ready For Print"><i class="fa fa-list" aria-hidden="true"></i></button>&nbsp;
-          <button type="button" *ngIf="this.printReadyOk==true;" class="btn btn-outline-primary"  printSectionId="listId" printTitle="ARCHIVED DOCUMENT LIST" styleSheetFile="assets/tablePrint.css" ngxPrint data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print" aria-hidden="true"></i></button>&nbsp;
-          <button type="button" *ngIf="this.resetBackVici==true;" class="btn btn-outline-primary"  (click)="resetBack()"><i class="fa fa-repeat" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reset"></i></button>&nbsp;
-        </div>
-        <br>
-      <div id="listId">
-        <table class="responsive-table highlight ">
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Size(Mb)</th>
-                <th>Category</th>
-                <th>Department</th>
-                <th>CreatedBy</th>
-                <th *ngIf="notPrint == true">File</th>
-                <th>CreatedAt</th>
-                <th *ngIf="notPrint == true">Options</th>
-              </tr>
-            </thead>
-            <tr *ngFor="let doc of documentService.arcDocs | slice: (page-1) * pageSize : page * pageSize;index as i">
-              <td>{{doc.name}}</td>
-              <td>{{doc.type}}</td>
-              <td>{{byteToMb(doc.size)}}</td>
-              <td>{{doc.category}}</td>
-              <td>{{doc.department}}</td>
-              <td  *ngIf="this.printReadyOk==true">{{doc.createdBy}}</td>
-              <td *ngIf="notPrint == true"><app-popup-userprofile (click)="getOtherUserdetailesById(doc.createdBy)"></app-popup-userprofile></td>
-              <td *ngIf="notPrint == true">
-                <button type="button" class="btn btn-outline-info"><a href="{{getLink(doc.arcPath)}}"  target="_blank">View</a></button>
-              </td>
-              <td>{{userService.getDate(doc.createdAt)}}</td>
-              <td *ngIf="notPrint == true">
-                <app-model-restore-arc-doc (click)='passFileId(doc._id)'></app-model-restore-arc-doc>
-              </td>
+<div class="container-fluid border">
+  <br>
+  <div *ngIf="this.documentService.countArc ==0">
+    <h5 style="text-align: center;">Empty List!</h5>
+  </div>
+  <div class="table-responsive" *ngIf="this.documentService.countArc != 0 && documentService.arcDocs">
+    <div class="table-responsive" *ngIf="this.documentService.countArc !=0 && documentService.arcDocs">
+      <div style="text-align: right;">
+        <button type="button" class="btn btn-outline-primary"  (click)="printReady()" data-toggle="tooltip" data-placement="top" title="Ready For Print"><i class="fa fa-list" aria-hidden="true"></i></button>&nbsp;
+        <button type="button" *ngIf="this.printReadyOk==true;" class="btn btn-outline-primary"  printSectionId="listId" printTitle="ARCHIVED DOCUMENT LIST" styleSheetFile="assets/tablePrint.css" ngxPrint data-toggle="tooltip" data-placement="top" title="Print"><i class="fa fa-print" aria-hidden="true"></i></button>&nbsp;
+        <button type="button" *ngIf="this.resetBackVici==true;" class="btn btn-outline-primary"  (click)="resetBack()"><i class="fa fa-repeat" aria-hidden="true" data-toggle="tooltip" data-placement="top" title="Reset"></i></button>&nbsp;
+      </div>
+      <br>
+    <div id="listId">
+      <table class="responsive-table highlight" *ngIf="this.countArc != 0 && documentService.arcDocs">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Type</th>
+              <th>Size(Mb)</th>
+              <th>Category</th>
+              <th>Department</th>
+              <th>CreatedBy</th>
+              <th *ngIf="notPrint == true">File</th>
+              <th>CreatedAt</th>
+              <th *ngIf="notPrint == true">Options</th>
             </tr>
-          </table>
-        </div>
-          <br>
-         <div class="center">
-          <ngb-pagination [(page)]="page"  [collectionSize]="documentService.arcDocs.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
-        </div>
-    </div>
+          </thead>
+          <tr *ngFor="let doc of documentService.arcDocs | slice: (page-1) * pageSize : page * pageSize;index as i">
+            <td>{{doc.name}}</td>
+            <td>{{doc.type}}</td>
+            <td>{{byteToMb(doc.size)}}</td>
+            <td>{{doc.category}}</td>
+            <td>{{doc.department}}</td>
+            <td  *ngIf="this.printReadyOk==true">{{doc.createdBy}}</td>
+            <td *ngIf="notPrint == true"><app-popup-userprofile (click)="getOtherUserdetailesById(doc.createdBy)"></app-popup-userprofile></td>
+            <td *ngIf="notPrint == true">
+              <button type="button" class="btn btn-outline-info"><a href="{{getLink(doc.arcPath)}}"  target="_blank">View</a></button>
+            </td>
+            <td>{{userService.getDate(doc.createdAt)}}</td>
+            <td *ngIf="notPrint == true">
+              <button type="button" class="btn btn-outline-danger" (click)="onDel(doc._id)"><i class="fa fa-trash" aria-hidden="true"></i></button>&nbsp;
+              <app-model-restore-arc-doc (click)='passFileId(doc._id)'></app-model-restore-arc-doc>
+            </td>
+          </tr>
+        </table>
+      </div>
+        <br>
+       <div class="center">
+        <ngb-pagination [(page)]="page"  [collectionSize]="documentService.arcDocs.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
+      </div>
+  </div>
+
+
+<br>
+</div>
+<br>

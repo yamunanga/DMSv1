@@ -2,28 +2,21 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <br>
-<div class="container-fluid border">
-    <br>
-    <div class="btn-group">
-        <button type="button" class="btn btn-primary" (click)="manageDocMainService.viewDocs()" data-toggle="tooltip" data-placement="top" title="View Documents"><i class="fa fa-files-o" aria-hidden="true"></i></button>
-        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openUpload()" *ngIf="this.role=='admin' || this.role=='author' " data-toggle="tooltip" data-placement="top" title="Upload"><i class="fa fa-upload" aria-hidden="true"></i></button>
-        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openArchived()" *ngIf="this.role=='admin'" data-toggle="tooltip" data-placement="top" title="View Archived"><i class="fa fa-archive" aria-hidden="true"></i></button>
-        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openManageCategory()" *ngIf="this.role=='admin' || this.role=='author' " data-toggle="tooltip" data-placement="top" title="Manage Category"><i class="fa fa-folder-o" aria-hidden="true"></i></button>
-        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openSubONly()" *ngIf="this.role=='admin' || this.role=='author' " data-toggle="tooltip" data-placement="top" title="Manage Sub Category"><i class="fa fa-folder-open-o" aria-hidden="true"></i></button>
-        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openApprovement() " *ngIf="this.role=='admin' " data-toggle="tooltip" data-placement="top" title="Manage File Approve"><i class="fa fa-handshake-o" aria-hidden="true"></i></button>
-        <button type="button" class="btn btn-primary" (click)="manageDocMainService.openWorkflow() " *ngIf="this.role=='admin' " data-toggle="tooltip" data-placement="top" title="Manage Workflow Data"><i class="fa fa-sitemap" aria-hidden="true"></i></button>
-      </div>
-    <br>
-    <div>
-        <app-manage-docs *ngIf="this.manageDocMainService.tOfuploadDocs==true"></app-manage-docs>
-        <app-upload-doc *ngIf="this.manageDocMainService.tOfViewUpload==true"></app-upload-doc>
-        <app-view-docs *ngIf="this.manageDocMainService.tOfViewDocs==true"></app-view-docs>
-        <app-category-and-sub *ngIf="this.manageDocMainService.tOfViewCategoryAndSub==true"></app-category-and-sub>
-        <app-sub-cat-only *ngIf="this.manageDocMainService.tOfViewSubOnly==true"></app-sub-cat-only>
-        <app-manage-approvement *ngIf="this.manageDocMainService.tOfViewApprovement==true"></app-manage-approvement>
-        <app-archived-docs *ngIf="this.manageDocMainService.tOfViewArchived==true"></app-archived-docs>
-        <app-work-flow *ngIf="this.manageDocMainService.tofViewWorkflow==true"></app-work-flow>
+<div class="container-fluid ">
+<div ngbDropdown class="d-inline-block" >
+    <button class="btn btn-outline-primary" id="dropdownBasic" ngbDropdownToggle >SELECT</button>
+    <div ngbDropdownMenu aria-labelledby="dropdownBasic" style="max-height:150px;overflow-y: auto;" >
+      <button ngbDropdownItem routerLink="/home/managedocs/viewdocs"  routerLinkActive="active"  (click)="passNameDir('View Documents')" >View Documents</button>
+      <button ngbDropdownItem routerLink="/home/managedocs/upload"  routerLinkActive="false" (click)="passNameDir('Upload')" *ngIf="this.role=='admin' || this.role=='author' " >Upload</button>
+      <button ngbDropdownItem routerLink="/home/managedocs/viewAarcDocs"  routerLinkActive="false" (click)="passNameDir('View Archived')"  *ngIf="this.role=='admin' " >View Archived</button>
+      <button ngbDropdownItem routerLink="/home/managedocs/viewCategory"  routerLinkActive="false" (click)="passNameDir('Manage Category')" *ngIf="this.role=='admin' || this.role=='author' ">Manage Category</button>
+      <button ngbDropdownItem routerLink="/home/managedocs/subcategory"  routerLinkActive="false" (click)="passNameDir('Manage Sub Category')" *ngIf="this.role=='admin' || this.role=='author' ">Manage Sub Category</button>
+      <button ngbDropdownItem routerLink="/home/managedocs/manageApprove"  routerLinkActive="false" (click)="passNameDir('Manage File Approve')"  *ngIf="this.role=='admin' " >Manage File Approve</button>
+      <button ngbDropdownItem routerLink="/home/managedocs/workflowdata/new"  routerLinkActive="false" (click)="passNameDir('Manage Workflow Data')"  *ngIf="this.role=='admin' " >Manage Workflow Data</button>
     </div>
- 
+  </div>
+  <br>
+  <div>
+    <router-outlet></router-outlet>
+  </div>
 </div>
-

@@ -41,7 +41,7 @@ router.put('/deleteUser',jwtHelper.verifyJwtToken,ctrlUser.deleteUser);
 //for update userRole via user list
 router.put('/updateOtherUserRole',jwtHelper.verifyJwtToken,ctrlUser.updateUserRolefromList);
 //findUserProfile
-router.put('/findUserProfile',jwtHelper.verifyJwtToken,ctrlUser.findUserProfile);
+router.post('/findUserProfile',ctrlUser.findUserProfile);
 //changeUserDepartment this is for change other user department
 router.put('/changeDep',jwtHelper.verifyJwtToken,ctrlUser.changeUserDepartment);
 //to update current user departments
@@ -77,9 +77,8 @@ router.get('/getArcUsers',jwtHelper.verifyJwtToken,ctrlUser.getArchivedUsersCoun
 
 router.get('/getDocs',jwtHelper.verifyJwtToken,ctrlDoc.getDocs);
 router.post('/postDocFile',jwtHelper.verifyJwtToken,ctrlDoc.postDocWithFile);
-
 //if document expire it automattically move to archivedoc
-router.get('/chkDocs',jwtHelper.verifyJwtToken,ctrlDoc.checkExpiration);
+router.get('/chkDocs',jwtHelper.verifyJwtToken,ctrlDoc.checkExpiration1);
 //to manual  archive doc
 router.get('/toArc/:id',jwtHelper.verifyJwtToken,ctrlDoc.toArchived);
 //to manual restore archive doc
@@ -91,8 +90,9 @@ router.get('/getCountDocs',jwtHelper.verifyJwtToken,ctrlDoc.getCountDocs);
 //to pass count of archive documents schema
 router.get('/getArcCountDocs',jwtHelper.verifyJwtToken,ctrlDoc.getArcCountDocs );
 //to delete an archived file
-router.delete('/delArcFile/:id',jwtHelper.verifyJwtToken,ctrlDoc.delArcDoc);
-
+router.get('/delArcFile/:id',jwtHelper.verifyJwtToken,ctrlDoc.delArcDoc);
+//to update existing doc/file
+router.put('/updateFile/:path',jwtHelper.verifyJwtToken,ctrlWorkflow.updateFile);
 
 //to rename file via doc list 
 router.put('/renameFile',jwtHelper.verifyJwtToken,ctrlDoc.renameFile);
@@ -316,39 +316,39 @@ router.get('/getCatsForSearch/:id',jwtHelper.verifyJwtToken,ctrlCat.getCategorie
 //to pass today aded users
 router.get('/getTodayUsers',jwtHelper.verifyJwtToken,ctrlAudit.getUsersToday);
 //to pass today aded users count
-router.get('/getUsersTodayCount',ctrlAudit.getUsersTodayCount);
+router.get('/getUsersTodayCount',jwtHelper.verifyJwtToken,ctrlAudit.getUsersTodayCount);
 //to pass today archived users
-router.get('/getTodayArcUsers',ctrlAudit.getArcUsersToday);
+router.get('/getTodayArcUsers',jwtHelper.verifyJwtToken,ctrlAudit.getArcUsersToday);
 //to pass today archived users count
-router.get('/getArcUsersTodayCount',ctrlAudit.getArcUsersTodayCount);
+router.get('/getArcUsersTodayCount',jwtHelper.verifyJwtToken,ctrlAudit.getArcUsersTodayCount);
 //to pass today created  docs
-router.get('/getDocsToday',ctrlAudit.getDocsToday);
+router.get('/getDocsToday',jwtHelper.verifyJwtToken,ctrlAudit.getDocsToday);
 //to pass today created  docs count
-router.get('/getDocsTodayCount',ctrlAudit.getDocsTodayCount);
+router.get('/getDocsTodayCount',jwtHelper.verifyJwtToken,ctrlAudit.getDocsTodayCount);
 //to pass today archived docs
-router.get('/getArcDocsToday',ctrlAudit.getArcDocsToday);
+router.get('/getArcDocsToday',jwtHelper.verifyJwtToken,ctrlAudit.getArcDocsToday);
 //to pass today manual archived docs count
-router.get('/getArcDocsTodayCount',ctrlAudit.getArcDocsTodayCount);
+router.get('/getArcDocsTodayCount',jwtHelper.verifyJwtToken,ctrlAudit.getArcDocsTodayCount);
 //to pass today automatic archived docs
-router.get('/getArcDocsTodayAuto',ctrlAudit.getArcDocsTodayAuto);
+router.get('/getArcDocsTodayAuto',jwtHelper.verifyJwtToken,ctrlAudit.getArcDocsTodayAuto);
 //to pass today automatic archived docs count
-router.get('/getArcDocsTodayAutoCount',ctrlAudit.getArcDocsTodayAutoCount);
+router.get('/getArcDocsTodayAutoCount',jwtHelper.verifyJwtToken,ctrlAudit.getArcDocsTodayAutoCount);
 //to pass today assaigned documents
-router.get('/getAssaignedDocsToday',ctrlAudit.getAssaignedDocsToday);
+router.get('/getAssaignedDocsToday',jwtHelper.verifyJwtToken,ctrlAudit.getAssaignedDocsToday);
 //to pass today assaigned documents count
-router.get('/getAssaignedDocsTodayCount',ctrlAudit.getAssaignedDocsTodayCount);
+router.get('/getAssaignedDocsTodayCount',jwtHelper.verifyJwtToken,ctrlAudit.getAssaignedDocsTodayCount);
 //to pass today workflowed documents
-router.get('/getWorkflowedDocsToday',ctrlAudit.getWorkflowedDocsToday);
+router.get('/getWorkflowedDocsToday',jwtHelper.verifyJwtToken,ctrlAudit.getWorkflowedDocsToday);
 //to pass today workflowed documents count
-router.get('/getWorkflowedDocsTodayCount',ctrlAudit.getWorkflowedDocsTodayCount);
+router.get('/getWorkflowedDocsTodayCount',jwtHelper.verifyJwtToken,ctrlAudit.getWorkflowedDocsTodayCount);
 //to pass today approved documents
-router.get('/getApprovedDocsToday',ctrlAudit.getApprovedDocsToday);
+router.get('/getApprovedDocsToday',jwtHelper.verifyJwtToken,ctrlAudit.getApprovedDocsToday);
 //to pass today approved documents count
-router.get('/getApprovedDocsTodayCount',ctrlAudit.getApprovedDocsTodayCount);
+router.get('/getApprovedDocsTodayCount',jwtHelper.verifyJwtToken,ctrlAudit.getApprovedDocsTodayCount);
 //to pass today ended workflow data
-router.get('/getWorkflowedDocsTodayEnd',ctrlAudit.getWorkflowedEndDocsToday);
+router.get('/getWorkflowedDocsTodayEnd',jwtHelper.verifyJwtToken,ctrlAudit.getWorkflowedEndDocsToday);
 //to pass today ended workflow data count
-router.get('/getWorkflowedDocsEndTodayCount',ctrlAudit.getWorkflowedEndDocsTodayCount);
+router.get('/getWorkflowedDocsEndTodayCount',jwtHelper.verifyJwtToken,ctrlAudit.getWorkflowedEndDocsTodayCount);
 module.exports = router;
 
 

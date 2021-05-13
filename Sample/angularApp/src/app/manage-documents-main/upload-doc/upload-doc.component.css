@@ -28,19 +28,19 @@ div.r{
 }
 
 .centera {
-  border: 5px solid white;
+  border: 5px solid transparent;
   display: flex;
   justify-content: center;
   }
 
   .center1 {
-    border: 5px solid white;
+    border: 5px solid transparent;
     display: flex;
     justify-content: center;
     }
 
-    .centerb {
-     
-      display: flex;
-      justify-content: center;
-      }
+ .centerb {
+  border:transparent;
+  display: flex;
+ justify-content: center;
+}

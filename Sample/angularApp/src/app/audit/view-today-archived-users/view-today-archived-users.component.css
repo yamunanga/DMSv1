@@ -1,5 +1,5 @@
 .center {
-    border: 5px solid white;
+    border: 5px solid transparent;
     display: flex;
     justify-content: center;
     }

@@ -1,4 +1,6 @@
 <br>
+<div class="container-fluid border">
+<br>
     <div *ngIf="this.countDocs == 0">
         <h5 style="text-align: center;">Empty List!</h5>
     </div>
@@ -8,7 +10,7 @@
       </div>
     </div>
       <br>
-      <div style="text-align: center;">
+      <div style="text-align: center;" *ngIf="this.countDocs != 0">
       <div ngbDropdown class="d-inline-block" >
         <button class="btn btn-outline-primary" id="dropdownBasic1" ngbDropdownToggle (click)="getDepList()">{{depName}}</button>
         <div ngbDropdownMenu aria-labelledby="dropdownBasic1" style="max-height:150px;overflow-y: auto;" >
@@ -66,6 +68,7 @@
                <!-- <th>Tags</th>-->
                 <th *ngIf="notPrint == true">File</th>
                 <th>CreatedAt</th>
+                <th>ExpireAt</th>
                 <th *ngIf="notPrint == true">Options</th>
               </tr>
             </thead>
@@ -82,10 +85,12 @@
                 <button type="button" class="btn btn-outline-info"  *ngIf="doc.isLock===null"><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
               </td>
               <td>{{userService.getDate(doc.createdAt)}}</td>
+              <td>{{doc.expDate}}</td>
               <td *ngIf="notPrint == true">
-                <button type="button" class="btn btn-outline-info" (click)="toArc(doc._id)" *ngIf="this.role==='admin'" data-toggle="tooltip" data-placement="top" title="Archive"><i class="fa fa-archive" aria-hidden="true"></i></button>
+                <button type="button" class="btn btn-outline-info" (click)="toArc(doc._id)" *ngIf="this.role==='admin' && doc.isLock !=true" data-toggle="tooltip" data-placement="top" title="Archive"><i class="fa fa-archive" aria-hidden="true"></i></button>
                 <button type="button" class="btn btn-outline-danger" (click)="onDel(doc._id)" *ngIf="doc.isLock !=true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin')"><i class="fa fa-trash" aria-hidden="true"></i></button>
-                <app-model-unlock (click)="passFileId(doc._id) " *ngIf="doc.isLock===true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin' ) " ></app-model-unlock>
+                <app-rename-model (click)="toRename(doc._id,doc.catPath)" *ngIf="doc.isLock !=true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin')"></app-rename-model>
+                <app-model-unlock  (click)="passFileId(doc._id) " *ngIf="doc.isLock===true && (doc.createdBy===this.userService.userDetails._id || this.role==='admin' ) " ></app-model-unlock>
                 <app-model-set-pass (click)="passFileId(doc._id)" *ngIf="doc.isLock===null && (doc.createdBy===this.userService.userDetails._id || this.role==='admin') " ></app-model-set-pass>
               </td>
             </tr>
@@ -96,3 +101,7 @@
         <ngb-pagination [(page)]="page"  [collectionSize]="documentService.allDocs.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
       </div>
     </div>
+
+<br>
+</div>
+<br>

@@ -1,0 +1,43 @@
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport 
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar color="primary" ><i class="fa fa-bars" aria-hidden="true"></i>&nbsp;Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/home/userprofile/view"  routerLinkActive="active"  *ngIf="this.role=='admin' || this.role=='author' || this.role == 'reader' "><i class="fa fa-user" aria-hidden="false"></i>&nbsp;PROFILE</a>
+      <a mat-list-item routerLink="/home/messagebox/inbox" *ngIf="this.role=='admin' || this.role=='author' || this.role == 'reader' "><i class="fa fa-envelope" aria-hidden="true"></i>&nbsp;MESSAGE BOX</a>
+      <a mat-list-item routerLink="/home/org/dep" *ngIf="this.role=='admin'"><i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;ORGANIZATION</a>
+      <a mat-list-item routerLink="/home/manageusers/viewusers" *ngIf="this.role=='admin'"><i class="fa fa-users" aria-hidden="true"></i>&nbsp;USERS</a>
+      <a mat-list-item routerLink="/home/managedocs/viewdocs" *ngIf="this.role=='admin' || this.role=='author' || this.role == 'reader' "><i class="fa fa-file" aria-hidden="true"></i>&nbsp;DOCUMENTS</a>
+      <a mat-list-item routerLink="/home/audit" *ngIf="this.role=='admin'"><i class="fa fa-check-square" aria-hidden="true"></i>&nbsp;AUDIT</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button 
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span >DMSv1.0</span>
+        <div class="subButton">
+          <a routerLink="/home/messagebox/inbox" class="notification" >
+            <span><i class="fa fa-envelope" aria-hidden="true"></i></span>
+            <span class="badge" *ngIf="this.messageService.countNewMsg !=0">{{this.messageService.countNewMsg}}</span>
+          </a>
+         &nbsp;
+         <a (click)="onLogout()" class="notification" >
+          <span><i class="fa fa-power-off" aria-hidden="true"></i></span>
+        </a>
+      <!--  <button type="button" class="btn btn-outline-info" (click)="onLogout()" ><i class="fa fa-power-off" aria-hidden="true"></i></button>-->
+        </div>
+    </mat-toolbar>
+    <!-- Add Content Here -->
+  <ng-content></ng-content>
+  </mat-sidenav-content>
+</mat-sidenav-container>

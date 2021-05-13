@@ -16,12 +16,21 @@ export class ManageDocumentsMainComponent implements OnInit {
   tOfViewCategoryAndSub=false;//to view manage category 
   tOfViewSubOnly=false;//to view  sub category only
 */
-
+  dirName="View Documents";
   constructor(public catService:CategoryService,private userService: UserService,public manageDocMainService:ManageDocMainService) { }
   role:string;//data come from local storage
   ngOnInit(): void {
    this.getRole();
+   this.dirName="View Documents";
   }
+//pass name dir
+passNameDir(name){
+  this.dirName=name;
+  return this.dirName;
+}
+
+
+
 
 //to get user role
 getRole(){

@@ -68,7 +68,7 @@ onSubmitn(form: NgForm) {
 }
 //using
 onSubmit(form: NgForm){
-  if(this.documentService.toPassDocId===''  && this.workflow.passWorkflowId==='' && this.manageApprovment.toPassDocIdApr==='' && this.tempDocService.passFileId !=''){
+  if(this.documentService.toPassDocId==='empty'  && this.workflow.passWorkflowId==='empty' && this.manageApprovment.toPassDocIdApr==='empty' && this.tempDocService.passFileId !='empty'){
     var dataModel={
       pass:this.exPass
     }
@@ -80,11 +80,12 @@ onSubmit(form: NgForm){
         this.refreshWorkflowDataProcess();
         this.refreshOldWorkflowDataProcess();
         this.resetForm(form);
+        this.resetVariable();
        },err => {
         this.serverErrorMessages =err.error;  
       },
     )
-  }else if(this.tempDocService.passFileId==='' && this.workflow.passWorkflowId==='' && this.manageApprovment.toPassDocIdApr==='' && this.documentService.toPassDocId !=''){
+  }else if(this.tempDocService.passFileId==='empty' && this.workflow.passWorkflowId==='empty' && this.manageApprovment.toPassDocIdApr==='empty' && this.documentService.toPassDocId !='empty'){
     var dataModel={
       pass:this.exPass
     }
@@ -96,11 +97,12 @@ onSubmit(form: NgForm){
         this.refreshDocumentList();
         this.refreshOldWorkflowDataProcess();
         this.resetForm(form);
+        this.resetVariable();
        },err => {
         this.serverErrorMessages =err.error;  
       },
     )
-  }else if(this.documentService.toPassDocId==='' && this.tempDocService.passFileId==='' && this.manageApprovment.toPassDocIdApr==='' &&this.workflow.passWorkflowId !=''){
+  }else if(this.documentService.toPassDocId==='empty' && this.tempDocService.passFileId==='empty' && this.manageApprovment.toPassDocIdApr==='empty' &&this.workflow.passWorkflowId !='empty'){
     var dataModel={
       pass:this.exPass
     }
@@ -112,12 +114,12 @@ onSubmit(form: NgForm){
         this.refreshWorkflowData();
         this.refreshOldWorkflowDataProcess();
         this.resetForm(form);
-        
+        this.resetVariable();
        },err => {
         this.serverErrorMessages =err.error;  
       },
     )
-  }else if(this.documentService.toPassDocId==='' && this.tempDocService.passFileId==='' && this.workflow.passWorkflowId==='' && this.manageApprovment.toPassDocIdApr !=''){
+  }else if(this.documentService.toPassDocId==='empty' && this.tempDocService.passFileId==='empty' && this.workflow.passWorkflowId==='empty' && this.manageApprovment.toPassDocIdApr !='empty'){
     var dataModel={
       pass:this.exPass
     }
@@ -127,7 +129,7 @@ onSubmit(form: NgForm){
         setTimeout(() => this.showSucessMessage = false, 4000);
         this.refreshNeedApprovementList();
         this.resetForm(form);
-        
+        this.resetVariable();
        },err => {
         this.serverErrorMessages =err.error;  
       },
@@ -146,10 +148,10 @@ resetValues(){
 }
 
 resetVariable(){
-  this.documentService.toPassDocId='';
-  this.tempDocService.passFileId='';
-  this.workflow.passWorkflowId='';
-  this.manageApprovment.toPassDocIdApr='';
+  this.documentService.toPassDocId='empty';
+  this.tempDocService.passFileId='empty';
+  this.workflow.passWorkflowId='empty';
+  this.manageApprovment.toPassDocIdApr='empty';
 }
 
 //to get temp documents

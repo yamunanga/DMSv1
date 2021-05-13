@@ -1,10 +1,13 @@
 <!--<app-register></app-register>-->
 <!--<app-sign-in></app-sign-in>-->
 <!--<router-outlet></router-outlet>-->
+<!-- [routerLink]="['/noAuth',{outlets:{'no':['login']}}]"-->
 <div class="wrapper">
     <div id="formContent">
-     <h2 class="underlineHover"  routerLink="/login"  routerLinkActive="active"> Sign In </h2>
-    <h2 class="underlineHover"  routerLink="/forgetPassword"  routerLinkActive="false">Forget </h2>
-    <router-outlet></router-outlet>
+     <h2 class="underlineHover"   routerLink="/noAuth/login"  routerLinkActive="active" (click)="toOpenLog()"> Sign In </h2>
+    <h2 class="underlineHover"    routerLink="/noAuth/forget"    routerLinkActive="false" (click)="forgetViewOpen()">Forget </h2>
+          <!--<app-sign-in *ngIf="this.logView==true"></app-sign-in>
+          <app-forget-password  *ngIf="this.forgetView==true"></app-forget-password>-->
+          <router-outlet></router-outlet>
     </div>
   </div>

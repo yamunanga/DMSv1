@@ -1,0 +1,67 @@
+//To send Token VIA Mailgun
+           const Emailtoken=jwt.sign({fullName,email,password,role,department,position},process.env.JWT_ACC_ACTIVATE,{expiresIn:'10m'});
+           //Mailgun Property
+           const data = {
+            from: 'noReply@hello.com',
+            to:req.body.email,
+            subject: 'ACCOUNT ACTIVATION LINK',
+            html:
+            `
+            <h2>Please Activate Your Account</h2>
+            </br>
+            <h3>To Activate your acount please go to this link!</h3>
+            </br>
+            <h4> ${process.env.CLIENT_URL}/activateAccount/${Emailtoken}</h4>
+            </br>
+            <h3>Thank You!</h4>
+            `
+        };
+        mg.messages().send(data, function (error, body) {
+            //eror handling not don properly----------!!!!!
+            if(error){
+               /*return res.json({
+                    //eror:err.message
+                    message:'Email Server Failure !'
+                })*/
+                res.status(503).send(['Email Server Eror']);
+            }else{
+            res.status(200).send(['Email has been sent,Kindly activate your account']);
+           // return res.json({message:'Email has been sent,Kindly activate your account'})
+            }
+        });
+
+
+
+
+
+
+//to reset password
+ const data = {
+        from: 'noReply@hello.com',
+        to:email,
+        subject: 'RESET PASSWORD LINK',
+        html:
+        `
+        <h2>Please Reset Your Password</h2>
+        </br>
+        <h3>To Reset your acount password please go to this link!</h3>
+        </br>
+        <h4> ${process.env.CLIENT_URL}/resetPassword/${forgetPasstoken}</h4>
+        </br>
+        <h3>Thank You!</h4>
+        `
+    };
+
+mg.messages().send(data, function (error, body) {
+            //eror handling not don properly----------!!!!!
+            if(error){
+               /*return res.json({
+                    //eror:err.message
+                    message:'Email Server Failure !'
+                })*/
+                res.status(503).send(['Email Server Eror']);
+            }else{
+            res.status(200).send(['Email has been sent,Kindly follow instructions']);
+           // return res.json({message:'Email has been sent,Kindly activate your account'})
+            }
+        });

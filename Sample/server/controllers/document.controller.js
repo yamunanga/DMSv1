@@ -7,6 +7,7 @@ const date = require('date-and-time');
 var config = require('../config/config.json');
 const fs = require('fs-extra')
 const { encrypt, decrypt } = require('../config/crypto');
+const upath = require('upath');
 //Multer configuration
 const multer = require('multer');
 var storage1 = multer.diskStorage({
@@ -112,6 +113,7 @@ module.exports.postDocWithFile=(req,res,next)=>{
      })
 }
 
+
 //to rename doc/file with document view list
 
 module.exports.renameFile=(req,res,next)=>{
@@ -126,41 +128,32 @@ module.exports.renameFile=(req,res,next)=>{
               if(conFileName[0]==req.body.name){
                 return res.status(422).send(['File name already use !']);
               }else{
-                var myJSON = JSON.stringify(file.file);
-                var str=myJSON.split('\\');
-                var nStr=str[str.length-1].split('"');
-                var multerDate=nStr[0].split('-');
-                var str=file.catPath.split('/');
-                  var mC=str[3];
-                  var dep=str[2];
-                  var arr = new Array
-                  for(var x=2;x<str.length;x++){
-                    if(str[x] !=''){
-                      arr.push(str[x]);
+                var toUnix= upath.toUnix(file.file)
+                var unixStr=toUnix.split('/');
+                var arr = new Array
+                  for(var x=0;x<unixStr.length-1;x++){
+                    if(unixStr[x] !=''){
+                      arr.push(unixStr[x]);
                     }
                   }
                 //Over
                   //new filename+type
                   var newName=req.body.name+'.'+file.type;
-                  var oldpath=file.catPath+multerDate[0]+'-'+file.name;
-                  var newpath=file.catPath+multerDate[0]+'-'+req.body.name+'.'+file.type;
+                  var oldpath=file.catPath+file.name;
+                  var newpath=file.catPath+req.body.name+'.'+file.type;
                   //var toDbPath=config.development.TO_DB_TO_UP_LOCATION+file.department+'\\'+file.category+'\\'+multerDate[0]+'-'+name+'.'+file.type;
                   
-                  var toDbPath=config.development.TO_DB_TO_UP_LOCATION+dbPath(arr)+multerDate[0]+'-'+req.body.name+'.'+file.type;
-                  console.log(toDbPath);
-                  fs.rename(oldpath.toString(),newpath.toString(), function (err) {
-                    if (err){
-                      return res.status(422).send(['Cannot rename !']);
+                  var toDbPath=dbPath(arr)+req.body.name+'.'+file.type;
+                  //console.log(toDbPath);
+                  Document.findOneAndUpdate({_id:req.body._id},{name:newName,file:toDbPath},function(err,doc){
+                    if(err){
+                      return res.status(422).send(['Eror from DB!']);
+                    }else{
+                      fs.renameSync(oldpath,newpath);
+                      return res.status(200).send(['File name has been changed !']);
                     }
-                    Document.findOneAndUpdate({_id:req.body._id},{name:newName,file:toDbPath},function(err,doc){
-                      if(err){
-                        return res.status(422).send(['Eror from DB!']);
-                      }else{
-                        return res.status(200).send(['File name has been changed !']);
-                      }
-            
-                   })
-                  });
+          
+                 })
               }
          
     
@@ -176,19 +169,22 @@ module.exports.renameFile=(req,res,next)=>{
   }
 );
 }
-
+/*
+fs.rename(oldpath.toString(),newpath.toString(), function (err) {
+                    if (err){
+                      return res.status(422).send(['Cannot rename !']);
+                    }
+                   
+                  });
+*/
 //to delete document/file from list
 module.exports.deleteFile=(req,res,next)=>{
   Document.findOne({ _id:req.params.id },(err,file)=>{
       if(err || !file){
           return res.status(404).send(['File Does Not Exist !']);
      }else{
-          var myJSON = JSON.stringify(file.file);
-          var str=myJSON.split('\\');
-          var nStr=str[str.length-1].split('"');
-          var multerDate=nStr[0].split('-');
-          var myPath=file.catPath+'/'+multerDate[0]+'-'+file.name;
-          fs.unlink(myPath, (err) => {
+          var myPath=file.catPath+file.name;
+          fs.remove(myPath, (err) => {
             if (err) {
               return res.status(404).send(['File Not found in Local Storage !']);
             }
@@ -302,10 +298,10 @@ module.exports.checkExpiration=(req,res,next)=>{
 module.exports.checkExpiration1=(req,res,next)=>{
   const now = new Date();
   var current= date.format(now, 'YYYY-M-D');
-  console.log(current.toString());
+  //console.log(current.toString());
   var errArr=[];
   var resArr=[];
-  Document.find({expDate:current.toString()}, 
+  Document.find({expDate:current.toString(),isLock:null}, 
     (err,files)=>{
         if (!files){
             return res.status(404).send( 'Can not find !' );
@@ -318,11 +314,7 @@ module.exports.checkExpiration1=(req,res,next)=>{
                       return res.status(404).send('not found');
                   }else{
                     //for get file now path
-                    var myJSON = JSON.stringify(file.file);
-                    var str=myJSON.split('\\');
-                    var nStr=str[str.length-1].split('"');
-                    var multerDate=nStr[0].split('-');
-                    var nowPath=file.catPath+multerDate[0]+'-'+file.name;
+                    var nowPath=file.catPath+file.name;
                     //over
                     var arr=new Array;
                     var str=file.catPath.split('/');
@@ -333,7 +325,9 @@ module.exports.checkExpiration1=(req,res,next)=>{
                     }
                     var path=config.development.ARC_PATH+arPath(arr);
                     fs.mkdirsSync(path);
-                    var desPath=config.development.ARC_PATH+arPath(arr)+multerDate[0]+'-'+file.name
+                    var desPath=config.development.ARC_PATH+arPath(arr)+file.name
+                   // console.log(nowPath);
+                   // console.log(desPath);
                     fs.move(nowPath,desPath, err => {
                       if (err){
                         return res.status(422).send('fs eror !');
@@ -398,12 +392,7 @@ module.exports.fromArcDoc=(req,res,next)=>{
           if (!file){
               return res.status(404).send( ['Can not find !']);
           }else{
-            //for get file destination path
-            var myJSON = JSON.stringify(file.file);
-            var str=myJSON.split('\\');
-            var nStr=str[str.length-1].split('"');
-            var multerDate=nStr[0].split('-');
-            var desPath=file.catPath+multerDate[0]+'-'+file.name;
+            var desPath=file.catPath+file.name;
             //over
             fs.move(file.arcPath,desPath, err => {
               if (err){
@@ -442,11 +431,8 @@ module.exports.toArchived=(req,res,next)=>{
               return res.status(404).send( 'Can not find !' );
           }else{
             //for get file now path
-            var myJSON = JSON.stringify(file.file);
-            var str=myJSON.split('\\');
-            var nStr=str[str.length-1].split('"');
-            var multerDate=nStr[0].split('-');
-            var nowPath=file.catPath+multerDate[0]+'-'+file.name;
+
+            var nowPath=file.catPath+file.name;
             //over
             var arr=new Array;
             var str=file.catPath.split('/');
@@ -457,7 +443,7 @@ module.exports.toArchived=(req,res,next)=>{
             }
             var path=config.development.ARC_PATH+arPath(arr);
             fs.mkdirsSync(path);
-            var desPath=config.development.ARC_PATH+arPath(arr)+multerDate[0]+'-'+file.name
+            var desPath=config.development.ARC_PATH+arPath(arr)+file.name
             fs.move(nowPath,desPath, err => {
               if (err){
                 return res.status(422).send('fs eror !');
@@ -512,13 +498,13 @@ module.exports.tM = (req, res, next) =>{
   var arr=new Array;
   var catPath='./uploads/finance/paysheet2/';
   var str=catPath.split('/');
-  console.log(str);
+  //console.log(str);
   for(var x=2;x<str.length;x++){
     if(str[x] !=''){
       arr.push(str[x]);
     }
   }
- console.log(arr);
+ //console.log(arr);
  var path=config.development.ARC_PATH+arPath(arr);
  fs.mkdirsSync(path);
  console.log(path);
@@ -573,28 +559,104 @@ module.exports.getArcCountDocs = (req, res, next) =>{
   );
 }
 
-//to delete archive doc 
+//to delete archive doc notwork
+module.exports.delArcDoc1= (req, res, next) =>{
+  arcDocument.findOneAndRemove({_id:req.params.id},
+      function (err,file) {
+          if (!file)
+              return res.status(404).send('not found');
+          else{
+            var myJSON = JSON.stringify(file.file);
+            var str=myJSON.split('\\');
+            //console.log(str);
+            var nStr=str[str.length-1].split('"');
+            //console.log(nStr[0]);
+            var multerDate=nStr[0].split('-');
+            if(file.subCategory ==null){
+              var opath=config.development.ARC_PATH+file.department+'/'+file.category+'/'+multerDate[0]+'-'+file.name;
+              //console.log(opath);
+              //fs.removeSync(opath);
+              fs.unlink(opath, (err) => {
+                if (err) {
+                  return res.status(404).send(['File can not delete !']);
+                }
+                 //file removed
+                 Document.findOneAndRemove({_id:file.docId},
+                  function (err,rfile) {
+                      if (!rfile)
+                          return res.status(404).send(['not found']);
+                      else{
+                         return res.status(200).send(['File Deleted !']);
+                        
+                       }
+                  }
+              );
+             })
+        
+            }else{
+              var opath=config.development.ARC_PATH+file.department+'/'+file.category+'/'+file.subCategory+'/'+multerDate[0]+'-'+file.name;
+              //console.log(opath);
+              //fs.removeSync(opath);
+              fs.unlink(opath, (err) => {
+                if (err) {
+                  return res.status(404).send(['File can  not delete !']);
+                }
+                 //file removed
+                 Document.findOneAndRemove({_id:file.docId},
+                  function (err,rfile) {
+                      if (!rfile)
+                          return res.status(404).send(['not found']);
+                      else{
+                         return res.status(200).send(['File Deleted !']);
+                        
+                       }
+                  }
+              );
+             })
+             }
+           }
+      }
+  );
+}
+
+
+
 module.exports.delArcDoc = (req, res, next) =>{
   arcDocument.findOneAndRemove({_id:req.params.id},
       function (err,file) {
           if (!file)
               return res.status(404).send('not found');
           else{
-            //return res.status(200).send('File Deleted !');
-            Document.findOneAndRemove({_id:file.docId},
-              function (err,rfile) {
-                  if (!rfile)
-                      return res.status(404).send('not found');
-                  else{
-                     return res.status(200).send('File Deleted !');
-                    
-                   }
+            fs.remove(file.arcPath, (err) => {
+              if (err) {
+                return res.status(404).send(['File can not delete Or Unlock Before Delete !']);
               }
-          );
+               //file removed
+               return res.status(200).send(['File  delete Deleteted!']);
+              
+            })
+
            }
       }
   );
 }
+
+
+
+/*
+  //return res.status(200).send('File Deleted !');
+           
+
+*/
+
+
+
+
+
+
+
+
+
 
 //to unlock document
 module.exports.unlockDoc = (req, res, next) =>{

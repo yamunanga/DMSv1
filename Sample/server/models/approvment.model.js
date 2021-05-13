@@ -10,14 +10,14 @@ var approvmentSchema = new mongoose.Schema({
     file:{
         type:String,
        // default:[],
-        required:true
+        default:null
     },
     size:{type:String,default:''},
     needApproveBy:{
         type:Array,
         default:[]
     },
-    catPath:{type:String,required:true},
+    catPath:{type:String,default:null},
     category:{type:String,required:true},
     subCategory:{type:Array,default:null},
     department:{type:String,default:''},

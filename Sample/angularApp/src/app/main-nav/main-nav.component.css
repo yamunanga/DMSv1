@@ -1,0 +1,56 @@
+.sidenav-container {
+  height: 100%;
+}
+
+.sidenav{
+  width:200px;
+}
+/*
+.sidenav .mat-toolbar {
+  background: inherit;
+}
+*/
+.mat-toolbar.mat-primary {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+.sub{
+  /*float: left;*/
+ 
+  transition: margin-left .5s;
+  background-color: #f1f1f1;
+  padding: 8px 8px 8px 32px;
+  
+}
+.subButton{
+  position: absolute;
+  right: 10px;
+  float: right;
+  padding: 5px;
+}
+.notification {
+  background-color:transparent;
+  color:white;
+  text-decoration: none;
+  padding: 4px 12px;
+  position: relative;
+  display: inline-block;
+  border-radius: 5px;
+  border:1px solid white;
+}
+
+.notification:hover {
+  background:white;
+  color:black;
+}
+
+.notification .badge {
+  position: absolute;
+  top: -10px;
+  right: -10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+  background: red;
+  color: white;
+}

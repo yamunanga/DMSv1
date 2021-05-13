@@ -1,9 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ToastrService } from 'ngx-toastr';
 import { NEEDAPPROVEDOCS } from 'src/app/shared/approvementData.model';
+import { DocumentService } from 'src/app/shared/document.service';
 import { ManageApprovementServiceService } from 'src/app/shared/manage-approvement-service.service';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
+import { TempDocService } from 'src/app/shared/temp-doc.service';
 import { UserService } from 'src/app/shared/user.service';
+import { WorkflowService } from 'src/app/shared/workflow.service';
 import { environment } from 'src/environments/environment.prod';
 
 @Component({
@@ -21,7 +24,7 @@ export class ManageApprovementComponent implements OnInit {
    notPrint=true;
    resetBackVici=false;
    printReadyOk=false;
-  constructor(public manageApprovment:ManageApprovementServiceService,public userService: UserService,private toastr: ToastrService) { }
+  constructor(public tempDocService:TempDocService,public documentService:DocumentService,public workflow:WorkflowService,public manageApprovment:ManageApprovementServiceService,public userService: UserService,private toastr: ToastrService) { }
   ngOnInit(): void {
     this.refreshNeedApprovementList();
     this.getUserdetailes();
@@ -30,6 +33,13 @@ export class ManageApprovementComponent implements OnInit {
     this.notPrint=true;
     this.resetBackVici=false;
     this.printReadyOk=false;
+    this.resetVariable();
+  }
+  resetVariable(){
+    this.documentService.toPassDocId='empty';
+    this.tempDocService.passFileId='empty';
+    this.workflow.passWorkflowId='empty';
+    //this.manageApprovment.toPassDocIdApr='empty';
   }
 //this is for print ready
 printReady(){

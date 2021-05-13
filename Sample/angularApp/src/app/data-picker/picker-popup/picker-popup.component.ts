@@ -105,7 +105,7 @@ setExpDate(){
      },
    );
 
-  }else if(this.datePickerService.pickerModel.year === this.model.year && this.datePickerService.pickerModel.month >= this.model.month && this.datePickerService.pickerModel.day >= this.model.day){
+  }else if(this.datePickerService.pickerModel.year === this.model.year && this.datePickerService.pickerModel.month >= this.model.month && this.datePickerService.pickerModel.day > this.model.day){
     this.date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString();
     var setDateData={
       id:this.tempDocService.passFileId,

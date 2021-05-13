@@ -11,6 +11,7 @@ import { RESETPASS } from './resetPassword.model';
 import { OTHERUSERS } from './otherUsers.model';
 import { OtherUserRole } from './otherUserRole.model';
 import { ARCHIVEDUSERS } from './archivedUsers.model';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -37,6 +38,8 @@ export class UserService {
    userStatus={
     status:'',
    }
+   //this is for navigation
+   private  userActive: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
    //This is for other user role update via user list
    userData:OtherUserRole={
      _id:'',
@@ -73,7 +76,7 @@ export class UserService {
   noAuthHeader = { headers: new HttpHeaders({ 'NoAuth': 'True' }) };
   localTimeService: string;
   otherUserCount=0;//to get count of users
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {}
 
   postUser(user: User){
     return this.http.post(environment.apiBaseUrl+'/reguser',user);//if you want to use no auth (,this.noAuthHeader)
@@ -142,7 +145,7 @@ export class UserService {
   } 
  //To view user profile for other Users
  viewOtherUserProfile(data){
-  return this.http.put(environment.apiBaseUrl+'/findUserProfile',data);
+  return this.http.post(environment.apiBaseUrl+'/findUserProfile',data);
 } 
 
 //To change other user department
@@ -244,7 +247,18 @@ getAllArchivedUsersCout() {
     else
       return false;
   }
-
+//for navigation
+checkUser(){
+  var userPayload = this.getUserPayload();
+  if(userPayload){
+    this.userActive.next(true);
+  }else{
+    this.userActive.next(false);
+  }
+}
+get isLoged() {
+  return this.userActive.asObservable();
+}
   //To get current time
   toCurrentTime(){
     var date = moment.utc().format('YYYY-MM-DD HH:mm:ss');

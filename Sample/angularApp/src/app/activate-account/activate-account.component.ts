@@ -42,7 +42,7 @@ export class ActivateAccountComponent implements OnInit {
     );
   }
   toLogin(){
-    this.router.navigateByUrl('/login');
+    this.router.navigateByUrl('/noAuth/login');
   }
   /*resetForm(form: NgForm) {
     this.userService.activationToken= {

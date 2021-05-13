@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ToastrService } from 'ngx-toastr';
 import { ARCDOCUMENTS } from 'src/app/models/archiveDoc.model';
 import { DocumentService } from 'src/app/shared/document.service';
 import { OTHERUSERS } from 'src/app/shared/otherUsers.model';
@@ -11,14 +12,14 @@ import { environment } from 'src/environments/environment.prod';
   styleUrls: ['./archived-docs.component.css']
 })
 export class ArchivedDocsComponent implements OnInit {
-   countArc;
+  serverErrorMessages='';
    public page=1
    public pageSize=10;
    //for print
    notPrint=true;
    resetBackVici=false;
    printReadyOk=false;
-  constructor(public documentService:DocumentService,public userService: UserService) { }
+  constructor(public documentService:DocumentService,public userService: UserService,private toastr: ToastrService) { }
  
   ngOnInit(): void {
     this.refreshArcDocList();
@@ -46,10 +47,10 @@ resetBack(){
       this.documentService.arcDocs = res as ARCDOCUMENTS[];
     });
     this.documentService.getCountArcDocs().subscribe((res) => {
-      this.countArc= res[0];
+      this.documentService.countArc= res[0];
     },err => {
       if (err.status === 404) {
-        this.countArc=0;
+        this.documentService.countArc=0;
       }
     }
     );
@@ -86,7 +87,23 @@ getOtherUserdetailesById(id){
   )
 }
 
-
+//to delete an file from  arc documents
+onDel(_id){
+  if (confirm('Are you sure to delete this record ?') == true) {
+  this.documentService.delArcDoc(_id).subscribe(
+    res => {
+      this.toastr.success('Deleted Successful');
+      this.refreshArcDocList();
+      
+    },
+    err => {
+      this.serverErrorMessages= err.error;
+      this.toastr.error( this.serverErrorMessages);
+      
+    },
+  );
+ }
+}
 
 
 

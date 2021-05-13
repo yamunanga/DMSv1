@@ -1,4 +1,6 @@
 <br>
+<div class="container-fluid border">
+<br>
 <h5 style="text-align: center;"  *ngIf="cTodayAssaignedDocs ==0">Empty List!</h5>
 <div class="centertb" *ngIf="cTodayAssaignedDocs !=0">
     <div style="text-align: center">
@@ -24,6 +26,7 @@
             <th>CreatedBy</th>
             <th *ngIf="notPrint == true">File</th>
             <th>CreatedAt</th>
+            <th>NeedApproveBy</th>
           </tr>
         </thead>
         <tr *ngFor="let doc of this.audit.allAssaignDocs  | slice: (page-1) * pageSize : page * pageSize;index as i">
@@ -40,6 +43,7 @@
             <button type="button" class="btn btn-outline-info" *ngIf="doc.isLock===null" ><a href="{{getLink(doc.file)}}"  target="_blank">View</a></button>
           </td>
           <td>{{userService.getDate(doc.createdAt)}}</td>
+          <td>{{doc.needApproveBy}}</td>
         </tr>
       </table>
       </div>
@@ -48,3 +52,7 @@
         <ngb-pagination [(page)]="page"  [collectionSize]="audit.allAssaignDocs.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
     </div>
 </div>
+
+<br>
+</div>
+<br>

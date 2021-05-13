@@ -2,18 +2,19 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <br>
-<div class="container-fluid border">
+<div class="container-fluid">
     <br>
     <div class="btn-group">
-        <button type="button" class="btn btn-primary" (click)="addUserOpen()" >ADD</button>
-        <button type="button" class="btn btn-primary" (click)="viewUsersOpen()">VIEW</button>
-        <button type="button" class="btn btn-primary" (click)="viewArcUsersOpen()">ARCHIVED</button>
+        <button type="button" class="btn btn-primary" routerLink="/home/manageusers/register"  routerLinkActive="active" (click)="addUserOpen()" >ADD</button>
+        <button type="button" class="btn btn-primary" routerLink="/home/manageusers/viewusers"  routerLinkActive="false"  (click)="viewUsersOpen()">VIEW</button>
+        <button type="button" class="btn btn-primary" routerLink="/home/manageusers/arcusers"  routerLinkActive="false"  (click)="viewArcUsersOpen()">ARCHIVED</button>
       </div>
     <br>
     <div><!--*ngIf="this.tOfWMsg==true"-->
-        <app-register *ngIf="this.tOfadd==true"></app-register>
+       <!-- <app-register *ngIf="this.tOfadd==true"></app-register>
         <app-other-users *ngIf="this.tOfVusers==true"></app-other-users>
-        <app-archived-users *ngIf="this.tOfVarcUsers==true"></app-archived-users>
+        <app-archived-users *ngIf="this.tOfVarcUsers==true"></app-archived-users>-->
+        <router-outlet></router-outlet>
     </div>
  
 </div>

@@ -12,7 +12,6 @@ import { HttpClientModule,HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AppComponent } from './app.component';
 import { UserComponent } from './user/user.component';
 import { RegisterComponent } from './manage-users-main/register/register.component';
-import { UpdateProfileComponent } from './update-profile/update-profile.component';
 import { ForbiddenComponent } from './forbidden/forbidden.component';
 import { ActivateAccountComponent } from './activate-account/activate-account.component';
 import { ForgetPasswordComponent } from './user/forget-password/forget-password.component';
@@ -21,7 +20,6 @@ import { NgbdModalBasic } from './user-profile/modal-basic/modal-basic.component
 import { ModalChangePassComponent } from './user-profile/modal-change-pass/modal-change-pass.component';
 import { ResetPasswordTokenComponent } from './reset-password-token/reset-password-token.component';
 import { ModalChangeRoleComponent } from './user-profile/modal-change-role/modal-change-role.component';
-import { HomeComponent } from './home/home.component';
 import { OtherUsersComponent } from './other-users/other-users.component';
 import { ModelForOtherUserRoleComponent } from './other-users/model-for-other-user-role/model-for-other-user-role.component';
 import { ManageDocsComponent } from './manage-documents-main/manage-docs/manage-docs.component';
@@ -87,6 +85,19 @@ import { ViewTodayApprovedComponent } from './audit/view-today-approved/view-tod
 import { ViewTodayNewWorkflowsComponent } from './audit/view-today-new-workflows/view-today-new-workflows.component';
 import { ViewTodayEndWorkflowsComponent } from './audit/view-today-end-workflows/view-today-end-workflows.component';
 import { ViewTodayAutoArchivedDocsComponent } from './audit/view-today-auto-archived-docs/view-today-auto-archived-docs.component';
+import { NavigationService } from './shared/navigation.service';
+import { NavigationComponent } from './navigation/navigation.component';
+import { MainNavComponent } from './main-nav/main-nav.component';
+import { LayoutModule } from '@angular/cdk/layout';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { LoginLayoutComponent } from './layouts/login-layout/login-layout.component';
+import { TestNavComponent } from './test-nav/test-nav.component';
+import { HomeLayoutComponent } from './layouts/home-layout/home-layout.component';
+import { RenameModelComponent } from './manage-documents-main/view-docs/rename-model/rename-model.component';
 
 
 
@@ -104,7 +115,6 @@ import { ViewTodayAutoArchivedDocsComponent } from './audit/view-today-auto-arch
     RegisterComponent,
     UserProfileComponent,
     SignInComponent,
-    UpdateProfileComponent,
     ForbiddenComponent,
     ActivateAccountComponent,
     ForgetPasswordComponent,
@@ -112,7 +122,6 @@ import { ViewTodayAutoArchivedDocsComponent } from './audit/view-today-auto-arch
     NgbdModalBasic,
     ModalChangePassComponent,
     ModalChangeRoleComponent,
-    HomeComponent,
     OtherUsersComponent,
     ModelForOtherUserRoleComponent,
     ManageDocsComponent,
@@ -165,6 +174,12 @@ import { ViewTodayAutoArchivedDocsComponent } from './audit/view-today-auto-arch
     ViewTodayNewWorkflowsComponent,
     ViewTodayEndWorkflowsComponent,
     ViewTodayAutoArchivedDocsComponent,
+    NavigationComponent,
+    MainNavComponent,
+    LoginLayoutComponent,
+    TestNavComponent,
+    HomeLayoutComponent,
+    RenameModelComponent,
   
   
    
@@ -178,12 +193,18 @@ import { ViewTodayAutoArchivedDocsComponent } from './audit/view-today-auto-arch
     HttpClientModule,
     NgbModule,
     NgxPrintModule,
+    LayoutModule,
+    MatToolbarModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatIconModule,
+    MatListModule,
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true
-  },AuthGuard,UserService],//,{provide:LocationStrategy,useClass:HashLocationStrategy} because every url has #
+  },AuthGuard,UserService,NavigationService],//,{provide:LocationStrategy,useClass:HashLocationStrategy} because every url has #
   bootstrap: [AppComponent]
 })
 export class AppModule { }

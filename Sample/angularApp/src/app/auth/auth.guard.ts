@@ -5,6 +5,7 @@ import { UserService } from "../shared/user.service";
 import { Router } from "@angular/router";
 import { UserProfileComponent } from '../user-profile/user-profile.component';
 import { nextTick } from 'process';
+import { NavigationService } from '../shared/navigation.service';
 //import { profile } from 'console';
 
 @Injectable({
@@ -13,7 +14,7 @@ import { nextTick } from 'process';
 export class AuthGuard implements CanActivate {
    
 
-  constructor(private userService : UserService,private router : Router ){} //,private profile:UserProfileComponent
+  constructor(private userService : UserService,private router : Router ,private  navigationService: NavigationService){} //,private profile:UserProfileComponent
   user={
     role:localStorage.getItem('userRole')
   };
@@ -22,7 +23,7 @@ export class AuthGuard implements CanActivate {
     next: ActivatedRouteSnapshot,
     state: RouterStateSnapshot):  boolean {
       if ((!this.userService.isLoggedIn() )){
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/noAuth/login');
         this.userService.deleteToken();
         localStorage.removeItem('userRole');
         return false;

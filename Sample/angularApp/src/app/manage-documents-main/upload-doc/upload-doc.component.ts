@@ -15,6 +15,8 @@ import { DatePickerService } from 'src/app/shared/date-picker.service';
 import { NgbCalendar, NgbDate, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
 import { WorkflowService } from 'src/app/shared/workflow.service';
 import { WORKFLOWDATA } from 'src/app/models/workFlow.model';
+import { DocumentService } from 'src/app/shared/document.service';
+import { ManageApprovementServiceService } from 'src/app/shared/manage-approvement-service.service';
 
 @Component({
   selector: 'app-upload-doc',
@@ -46,12 +48,19 @@ export class UploadDocComponent implements OnInit {
   //this is for get today data 
   model: NgbDateStruct;
 
-  constructor(public workflow:WorkflowService,public datePickerService:DatePickerService,private http: HttpClient,public departmentService:DepartmentService,public catService:CategoryService,private toastr: ToastrService,public tempDocService:TempDocService,private manageDocMainService:ManageDocMainService,private calendar: NgbCalendar) { }
+  constructor(public manageApprovment:ManageApprovementServiceService,public documentService:DocumentService,public workflow:WorkflowService,public datePickerService:DatePickerService,private http: HttpClient,public departmentService:DepartmentService,public catService:CategoryService,private toastr: ToastrService,public tempDocService:TempDocService,private manageDocMainService:ManageDocMainService,private calendar: NgbCalendar) { }
   
   ngOnInit(): void {
     this.reset();
     this.refreshDepList();
     this.refreshTempDocList();
+    this.resetVariable();
+  }
+
+  resetVariable(){
+    this.documentService.toPassDocId='empty';
+    this.workflow.passWorkflowId='empty';
+    this.manageApprovment.toPassDocIdApr='empty';
   }
   //this is for get today
    selectToday() {
@@ -121,7 +130,7 @@ onSend(){
     formData.append('files',file);
   }
   if(this.datePickerService.pickerModel.day > 0){
-    if(this.datePickerService.pickerModel.year >=this.model.year && this.datePickerService.pickerModel.month >=this.model.month && this.datePickerService.pickerModel.day >=this.model.day){
+    if(this.datePickerService.pickerModel.year >=this.model.year && this.datePickerService.pickerModel.month >=this.model.month && this.datePickerService.pickerModel.day >this.model.day){
       var date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString()
       formData.append('expDate',date)
       var path=this.conPath(this.catService.uploadPath);
@@ -243,6 +252,7 @@ refreshTempDocList() {
   this.tempDocService.tempCount().subscribe((res) => {
     this.tempDocService.countTemp= res[0];
   });
+  this.passModel._id ='';
 }
 
 //to delete an file from temp doc

@@ -1,4 +1,6 @@
 <br>
+<div class="container-fluid border">
+<br>
 <h5 style="text-align: center;"  *ngIf="cTodayApprovedDocs ==0">Empty List!</h5>
 <div class="centertb" *ngIf="cTodayApprovedDocs !=0">
     <div style="text-align: center" >
@@ -43,7 +45,7 @@
           </td>
           <td>{{userService.getDate(doc.createdAt)}}</td>
           <td *ngIf="this.printReadyOk==true">{{doc.approvedBy}}</td>
-          <td *ngIf="notPrint == true"><app-popup-userprofile (click)="getUserEmail(doc.approvedBy)"></app-popup-userprofile></td>
+          <td *ngIf="notPrint == true"><app-popup-userprofile (click)="getUserDetailesByMail(doc.approvedBy)"></app-popup-userprofile></td>
           <td>{{doc.addedAt}}</td>
         </tr>
       </table>
@@ -53,3 +55,7 @@
         <ngb-pagination [(page)]="page"  [collectionSize]="audit.allApprovedDocsToday.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
     </div>
 </div>
+
+<br>
+</div>
+<br>

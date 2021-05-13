@@ -78,7 +78,7 @@ onSubmitN() {
 
 //to lock file
 onSubmit(){
-  if(this.documentService.toPassDocId==='' && this.workflow.passWorkflowId==='' && this.manageApprovment.toPassDocIdApr==='' && this.tempDocService.passFileId !=''){
+  if(this.documentService.toPassDocId==='empty' && this.workflow.passWorkflowId==='empty' && this.manageApprovment.toPassDocIdApr==='empty' && this.tempDocService.passFileId !='empty'){
     if(this.newPassword==this.confirmPassword){
       var dataModel={
         pass:this.confirmPassword
@@ -91,6 +91,7 @@ onSubmit(){
           this.refreshTempDocList();
           this.refreshWorkflowDataProcess();
           this.refreshOldWorkflowDataProcess();
+          this.resetVariable();
           
         },
         err => {
@@ -101,7 +102,7 @@ onSubmit(){
     }else{
      this.serverErrorMessages = 'Password Not Match Enter Again';
     } 
-  }else if(this.tempDocService.passFileId==='' && this.workflow.passWorkflowId==='' && this.manageApprovment.toPassDocIdApr==='' && this.documentService.toPassDocId !=''){
+  }else if(this.tempDocService.passFileId==='empty' && this.workflow.passWorkflowId==='empty' && this.manageApprovment.toPassDocIdApr==='empty' && this.documentService.toPassDocId !='empty'){
     if(this.newPassword==this.confirmPassword){
       var dataModel={
         pass:this.confirmPassword
@@ -114,7 +115,7 @@ onSubmit(){
           this.refreshDocumentList();
           this.refreshWorkflowDataProcess();
           this.refreshOldWorkflowDataProcess();
-          
+          this.resetVariable();
         },
         err => {
           this.serverErrorMessages=err.error;
@@ -124,7 +125,7 @@ onSubmit(){
     }else{
      this.serverErrorMessages = 'Password Not Match Enter Again';
     } 
-  }else if(this.documentService.toPassDocId==='' && this.tempDocService.passFileId==='' && this.manageApprovment.toPassDocIdApr==='' && this.workflow.passWorkflowId !=''){
+  }else if(this.documentService.toPassDocId==='empty' && this.tempDocService.passFileId==='empty' && this.manageApprovment.toPassDocIdApr==='empty' && this.workflow.passWorkflowId !='empty'){
     if(this.newPassword==this.confirmPassword){
       var dataModel={
         pass:this.confirmPassword
@@ -137,7 +138,7 @@ onSubmit(){
           this.refreshWorkflowData();
           this.refreshWorkflowDataProcess();
           this.refreshOldWorkflowDataProcess();
-          
+          this.resetVariable();
         },
         err => {
           this.serverErrorMessages=err.error;
@@ -147,7 +148,7 @@ onSubmit(){
     }else{
      this.serverErrorMessages = 'Password Not Match Enter Again';
     } 
-  }else if(this.documentService.toPassDocId==='' && this.tempDocService.passFileId==='' && this.workflow.passWorkflowId==='' && this.manageApprovment.toPassDocIdApr !=''){
+  }else if(this.documentService.toPassDocId==='empty' && this.tempDocService.passFileId==='empty' && this.workflow.passWorkflowId==='empty' && this.manageApprovment.toPassDocIdApr !='empty'){
     if(this.newPassword==this.confirmPassword){
       var dataModel={
         pass:this.confirmPassword
@@ -158,7 +159,7 @@ onSubmit(){
           setTimeout(() => this.showSucessMessage = false, 4000);
           this.resetValues();
           this.refreshNeedApprovementList();
-        
+          this.resetVariable();
         },
         err => {
           this.serverErrorMessages=err.error;
@@ -175,10 +176,10 @@ onSubmit(){
 
 
 resetVariable(){
-  this.documentService.toPassDocId='';
-  this.tempDocService.passFileId='';
-  this.workflow.passWorkflowId='';
-  this.manageApprovment.toPassDocIdApr='';
+  this.documentService.toPassDocId='empty';
+  this.tempDocService.passFileId='empty';
+  this.workflow.passWorkflowId='empty';
+  this.manageApprovment.toPassDocIdApr='empty';
 }
 
 

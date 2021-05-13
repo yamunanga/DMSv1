@@ -1,4 +1,6 @@
 <br>
+<div class="container-fluid border">
+<br>
 <div class="centertb" >
   <div style="text-align: center" >
     <input type="text" [(ngModel)]="sName" (input)="search()" placeholder="Search here"  (keydown)="onKeydown($event)" />&nbsp;
@@ -8,7 +10,7 @@
     <button type="button" class="btn btn-outline-danger" (click)="delAll()"><i class="fa fa-trash" aria-hidden="true"></i> Delete All</button>
   </div>
 </div>
-<div class="col s7" style="height:400px;overflow:auto;" *ngIf="messageService.allSents">
+<div class="table-responsive-sm"  *ngIf="messageService.allSents">
   <table class="responsive-table highlight centertb">
       <!--<thead>
         <tr>
@@ -35,3 +37,6 @@
       <ngb-pagination [(page)]="page"  [collectionSize]="messageService.allSents.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
   </div>
 </div>
+<br>
+</div>
+<br>

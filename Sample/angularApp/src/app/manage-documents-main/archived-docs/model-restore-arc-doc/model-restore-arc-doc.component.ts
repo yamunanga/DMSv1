@@ -47,7 +47,7 @@ export class ModelRestoreArcDocComponent implements OnInit {
 //to set doc expiration date individually working
 setExpDate(){
   this.selectToday();
-  if(this.datePickerService.pickerModel.year >=this.model.year && this.datePickerService.pickerModel.month >=this.model.month && this.datePickerService.pickerModel.day >=this.model.day){
+  if(this.datePickerService.pickerModel.year >=this.model.year && this.datePickerService.pickerModel.month >=this.model.month && this.datePickerService.pickerModel.day >this.model.day){
     this.date=this.datePickerService.pickerModel.year.toString()+'-'+this.datePickerService.pickerModel.month.toString()+'-'+this.datePickerService.pickerModel.day.toString();
     var setDateData={
       expDate:this.date
@@ -56,7 +56,7 @@ setExpDate(){
      res => {
         this.showSucessMessage = true;
         setTimeout(() => this.showSucessMessage = false, 3000);
-        this.refreshArcDocs();
+        this.refreshArcDocList();
         this.serverErrorMessages='';
      },
      err => {
@@ -80,11 +80,19 @@ reset(){
 selectToday() {
   this.model = this.calendar.getToday();
 }
-//to refresh arc documents
-refreshArcDocs(){
+ //to get arc doc list from database
+ refreshArcDocList() {
   this.documentService.getArcDocs().subscribe((res) => {
     this.documentService.arcDocs = res as ARCDOCUMENTS[];
   });
+  this.documentService.getCountArcDocs().subscribe((res) => {
+    this.documentService.countArc= res[0];
+  },err => {
+    if (err.status === 404) {
+      this.documentService.countArc=0;
+    }
+  }
+  );
 }
 
 }

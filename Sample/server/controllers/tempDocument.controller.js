@@ -8,6 +8,7 @@ const fs = require('fs-extra')
 const router = e.Router();
 const URIpath = require('uri-path');
 const url = require('url');
+const upath = require('upath');
 const date = require('date-and-time');
 const { encrypt, decrypt } = require('../config/crypto');
 const User = mongoose.model('User');
@@ -41,7 +42,7 @@ var storage3 = multer.diskStorage({
     },
    
     filename: function (req, file, cb) {
-      cb(null,Date.now()+'-'+file.originalname) //this can store file as original
+      cb(null,file.originalname) //this can store file as original
     }
 
 })
@@ -205,9 +206,9 @@ tempDocument.findOne({ _id:req.params.id },(err,file)=>{
    }else{
     var myJSON = JSON.stringify(file.file);
     var str=myJSON.split('\\');
-    console.log(str);
+    //console.log(str);
     var nStr=str[str.length-1].split('"');
-    console.log(nStr[0]);
+    //console.log(nStr[0]);
     var multerDate=nStr[0].split('-');
     if(file.subCategory ==null){
       var opath=config.development.UPLOAD_LOCATION+file.department+'/'+file.category+'/'+multerDate[0]+'-'+file.name;
@@ -232,7 +233,7 @@ tempDocument.findOne({ _id:req.params.id },(err,file)=>{
 
     }else{
       var opath=config.development.UPLOAD_LOCATION+file.department+'/'+file.category+'/'+file.subCategory+'/'+multerDate[0]+'-'+file.name;
-      console.log(opath);
+      //console.log(opath);
       //fs.removeSync(opath);
       fs.unlink(opath, (err) => {
         if (err) {
@@ -262,15 +263,15 @@ module.exports.deleteTempFile=(req,res,next)=>{
       if(err || !file){
           return res.status(404).send(['File Does Not Exist !']);
      }else{
-          var myJSON = JSON.stringify(file.file);
+          /*var myJSON = JSON.stringify(file.file);
           var str=myJSON.split('\\');
           //console.log(str);
           var nStr=str[str.length-1].split('"');
           //console.log(nStr[0]);
-          var multerDate=nStr[0].split('-');
-          var myPath=file.catPath+'/'+multerDate[0]+'-'+file.name;
+          var multerDate=nStr[0].split('-');*/
+          var myPath=file.catPath+file.name;
           //console.log(myPath);
-          fs.unlink(myPath, (err) => {
+          fs.remove(myPath, (err) => {
             if (err) {
               return res.status(404).send(['File can not delete Or Unlock Before Delete !']);
             }
@@ -306,49 +307,36 @@ module.exports.renameTempFile=(req,res,next)=>{
               if(conFileName[0]==name){
                 return res.status(422).send(['File name already use !']);
               }else{
-                var myJSON = JSON.stringify(file.file);
-                console.log(myJSON);
-                var str=myJSON.split('\\');
-                console.log(str);
-                var nStr=str[str.length-1].split('"');
-                var multerDate=nStr[0].split('-');
-                //cat path config
-                var str=file.catPath.split('/');
-                  var mC=str[3];
-                  var dep=str[2];
-                  var arr = new Array
-                  for(var x=2;x<str.length;x++){
-                    if(str[x] !=''){
-                      arr.push(str[x]);
+                var toUnix= upath.toUnix(file.file)
+                var unixStr=toUnix.split('/');
+                var arr = new Array
+                  for(var x=0;x<unixStr.length-1;x++){
+                    if(unixStr[x] !=''){
+                      arr.push(unixStr[x]);
                     }
                   }
                 //Over
                 //console.log(nStr);
                   //new filename+type
                   var newName=name+'.'+file.type;
-                  var oldpath=file.catPath+multerDate[0]+'-'+file.name;
-                  var newpath=file.catPath+multerDate[0]+'-'+name+'.'+file.type;
+                  var oldpath=file.catPath+file.name;
+                  var newpath=file.catPath+name+'.'+file.type;
                   //var toDbPath=config.development.TO_DB_TO_UP_LOCATION+file.department+'\\'+file.category+'\\'+multerDate[0]+'-'+name+'.'+file.type;
                   
-                  var toDbPath=config.development.TO_DB_TO_UP_LOCATION+dbPath(arr)+multerDate[0]+'-'+name+'.'+file.type;
+                  var toDbPath=dbPath(arr)+name+'.'+file.type;
                  // console.log(newpath.toString());
-                 // console.log(oldpath);
-                 // console.log(toDbPath);
-                  
-                  fs.rename(oldpath.toString(),newpath.toString(), function (err) {
-                    if (err){
-                      return res.status(422).send(['Cannot rename !']);
+                   // console.log(oldpath);
+                   // console.log(oldpath.toString());
+                   tempDocument.findOneAndUpdate({_id:_id},{name:newName,file:toDbPath},function(err,doc){
+                    if(err){
+                      return res.status(422).send(['Eror from DB!']);
+                    }else{
+                      fs.renameSync(oldpath,newpath);
+                      return res.status(200).send(['File name has been changed !']);
                     }
-                    //console.log('File Renamed.');
-                    tempDocument.findOneAndUpdate({_id:_id},{name:newName,file:toDbPath},function(err,doc){
-                      if(err){
-                        return res.status(422).send(['Eror from DB!']);
-                      }else{
-                        return res.status(200).send(['File name has been changed !']);
-                      }
-            
-                   })
-                  });
+          
+                 })
+                
               }
          
     
@@ -364,6 +352,22 @@ module.exports.renameTempFile=(req,res,next)=>{
   }
 );
 }
+/*
+  fs.renameSync(oldpath,newpath, function (err) {
+                    if (err){
+                      return res.status(422).send(['Cannot rename !']);
+                    }
+                    //console.log('File Renamed.');
+                    tempDocument.findOneAndUpdate({_id:_id},{name:newName,file:toDbPath},function(err,doc){
+                      if(err){
+                        return res.status(422).send(['Eror from DB!']);
+                      }else{
+                        return res.status(200).send(['File name has been changed !']);
+                      }
+            
+                   })
+                  });
+*/
 
 //to set need approve to relevent documents
 module.exports.setApprovement=(req,res,next)=>{
@@ -582,7 +586,7 @@ module.exports.postDocNewLocation=(req,res,next)=>{
 //to post data from temp to documents--old
 module.exports.transferToDocumentT=(req,res,next)=>{
   tempDocument.findOne({ _id:req.params.id },(err,file)=>{
-    if(err || !file){
+    if(!file){
       return res.status(404).send(['Cannot find !']);
    }else{
        if(file.needApproveBy.length== 0|| file.needApproveBy==null || file.needApproveBy==[]){
@@ -726,33 +730,33 @@ module.exports.transferToDocument=(req,res,next)=>{
       }) 
       }else if( (file.needApproveBy !== null || file.needApproveBy.length != 0 || file.needApproveBy !==[] ) && (file.workflow.length== 0|| file.workflow==null || file.workflow==[] ) ){
         //return res.status(400).send(['eror happen !']); needApproveDoc
-        tempDocument.findOne({ _id:req.params.id },(err,file)=>{
-          if(err || !file){
+        tempDocument.findOne({ _id:req.params.id },(err,file2)=>{
+          if(!file2){
             return res.status(404).send(['Cannot find !']);
          }else{
           var document = new approvement();
-          document.name =file.name;
-          document.file =file.file;
-          document.type =file.type;
-          document.size =file.size;
-          document.category=file.category;
-          document.catPath=file.catPath;
-          document.subCategory=file.subCategory;
-          document.needApproveBy=file.needApproveBy;
-          document.department=file.department;
-          document.createdBy=file.createdBy;
-          document.tags=file.tags;
-          document.expDate=file.expDate;
+          document.name =file2.name;
+          document.file =file2.file;
+          document.type =file2.type;
+          document.size =file2.size;
+          document.category=file2.category;
+          document.catPath=file2.catPath;
+          document.subCategory=file2.subCategory;
+          document.needApproveBy=file2.needApproveBy;
+          document.department=file2.department;
+          document.createdBy=file2.createdBy;
+          document.tags=file2.tags;
+          document.expDate=file2.expDate;
           document.createDate=current.toString();
-          if(file.isLock==true){
-            document.isLock=file.isLock;
-            document.ePath=file.ePath;
-            document.eFile=file.eFile;
-            document.pass=file.pass;
+          if(file2.isLock==true){
+            document.isLock=file2.isLock;
+            document.ePath=file2.ePath;
+            document.eFile=file2.eFile;
+            document.pass=file2.pass;
           }
           document.save(function(err,result){ 
             if (err){ 
-                //console.log(err);
+               // console.log(err);
                 //return res.status(422).send(['Eror from backend !']);
             } 
             else{ 
@@ -773,32 +777,32 @@ module.exports.transferToDocument=(req,res,next)=>{
         })
 
        }else if((file.workflow.length != 0 || file.workflow !== null || file.workflow !== [] ) && (file.needApproveBy.length== 0|| file.needApproveBy==null || file.needApproveBy==[])){
-        tempDocument.findOne({ _id:req.params.id },(err,file)=>{
-          if(err || !file){
+        tempDocument.findOne({ _id:req.params.id },(err,file3)=>{
+          if(!file3){
             return res.status(404).send(['Cannot find !']);
          }else{
           var document = new workflow();
-          document.name =file.name;
-          document.file =file.file;
-          document.type =file.type;
-          document.size =file.size;
-          document.category=file.category;
-          document.catPath=file.catPath;
-          document.subCategory=file.subCategory;
-          document.department=file.department;
-          document.createdBy=file.createdBy;
-          document.workflow=file.workflow;
-          document.workflowData=file.workflow[0];
-          document.workflowNext=file.workflow[1];
-          document.workFlowList=file.workflow;
-          document.tags=file.tags;
-          document.expDate=file.expDate;
+          document.name =file3.name;
+          document.file =file3.file;
+          document.type =file3.type;
+          document.size =file3.size;
+          document.category=file3.category;
+          document.catPath=file3.catPath;
+          document.subCategory=file3.subCategory;
+          document.department=file3.department;
+          document.createdBy=file3.createdBy;
+          document.workflow=file3.workflow;
+          document.workflowData=file3.workflow[0];
+          document.workflowNext=file3.workflow[1];
+          document.workFlowList=file3.workflow;
+          document.tags=file3.tags;
+          document.expDate=file3.expDate;
           document.createDate=current.toString();
-          if(file.isLock==true){
-            document.isLock=file.isLock;
-            document.ePath=file.ePath;
-            document.eFile=file.eFile;
-            document.pass=file.pass;
+          if(file3.isLock==true){
+            document.isLock=file3.isLock;
+            document.ePath=file3.ePath;
+            document.eFile=file3.eFile;
+            document.pass=file3.pass;
           }
           document.save(function(err,result){ 
             if (err){ 

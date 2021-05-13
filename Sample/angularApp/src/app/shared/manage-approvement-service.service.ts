@@ -11,7 +11,7 @@ export class ManageApprovementServiceService {
   approveData:NEEDAPPROVEDOCS[];//to get need approvement data for relevent user
   approveDataCount;//to get need approve data count
   rejectDocId:'' ;//to pass reject doc/file id
-  toPassDocIdApr:'';//this is for doc lock/unlock
+  toPassDocIdApr='empty';//this is for doc lock/unlock
   constructor(private http: HttpClient) { }
 
 

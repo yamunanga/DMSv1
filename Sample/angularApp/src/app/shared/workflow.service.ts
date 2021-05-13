@@ -16,7 +16,7 @@ export class WorkflowService {
   workflowDataList:WORKFLOWDATALiST[] //for get workflow data to front end acording to user
   workflowDataCount;//for get workflow data count  acording to user
   workflowArrCount;//for get count of workflow arr 
-  passWorkflowId='';//for lock and unlock doc
+  passWorkflowId='empty';//for lock and unlock doc
   path='';//this is for document path
   workId;//this is for document id
   workflowUserList;//this is for work flow list model

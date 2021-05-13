@@ -1,4 +1,7 @@
 <br>
+<div class="container-fluid border">
+<br>
+<br>
 <h5 style="text-align: center;"  *ngIf="this.manageApprovment.approveDataCount==0">You Don't Have Any Request</h5>
 <div class="table-responsive" *ngIf="this.manageApprovment.approveDataCount !=0 && manageApprovment.approveData">
   <div style="text-align: right;">
@@ -19,6 +22,7 @@
             <th>CreatedBy</th>
             <th *ngIf="notPrint == true">File</th>
             <th>CreatedAt</th>
+            <th *ngIf="notPrint == true">Options</th>
           </tr>
         </thead>
         <tr *ngFor="let doc of manageApprovment.approveData | slice: (page-1) * pageSize : page * pageSize;index as i">
@@ -49,3 +53,7 @@
         <ngb-pagination [(page)]="page"  [collectionSize]="manageApprovment.approveData.length" [maxSize]="5" [rotate]="true" [ellipses]="false" [boundaryLinks]="true"></ngb-pagination>
     </div>
 </div>
+
+<br>
+</div>
+<br>

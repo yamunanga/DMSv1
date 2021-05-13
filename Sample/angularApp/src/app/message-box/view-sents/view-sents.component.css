@@ -54,7 +54,6 @@
     text-align:right;
   }
   .center {
-    border: 5px solid white;
     display: flex;
     justify-content: center;
     }

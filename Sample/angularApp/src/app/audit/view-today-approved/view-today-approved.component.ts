@@ -20,6 +20,9 @@ export class ViewTodayApprovedComponent implements OnInit {
   notPrint=true;
   resetBackVici=false;
   printReadyOk=false;
+  emailData={
+    email:''
+  }
   constructor(public audit:AuditService,public userService: UserService) { }
 
   ngOnInit(): void {
@@ -78,6 +81,14 @@ getUserEmail(_id){
   });
 }
 
+getUserDetailesByMail(email){
+  this.emailData={
+    email:email
+  }
+  this.userService.viewOtherUserProfile(this.emailData).subscribe((res) => {
+    this.userService.otherUserProfile=res as OTHERUSERS[];
+  });
+}
 
 onKeydown(event) {
   if (event.key === "Backspace") {

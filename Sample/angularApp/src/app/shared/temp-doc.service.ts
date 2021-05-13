@@ -17,7 +17,7 @@ export class TempDocService {
   tempDocId:String //this is for delete user from need approvement
   countNeeds;//to get count of need approve array
   countTemp;//to get count of temp docs
-  passFileId='';//to set _id for exp date for doc 
+  passFileId='empty';//to set _id for exp date for doc 
   constructor(private http: HttpClient) { }
  
 //to get tempory docs by user id
