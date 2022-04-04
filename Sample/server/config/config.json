@@ -13,7 +13,7 @@
         "TO_DB_TO_UP_LOCATION":"uploads\\",
         "ARC_PATH":"./archived/",
         "NODE_MAILER_EMAIL":"documentmanagementsystemv2@gmail.com",
-        "NODE_MAILER_PASS":"lkh1997108"
+        "NODE_MAILER_PASS":
 
     },
     "production": {
